@@ -1,0 +1,364 @@
+load maude-npa.maude
+load metaInterpreter.maude
+
+mod PARALLEL-GENERIC-TOOL is
+    pr MAUDE-NPA .
+    pr CONFIGURATION .
+
+    op aManager : -> Oid [ctor] .
+    op npa : -> Oid [ctor] .
+    op initialize : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
+                    IdSystemSet IdSystemSet -> Msg [ctor msg format (b o)] .
+
+    vars M : Module .
+    vars GS : GrammarList .
+    vars F : Filters .
+    vars BStep Nodes Sess : Bound .
+    vars Rem? : Bool .
+    vars IS : IdSystem .
+    vars IST IST' INIT HistoryIST : IdSystemSet .
+
+    sort IdSystemSetPair .
+    op <_,_> : IdSystemSet IdSystemSet -> IdSystemSetPair .
+
+    *** prun **********************
+    op p-run : Nat Bound Filters -> Msg .
+    op p-run : Nat Bound -> Msg .
+
+    eq p-run(Attack:Nat,Depth:Bound)
+    = toMsg(run[0](Attack:Nat,Depth:Bound,+parallel,unbounded)< unbounded >) .
+
+    eq p-run(Attack:Nat,Depth:Bound,F:Filters)
+    = toMsg(run[0](Attack:Nat,Depth:Bound,F:Filters,unbounded)< unbounded >) .
+
+    op toMsg : IdSystemSet -> Msg .
+    eq toMsg(< M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST >)
+    = initialize(aManager, npa, M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST) .
+
+    op filterStates : Filters IdSystemSet IdSystemSet -> IdSystemSet .
+    eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplify-theSystemSet(F,HistoryIST, IST))) .
+
+    op searchState-CheckInit : Module Bound IdSystemSet IdSystemSetPair IdSystemSet -> IdSystemSetPair .
+    eq searchState-CheckInit(M, Sess, HistoryIST, < INIT, IST' >, empty) = < INIT, IST' > .
+    eq searchState-CheckInit(M, Sess,HistoryIST, < INIT, IST' >, (IS IST))
+    = if Sess =/= unbounded and-then countSessions(IS) > Sess
+    then searchState-CheckInit(M, Sess, HistoryIST, < INIT, IST' >, IST)
+    else if isInitialM(M,IS)
+        then
+            searchState-CheckInit(M, Sess, HistoryIST, < INIT IS, IST' >, IST)
+        else searchState-CheckInit(M, Sess, HistoryIST,
+            < INIT, if isNFSystem(M,HistoryIST,IS) then IST' else (IS IST') fi >,
+            IST)
+        fi
+    fi .
+
+    op pM : -> Module .
+    op pGS : -> GrammarList .
+    op pF : -> Filters .
+
+    --- parallel back narrowing wrapper function
+    op nextBackNarrowParallel* : GrammarList Filters Bound IdSystemSet -> IdSystemSet [memo] .
+    eq nextBackNarrowParallel*(GS, F, Nodes, IST) = nextBackNarrowParallel(pM, GS, F, Nodes, IST) .
+
+    op nextBackNarrowParallel : Module GrammarList Filters Bound IdSystemSet -> IdSystemSet [memo] .
+    eq nextBackNarrowParallel(M,GS,F:Filters,Nodes,IST)
+    = filter-eachSystem#Top(F:Filters,M,GS, --- filter systems with grammars, never patterns, ...
+        simplify-eachSystem#Top(F:Filters,M, --- always simplify before filtering
+            simplifyGhost#Top(F:Filters, --- simplify Ghost
+                createGhost#Top(M,F:Filters, --- create Ghost again
+                    reactivateGhost#Top(F:Filters, --- if messages are not ghost messages anymore, reactive the messages
+                        tryUnificationofKnowledge(M, --- create and check ghosts before and after
+                            nextBackNarrow*(M,GS,F:Filters,Nodes,empty,IST)
+                        )
+                    )
+                )
+             )
+        )
+    ) .
+endm
+
+view Worker from TRIV to CONFIGURATION is
+    sort Elt to Oid .
+endv
+
+mod PARALLEL-MAUDE-NPA is
+    pr META-INTERPRETER .
+    pr PARALLEL-GENERIC-TOOL .
+    pr SET{Worker} .
+
+    sort Status .
+    ops idle initializing initialized waiting suspending working stopping terminated : -> Status .
+
+    op status :_ : Status -> Attribute [ctor format(m o o o)] .
+    op m :_ : Module -> Attribute .
+    op gs :_ : GrammarList -> Attribute .
+    op filter :_ : Filters -> Attribute .
+    op bStep :_ : Bound -> Attribute .
+    op nodes :_ : Bound -> Attribute .
+    op sess :_ : Bound -> Attribute .
+    op rem :_ : Bool -> Attribute .
+    op history :_ : IdSystemSet -> Attribute .
+    op jobs :_ : IdSystemSet -> Attribute .
+    op next :_ : IdSystemSet -> Attribute .
+    op init :_ : IdSystemSet -> Attribute .
+    op nWorkers :_ : Nat -> Attribute [ctor format(! o o o)] .
+    op workers :_ : Set{Worker} -> Attribute [ctor format(! o o o)] .
+
+    op stopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
+    op ShortIdSystem:_ : IdSystemSet-or-Error -> Msg [ctor msg] .
+
+    op Manager : -> Cid [ctor] .
+    op errIdSystemSet : -> IdSystemSet .
+
+    vars O O' MI : Oid .
+    var  A : AttributeSet .
+    var N : Nat .
+    vars Nodes BStep Sess : Bound .
+    vars Rem? : Bool .
+    vars IST IST' IST'' INIT INIT' HistoryIST HistoryIST' : IdSystemSet .
+    var IS : IdSystem .
+    vars W : Set{Worker} .
+    vars T T' : Term .
+    var RT : Type .
+    vars M M' M'' : Module .
+    var GS : GrammarList .
+    var F : Filters .
+    vars PAIR : IdSystemSetPair .
+
+    crl [CreateWorkers] : < O : Manager |
+        status : idle,
+        nWorkers : N,
+        A >
+        initialize(O, O', M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST)
+    => < O : Manager |
+        status : initializing,
+        nWorkers : N,
+        workers : empty,
+        m : M,
+        gs : GS,
+        filter : F,
+        bStep : BStep,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        history : HistoryIST,
+        jobs : IST',
+        next : empty,
+        init : INIT,
+        A >
+        produceInterpreter(O, N)
+    if (< INIT, IST' >) := searchState-CheckInit(M, Sess, HistoryIST, < empty, empty > ,IST)
+    [print "[CreateWorkers]"] .
+
+    op produceInterpreter : Oid Nat -> Configuration .
+    ceq produceInterpreter(O, N) = createInterpreter(interpreterManager, O, newProcess)
+        produceInterpreter(O, sd(N, 1)) if N > 0 .
+    eq produceInterpreter(O, N) = none [owise] .
+
+    crl [CreatedWorker] : < O : Manager |
+        status : initializing,
+        nWorkers : N,
+        workers : empty,
+        m : M,
+        gs : GS,
+        filter : F,
+        nodes : Nodes,
+        jobs : IST,
+        A >
+        createdInterpreter(O, O', MI)
+    => < O : Manager |
+        status : initializing,
+        nWorkers : N,
+        workers : empty,
+        m : M,
+        gs : GS,
+        filter : F,
+        nodes : Nodes,
+        jobs : IST,
+        A >
+        insertModule(MI, O, M')
+        if M' := upModule('PARALLEL-MAUDE-NPA, true)
+        --- /\ M'' := addEqs(
+        ---     (eq 'pM.Module = upTerm(M) [none] . )
+        ---     (eq 'pGS.GrammarList = upTerm(GS) [none] . )
+        ---     (eq 'pF.Filters = upTerm(F) [none] . )
+        ---     , M'
+        --- )
+        [print "[CreatedWorker]"] .
+
+    rl [InsertedModule] : < O : Manager |
+        status : initializing,
+        workers : W,
+        A >
+        insertedModule(O, MI)
+    => < O : Manager |
+        status : initializing,
+        workers : (MI, W),
+        A >
+        [print "[InsertedModule]"] .
+
+    crl [CreatedWorkersDone] : < O : Manager |
+        status : initializing,
+        nWorkers : N,
+        workers : W,
+        A >
+    => < O : Manager |
+        status : working,
+        nWorkers : N,
+        workers : W,
+        A >
+    if | W | == N [print "[CreatedWorkersDone]"] .
+
+    rl [AssignJob] : < O : Manager |
+        status : working,
+        jobs : (IS IST),
+        workers : (MI, W),
+        m : M,
+        gs : GS,
+        filter : F,
+        nodes : Nodes,
+        bStep : BStep,
+        A >
+    => < O : Manager |
+        status : working,
+        jobs : IST,
+        workers : W,
+        m : M,
+        gs : GS,
+        filter : F,
+        nodes : Nodes,
+        bStep : BStep,
+        A >
+        handleJob(O, MI, M, GS, F, if BStep == 1 then Nodes else unbounded fi, IS)
+        [print "[AssignJob]"] .
+
+    op handleJob : Oid Oid Module GrammarList Filters Bound IdSystemSet -> Configuration .
+    eq handleJob(O, MI, M, GS, F, Nodes, IS) = reduceTerm(MI, O,
+        'PARALLEL-MAUDE-NPA,
+        upTerm(nextBackNarrowParallel(M, GS, F, Nodes, IS))) .
+
+    crl [WorkerResult] : < O : Manager |
+        status : working,
+        workers : W,
+        next : IST,
+        A >
+        reducedTerm(O, MI, N, T, RT)
+    => < O : Manager |
+        status : working,
+        workers : (W, MI),
+        next : (IST IST'),
+        A >
+    if RT == 'IdSystemSet or-else RT == 'IdSystem
+    /\ IST' := downTerm(T, errIdSystemSet)
+    [print "[WorkerResult]"] .
+
+    crl [Switch] : < O : Manager |
+        status : working,
+        nWorkers : N,
+        workers : W,
+        m : M,
+        gs : GS,
+        filter : F,
+        bStep : BStep,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        jobs : empty,
+        next : IST,
+        init : INIT,
+        history : HistoryIST,
+        A >
+    => < O : Manager |
+        status : suspending,
+        nWorkers : N,
+        workers : W,
+        m : M,
+        gs : GS,
+        filter : F,
+        bStep : dec(BStep),
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        jobs : IST'',
+        next : empty,
+        init : (INIT INIT'),
+        history : (HistoryIST IST''),
+        A >
+    if | W | == N
+    /\ IST =/= empty
+    /\ IST' := filterStates(F, HistoryIST, IST) --- filter sucessor states with history states
+    /\ < INIT', IST'' > := searchState-CheckInit(M, Sess, HistoryIST, < empty, empty > ,IST') --- filter initial and other states
+    [print "=================> [Switch] =================>"] .
+
+    rl [Resuming] : < O : Manager |
+        status : suspending,
+        jobs : IST,
+        filter : F,
+        history : HistoryIST,
+        bStep : BStep,
+        rem : Rem?,
+        A >
+    => if BStep == 0 or-else IST == empty then
+            --- Stop the search
+            stopWorking(O, O)
+            < O : Manager |
+                status : stopping,
+                jobs : IST,
+                filter : F,
+                history : HistoryIST,
+                bStep : BStep,
+                rem : Rem?,
+                A >
+        else
+            < O : Manager |
+                status : working,
+                jobs : IST,
+                filter : F,
+                history : HistoryIST,
+                bStep : BStep,
+                rem : Rem?,
+                A >
+        fi .
+
+    crl [terminate] : < O : Manager |
+        status : working,
+        nWorkers : N,
+        workers : W,
+        jobs : empty,
+        next : empty,
+        A >
+    => < O : Manager |
+        status : stopping,
+        nWorkers : N,
+        workers : W,
+        jobs : empty,
+        next : empty,
+        A >
+        stopWorking(O, O)
+    if | W | == N
+    [print "[terminate]"] .
+
+    rl [StopWorkers] : < O : Manager | workers : W, A > stopWorking(O, O')
+        => produceQuitMsg(O, W) < O : Manager | workers : W, A > [print "[StopWorkers]"] .
+
+    op produceQuitMsg : Oid Set{Worker} -> Configuration .
+    eq produceQuitMsg(O, (MI, W)) = quit(MI, O) produceQuitMsg(O, W) .
+    eq produceQuitMsg(O, empty) = none .
+
+    rl [Bye] : < O : Manager | workers : (MI, W), A > bye(O, MI) => < O : Manager | workers : W, A > [print "[Bye]"] .
+
+    rl [CleanUp] : < O : Manager |
+        status : stopping,
+        workers : empty,
+        filter : F,
+        jobs : IST,
+        rem : Rem?,
+        init : INIT,
+        A >
+    => ShortIdSystem: if Rem? then
+            changeShortSystem(F, INIT IST)
+        else
+            changeShortSystem(F, INIT)
+        fi
+        [print "[CleanUp]"] .
+endm
