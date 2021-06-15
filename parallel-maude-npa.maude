@@ -101,6 +101,7 @@ mod PARALLEL-MAUDE-NPA is
     op jobs :_ : IdSystemSet -> Attribute .
     op next :_ : IdSystemSet -> Attribute .
     op init :_ : IdSystemSet -> Attribute .
+    op depth :_ : Nat -> Attribute . --- depth needs to be explored
     op nWorkers :_ : Nat -> Attribute [ctor format(! o o o)] .
     op workers :_ : Set{Worker} -> Attribute [ctor format(! o o o)] .
 
@@ -112,7 +113,7 @@ mod PARALLEL-MAUDE-NPA is
 
     vars O O' MI : Oid .
     var  A : AttributeSet .
-    var N : Nat .
+    vars N D : Nat .
     vars Nodes BStep Sess : Bound .
     vars Rem? : Bool .
     vars IST IST' IST'' INIT INIT' HistoryIST HistoryIST' : IdSystemSet .
@@ -123,7 +124,7 @@ mod PARALLEL-MAUDE-NPA is
     vars M M' M'' : Module .
     var GS : GrammarList .
     var F : Filters .
-    vars PAIR : IdSystemSetPair .
+    var PAIR : IdSystemSetPair .
 
     crl [CreateWorkers] : < O : Manager |
         status : idle,
@@ -145,6 +146,7 @@ mod PARALLEL-MAUDE-NPA is
         jobs : IST',
         next : empty,
         init : INIT,
+        depth : 1,
         A >
         produceInterpreter(O, N)
     if (< INIT, IST' >) := searchState-CheckInit(M, Sess, HistoryIST, < empty, empty > ,IST)
@@ -267,6 +269,7 @@ mod PARALLEL-MAUDE-NPA is
         next : IST,
         init : INIT,
         history : HistoryIST,
+        depth : D,
         A >
     => < O : Manager |
         status : suspending,
@@ -283,12 +286,13 @@ mod PARALLEL-MAUDE-NPA is
         next : empty,
         init : (INIT INIT'),
         history : (HistoryIST IST''),
+        depth : (D + 1),
         A >
     if | W | == N
     /\ IST =/= empty
     /\ IST' := filterStates(F, HistoryIST, IST) --- filter sucessor states with history states
     /\ < INIT', IST'' > := searchState-CheckInit(M, Sess, HistoryIST, < empty, empty > ,IST') --- filter initial and other states
-    [print "=================> [Switch] =================>"] .
+    [print "<================= [Switch at Depth " D "] =================>"] .
 
     rl [Resuming] : < O : Manager |
         status : suspending,
