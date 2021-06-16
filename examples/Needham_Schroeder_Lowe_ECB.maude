@@ -1,17 +1,11 @@
-load parallel-maude-npa.maude
 ***(
 The informal journal-level description of this protocol is as follows:
 
-A --> B: pk(B,A ; N_A)
-B --> A: pk(A, N_A ; N_B)
-A --> B: pk(B, N_B)
+1. A -> B : {Na, A}PK(B)
+2. B -> A : {Na, Nb, B}PK(A)
+3. A -> B : {Nb}PK(B)
 
-where N_A and N_B are nonces, pk(x,y) means message y encripted using public
-key x, and sk(x,y) means message y encripted using private key x.
-Moreover, encription/decription have the following algebraic properties:
-
-  pk(K,sk(K,M)) = M .
-  sk(K,pk(K,M)) = M .
+where PK is homomorphic over concatenation.
 )***
 
 fmod PROTOCOL-EXAMPLE-SYMBOLS is
@@ -33,8 +27,7 @@ fmod PROTOCOL-EXAMPLE-SYMBOLS is
   subsort Name < Public .
 
   --- Encoding operators for public/private encryption
-  op pk : Key Msg -> Msg [frozen] .
-  op sk : Key Msg -> Msg [frozen] .
+  op pk : Msg Key -> Msg [frozen] .
 
   --- Nonce operator
   op n : Name Fresh -> Nonce [frozen] .
@@ -57,12 +50,8 @@ fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
   --- of your protocol
   ----------------------------------------------------------
 
-  var Z : Msg .
-  var Ke : Key .
-
-  *** Encryption/Decryption Cancellation
-  eq pk(Ke,sk(Ke,Z)) = Z [variant] .
-  eq sk(Ke,pk(Ke,Z)) = Z [variant] .
+  eq pk(X:Msg ; Y:Msg, K:Key) = pk(X:Msg, K:Key) ; pk(Y:Msg, K:Key)
+  [nonexec label homomorphism metadata "builtin-unify"] .
 
 endfm
 
@@ -80,52 +69,28 @@ fmod PROTOCOL-SPECIFICATION is
   vars X Y Z : Msg .
   vars r r' : Fresh .
   vars A B : Name .
-  vars N N1 N2 : Nonce .
+  vars N NA NB : Nonce .
 
   eq STRANDS-DOLEVYAO
    = :: nil :: [ nil | -(X), -(Y), +(X ; Y), nil ] &
      :: nil :: [ nil | -(X ; Y), +(X), nil ] &
      :: nil :: [ nil | -(X ; Y), +(Y), nil ] &
-     :: nil :: [ nil | -(X), +(sk(i,X)), nil ] &
-     :: nil :: [ nil | -(X), +(pk(Ke,X)), nil ] &
+     :: nil :: [ nil | -(X), +(pk(X,Ke)), nil ] &
+     :: nil :: [ nil | -(pk(X,i)), +(X), nil ] &
      :: nil :: [ nil | +(A), nil ]
   [nonexec] .
 
   eq STRANDS-PROTOCOL
    = :: r ::
-     [ nil | +(pk(B,A ; n(A,r))), -(pk(A,n(A,r) ; N)), +(pk(B, N)), nil ] &
+     [ nil | +(pk(A ; n(A,r), B)), -(pk(n(A,r) ; NB ; B, A)), +(pk(NB, B)), nil ] &
      :: r ::
-     [ nil | -(pk(B,A ; N)), +(pk(A, N ; n(B,r))), -(pk(B,n(B,r))), nil ]
+     [ nil | -(pk(A ; NA, B)), +(pk(NA ; n(B,r) ; B, A)), -(pk(n(B,r), B)), nil ]
   [nonexec] .
 
   eq ATTACK-STATE(0)
    = :: r ::
-     [ nil, -(pk(b,a ; N)), +(pk(a, N ; n(b,r))), -(pk(b,n(b,r))) | nil ]
+     [ nil, -(pk(a ; NA, b)), +(pk(NA ; n(b,r) ; b,a)), -(pk(n(b,r), b)) | nil ]
      || n(b,r) inI, empty
-     || nil
-     || nil
-     || nil
-  [nonexec] .
-
-  eq ATTACK-STATE(1)
-   = :: r ::
-     [ nil, -(pk(b,a ; N)), +(pk(a,  N ; n(b,r))), -(pk(b,n(b,r))) | nil ]
-     ||  empty
-     || nil
-     || nil
-     || never *** for authentication
-     (:: r' ::
-     [ nil, +(pk(b,a ; N)), -(pk(a,  N ; n(b,r))) | +(pk(b,n(b,r))), nil ]
-     & S:StrandSet
-     || K:IntruderKnowledge)
-  [nonexec] .
-
-  eq ATTACK-STATE(2)
-   = :: r ::
-     [ nil, +(pk(b,a ; n(a,r))), -(pk(a,n(a,r) ; N1)), +(pk(b, N1)) | nil ] &
-     :: r' ::
-     [ nil, -(pk(b,a ; N2)), +(pk(a, N2 ; n(b,r'))), -(pk(b,n(b,r'))) | nil ]
-     || N2 != n(a,r)
      || nil
      || nil
      || nil
@@ -134,10 +99,4 @@ fmod PROTOCOL-SPECIFICATION is
 endfm
 
 --- THIS HAS TO BE THE LAST LOADED MODULE !!!!
-
-select PARALLEL-MAUDE-NPA .
-
-set print attribute on .
-
-erew <> < aManager : Manager | nWorkers : 2, status : idle >
-        p-run(0, unbounded) .
+select MAUDE-NPA .

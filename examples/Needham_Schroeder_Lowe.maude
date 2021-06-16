@@ -1,9 +1,9 @@
-load maude-npa.maude
+--- Nedhham-Schroeder-Lowe Modified Protocol
 ***(
 The informal journal-level description of this protocol is as follows:
 
 A --> B: pk(B,A ; N_A)
-B --> A: pk(A, N_A ; N_B)
+B --> A: pk(A, N_A ; N_B ; B)
 A --> B: pk(B, N_B)
 
 where N_A and N_B are nonces, pk(x,y) means message y encripted using public
@@ -93,47 +93,35 @@ fmod PROTOCOL-SPECIFICATION is
 
   eq STRANDS-PROTOCOL
    = :: r ::
-     [ nil | +(pk(B,A ; n(A,r))), -(pk(A,n(A,r) ; N)), +(pk(B, N)), nil ] &
+     [ nil | +(pk(B,A ; n(A,r))), -(pk(A,n(A,r) ; N ; B)), +(pk(B, N)), nil ] &
      :: r ::
-     [ nil | -(pk(B,A ; N)), +(pk(A, N ; n(B,r))), -(pk(B,n(B,r))), nil ]
+     [ nil | -(pk(B,A ; N)), +(pk(A, N ; n(B,r) ; B)), -(pk(B,n(B,r))), nil ]
   [nonexec] .
 
   eq ATTACK-STATE(0)
    = :: r ::
-     [ nil, -(pk(b,a ; N)), +(pk(a, N ; n(b,r))), -(pk(b,n(b,r))) | nil ]
+     [ nil, -(pk(b,a ; N)), +(pk(a, N ; n(b,r) ; b)), -(pk(b,n(b,r))) | nil ]
      || n(b,r) inI, empty
      || nil
      || nil
      || nil
   [nonexec] .
 
-  eq ATTACK-STATE(1)
+  eq ATTACK-STATE(1) --- authentication
    = :: r ::
-     [ nil, -(pk(b,a ; N)), +(pk(a,  N ; n(b,r))), -(pk(b,n(b,r))) | nil ]
-     ||  empty
+     [ nil, -(pk(b,a ; N)), +(pk(a, N ; n(b,r) ; b)), -(pk(b,n(b,r))) | nil ]
+     || empty
      || nil
      || nil
-     || never *** for authentication
-     (:: r' ::
-     [ nil, +(pk(b,a ; N)), -(pk(a,  N ; n(b,r))) | +(pk(b,n(b,r))), nil ]
-     & S:StrandSet
-     || K:IntruderKnowledge)
-  [nonexec] .
-
-  eq ATTACK-STATE(2)
-   = :: r ::
-     [ nil, +(pk(b,a ; n(a,r))), -(pk(a,n(a,r) ; N1)), +(pk(b, N1)) | nil ] &
-     :: r' ::
-     [ nil, -(pk(b,a ; N2)), +(pk(a, N2 ; n(b,r'))), -(pk(b,n(b,r'))) | nil ]
-     || N2 != n(a,r)
-     || nil
-     || nil
-     || nil
+     || never(
+        (:: r' ::
+        [ nil | +(pk(b,a ; N1)), -(pk(a,N1 ; n(b,r) ; b)), +(pk(b, n(b,r))), nil ]
+	& SS:StrandSet)
+	|| IK:IntruderKnowledge
+        )
   [nonexec] .
 
 endfm
 
 --- THIS HAS TO BE THE LAST LOADED MODULE !!!!
 select MAUDE-NPA .
-
-red run(0, unbounded) .
