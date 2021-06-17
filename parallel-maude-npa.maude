@@ -1,14 +1,45 @@
 load maude-npa.maude
 load metaInterpreter.maude
 
-mod PARALLEL-GENERIC-TOOL is
-    pr MAUDE-NPA .
-    pr CONFIGURATION .
+view Worker from TRIV to CONFIGURATION is
+    sort Elt to Oid .
+endv
 
-    op aManager : -> Oid [ctor] .
-    op npa : -> Oid [ctor] .
+mod PARALLEL-CONFIG is
+    pr MAUDE-NPA .
+    pr META-INTERPRETER .
+    pr SET{Worker} .
+
+    sort Status .
+    ops idle initializing initialized waiting suspending working stopping terminated : -> Status .
+    op status :_ : Status -> Attribute [ctor format(m o o o)] .
+    op m :_ : Module -> Attribute .
+    op gs :_ : GrammarList -> Attribute .
+    op filter :_ : Filters -> Attribute .
+    op bStep :_ : Bound -> Attribute .
+    op nodes :_ : Bound -> Attribute .
+    op sess :_ : Bound -> Attribute .
+    op rem :_ : Bool -> Attribute .
+    op history :_ : IdSystemSet -> Attribute .
+    op jobs :_ : IdSystemSet -> Attribute .
+    op next :_ : IdSystemSet -> Attribute .
+    op init :_ : IdSystemSet -> Attribute .
+    op depth :_ : Nat -> Attribute . --- depth needs to be explored
+    op nWorkers :_ : Nat -> Attribute [ctor format(! o o o)] .
+    op workers :_ : Set{Worker} -> Attribute [ctor format(! o o o)] .
+    op stopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
+    op ShortIdSystem:_ : IdSystemSet-or-Error -> Msg [ctor msg] .
     op initialize : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
                     IdSystemSet IdSystemSet -> Msg [ctor msg format (b o)] .
+
+    op Manager : -> Cid [ctor] .
+    op aManager : -> Oid [ctor] .
+    op npa : -> Oid [ctor] .
+    op errIdSystemSet : -> IdSystemSet .
+endm
+
+mod PARALLEL-GENERIC-TOOL is
+    pr PARALLEL-CONFIG .
 
     vars M : Module .
     vars GS : GrammarList .
@@ -22,14 +53,16 @@ mod PARALLEL-GENERIC-TOOL is
     op <_,_> : IdSystemSet IdSystemSet -> IdSystemSetPair .
 
     *** prun **********************
-    op p-run : Nat Bound Filters -> Msg .
-    op p-run : Nat Bound -> Msg .
+    op p-run : Nat Bound Filters Nat -> Configuration .
+    op p-run : Nat Bound Nat -> Configuration .
 
-    eq p-run(Attack:Nat,Depth:Bound)
-    = toMsg(run[0](Attack:Nat,Depth:Bound,+parallel,unbounded)< unbounded >) .
+    eq p-run(Attack:Nat,Depth:Bound, nWorker:Nat)
+    = < aManager : Manager | nWorkers : nWorker:Nat, status : idle >
+    toMsg(run[0](Attack:Nat,Depth:Bound,+parallel,unbounded)< unbounded >) .
 
-    eq p-run(Attack:Nat,Depth:Bound,F:Filters)
-    = toMsg(run[0](Attack:Nat,Depth:Bound,F:Filters,unbounded)< unbounded >) .
+    eq p-run(Attack:Nat,Depth:Bound,F:Filters,nWorker:Nat)
+    = < aManager : Manager | nWorkers : nWorker:Nat, status : idle >
+    toMsg(run[0](Attack:Nat,Depth:Bound,F:Filters,unbounded)< unbounded >) .
 
     op toMsg : IdSystemSet -> Msg .
     eq toMsg(< M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST >)
@@ -37,6 +70,7 @@ mod PARALLEL-GENERIC-TOOL is
 
     op filterStates : Filters IdSystemSet IdSystemSet -> IdSystemSet .
     eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplify-theSystemSet(F,HistoryIST, IST))) .
+    --- eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplifyByImplicationL(IST))) .
 
     op searchState-CheckInit : Module Bound IdSystemSet IdSystemSetPair IdSystemSet -> IdSystemSetPair .
     eq searchState-CheckInit(M, Sess, HistoryIST, < INIT, IST' >, empty) = < INIT, IST' > .
@@ -77,39 +111,8 @@ mod PARALLEL-GENERIC-TOOL is
     ) .
 endm
 
-view Worker from TRIV to CONFIGURATION is
-    sort Elt to Oid .
-endv
-
 mod PARALLEL-MAUDE-NPA is
-    pr META-INTERPRETER .
     pr PARALLEL-GENERIC-TOOL .
-    pr SET{Worker} .
-
-    sort Status .
-    ops idle initializing initialized waiting suspending working stopping terminated : -> Status .
-
-    op status :_ : Status -> Attribute [ctor format(m o o o)] .
-    op m :_ : Module -> Attribute .
-    op gs :_ : GrammarList -> Attribute .
-    op filter :_ : Filters -> Attribute .
-    op bStep :_ : Bound -> Attribute .
-    op nodes :_ : Bound -> Attribute .
-    op sess :_ : Bound -> Attribute .
-    op rem :_ : Bool -> Attribute .
-    op history :_ : IdSystemSet -> Attribute .
-    op jobs :_ : IdSystemSet -> Attribute .
-    op next :_ : IdSystemSet -> Attribute .
-    op init :_ : IdSystemSet -> Attribute .
-    op depth :_ : Nat -> Attribute . --- depth needs to be explored
-    op nWorkers :_ : Nat -> Attribute [ctor format(! o o o)] .
-    op workers :_ : Set{Worker} -> Attribute [ctor format(! o o o)] .
-
-    op stopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
-    op ShortIdSystem:_ : IdSystemSet-or-Error -> Msg [ctor msg] .
-
-    op Manager : -> Cid [ctor] .
-    op errIdSystemSet : -> IdSystemSet .
 
     vars O O' MI : Oid .
     var  A : AttributeSet .
@@ -124,7 +127,6 @@ mod PARALLEL-MAUDE-NPA is
     vars M M' M'' : Module .
     var GS : GrammarList .
     var F : Filters .
-    var PAIR : IdSystemSetPair .
 
     crl [CreateWorkers] : < O : Manager |
         status : idle,
@@ -142,7 +144,7 @@ mod PARALLEL-MAUDE-NPA is
         nodes : Nodes,
         sess : Sess,
         rem : Rem?,
-        history : HistoryIST,
+        history : (HistoryIST IST'),
         jobs : IST',
         next : empty,
         init : INIT,
@@ -238,6 +240,7 @@ mod PARALLEL-MAUDE-NPA is
     eq handleJob(O, MI, M, GS, F, Nodes, IS) = reduceTerm(MI, O,
         'PARALLEL-MAUDE-NPA,
         upTerm(nextBackNarrowParallel(M, GS, F, Nodes, IS))) .
+        --- upTerm(nextBackNarrow(M, GS, F, Nodes, HistoryIST, IS))) .
 
     crl [WorkerResult] : < O : Manager |
         status : working,
