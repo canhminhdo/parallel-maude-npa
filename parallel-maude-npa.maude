@@ -61,43 +61,33 @@ mod MAUDE-NPA-EXT is
         fi
     fi .
 
-    op searchStateMParallel : Module GrammarList Filters Bound Bound Bound Bool
+    op searchStateMParallel : GrammarList Bound Bound Bound Bool
                     IdSystemSet IdSystemSet -> IdSystemSetTuple .
     op searchStateMParallel* : Module GrammarList Filters Bound Bound Bound Bool
                     IdSystemSet IdSystemSet IdSystemSet IdSystemSet -> IdSystemSetTuple .
-    op searchStateMParallel** : Module GrammarList Filters Bound Bound Bound Bool
-                    IdSystemSet IdSystemSet IdSystemSet IdSystemSet -> IdSystemSetTuple .
 
-    eq searchStateMParallel(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST,IST)
-    = searchStateMParallel*(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST, empty, empty, IST) [print "GoHere???"] .
+    eq searchStateMParallel(GS,BStep,Nodes,Sess,Rem?,HistoryIST,IST)
+    = searchStateMParallel*(pM,GS,pF,BStep,Nodes,Sess,Rem?,HistoryIST, empty, empty, IST) .
 
     ceq searchStateMParallel*(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST, INIT, HistoryIST', IST)
     = if BStep == 0 or-else IST' == empty
     then
         < (INIT INIT'), IST', HistoryIST' >
     else
-        searchStateMParallel**(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST IST', (INIT INIT'), HistoryIST' IST',
-            --- filterSMsgListX(F,filterIdX(F,
-            ---     nextBackNarrow(M,GS,F,
-            ---         if BStep == 1 then Nodes else unbounded fi,
-            ---         HistoryIST IST',IST')
-            ---     ))
-            IST'
+        searchStateMParallel*(M,GS,F,dec(BStep),Nodes,Sess,Rem?,HistoryIST IST', (INIT INIT'), HistoryIST' IST',
+            IST''
         )
     fi
     if < INIT', IST' > := searchState-CheckInit(M,Sess,HistoryIST, < empty, empty >, IST)
     /\ C := #jobs(IST')
     /\ N :=  #jobs(HistoryIST')
     /\ N' :=  #jobs(HistoryIST)
-    [print "\nBStep = " BStep "\n#Jobs = " C "\n#His = " N "\nHisTotal = " N'] .
-
-    ceq searchStateMParallel**(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST, INIT, HistoryIST', IST)
-    = searchStateMParallel*(M,GS,F,dec(BStep),Nodes,Sess,Rem?,HistoryIST, INIT, HistoryIST', IST')
-    if IST' := filterSMsgListX(F,filterIdX(F,
+    /\ IST'' := filterSMsgListX(F,filterIdX(F,
                     nextBackNarrow(M,GS,F,
                         if BStep == 1 then Nodes else unbounded fi,
-                        HistoryIST, IST
-                    ))) .
+                        HistoryIST IST',IST')
+                ))
+    [print "\nBStep = " BStep "\n#Jobs = " C "\n#His = " N "\nHisTotal = " N'] .
 
     op pM : -> Module .
     op pGS : -> GrammarList .
@@ -269,14 +259,14 @@ mod PARALLEL-MAUDE-NPA is
         nodes : Nodes,
         jobs : IST,
         A >
-        insertModule(MI, O, M')
+        insertModule(MI, O, M'')
         if M' := upModule('MAUDE-NPA-EXT, true)
-        --- /\ M'' := addEqs(
-        ---     (eq 'pM.Module = upTerm(M) [none] . )
-        ---     (eq 'pGS.GrammarList = upTerm(GS) [none] . )
-        ---     (eq 'pF.Filters = upTerm(F) [none] . )
-        ---     , M'
-        --- )
+        /\ M'' := addEqs(
+            (eq 'pM.Module = upTerm(M) [none] . )
+            --- (eq 'pGS.GrammarList = upTerm(GS) [none] . )
+            (eq 'pF.Filters = upTerm(F) [none] . )
+            , M'
+        )
         [print "[CreatedWorker]"] .
 
     rl [InsertedModule] : < O : Manager |
@@ -342,14 +332,14 @@ mod PARALLEL-MAUDE-NPA is
     op handleJob : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
                     IdSystemSet IdSystemSet -> Configuration .
     ceq handleJob(O, MI, M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IS) = reduceTerm(MI, O,
-        'MAUDE-NPA-EXT,
+        'MAUDE-NPA-EXT-ADDEDEQS,
         T
     )
-    --- if T := upTerm(searchStateMParallel(M,GS,F,Step,Nodes,Sess,Rem?,HistoryIST,IS)) [print "Term = " T] .
+    --- if T := upTerm(searchStateMParallel(GS,Step,Nodes,Sess,Rem?,HistoryIST,IS)) [print "Term = " T] .
     if T := 'searchStateMParallel[
-        upTerm(M),
+        --- upTerm(M),
         upTerm(GS),
-        upTerm(F),
+        --- upTerm(F),
         upTerm(Step),
         upTerm(Nodes),
         upTerm(Sess),
