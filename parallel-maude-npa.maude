@@ -17,8 +17,8 @@ mod MAUDE-NPA-EXT is
     vars IST1 IST2 IST3 IST4 IST5 IST6 IST7 IST8 : IdSystemSet .
 
     op filterStates : Filters IdSystemSet IdSystemSet -> IdSystemSet .
-    eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplify-theSystemSet(F,HistoryIST, IST))) .
-    --- eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplifyByImplicationL(IST))) .
+    --- eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplify-theSystemSet(F,HistoryIST, IST))) .
+    eq filterStates(F, HistoryIST, IST) = simplifyByImplicationL(IST) .
 
     op searchState-CheckInit : Module Bound IdSystemSet IdSystemSetPair IdSystemSet -> IdSystemSetPair .
     eq searchState-CheckInit(M, Sess, HistoryIST, < INIT, IST' >, empty) = < INIT, IST' > .
@@ -39,23 +39,30 @@ mod MAUDE-NPA-EXT is
     op pF : -> Filters .
 
     --- parallel back narrowing wrapper function
-    op nextBackNarrowParallel* : GrammarList Bound IdSystemSet -> IdSystemSet [memo] .
-    eq nextBackNarrowParallel*(GS, Nodes, IST) = nextBackNarrowParallel(pM, GS, pF, Nodes, IST) .
+    op nextBackNarrowParallel* : GrammarList Bound IdSystemSet IdSystemSet -> IdSystemSet [memo] .
+    eq nextBackNarrowParallel*(GS, Nodes, HistoryIST, IST) = nextBackNarrowParallel(pM, GS, pF, Nodes, HistoryIST, IST) .
 
-    op nextBackNarrowParallel : Module GrammarList Filters Bound IdSystemSet -> IdSystemSet [memo] .
-    ceq nextBackNarrowParallel(M,GS,F:Filters,Nodes,IST)
+    op nextBackNarrowParallel : Module GrammarList Filters Bound IdSystemSet IdSystemSet -> IdSystemSet [memo] .
+    ceq nextBackNarrowParallel(M,GS,F:Filters,Nodes,HistoryIST,IST)
     = IST'
-    if IST' := filter-eachSystem#Top(F:Filters,M,GS, --- filter systems with grammars, never patterns, ...
-        simplify-eachSystem#Top(F:Filters,M, --- always simplify before filtering
-            simplifyGhost#Top(F:Filters, --- simplify Ghost
-                createGhost#Top(M,F:Filters, --- create Ghost again
-                    reactivateGhost#Top(F:Filters, --- if messages are not ghost messages anymore, reactive the messages
-                        tryUnificationofKnowledge(M, --- create and check ghosts before and after
-                            nextBackNarrow*(M,GS,F:Filters,Nodes,empty,IST)
+    if IST' :=
+    filterSMsgListX(F:Filters,
+        filterIdX(F:Filters,
+            simplify-theSystemSet(F:Filters,HistoryIST,
+                filter-eachSystem#Top(F:Filters,M,GS, --- filter systems with grammars, never patterns, ...
+                    simplify-eachSystem#Top(F:Filters,M, --- always simplify before filtering
+                        simplifyGhost#Top(F:Filters, --- simplify Ghost
+                            createGhost#Top(M,F:Filters, --- create Ghost again
+                                reactivateGhost#Top(F:Filters, --- if messages are not ghost messages anymore, reactive the messages
+                                    tryUnificationofKnowledge(M, --- create and check ghosts before and after
+                                        nextBackNarrow*(M,GS,F:Filters,Nodes,empty,IST)
+                                    )
+                                )
+                            )
                         )
                     )
                 )
-             )
+            )
         )
     ) .
 
@@ -268,7 +275,7 @@ mod PARALLEL-MAUDE-NPA is
         history : HistoryIST,
         A >
         handleJob(O, MI, M, GS, F, if BStep == 1 then Nodes else unbounded fi, HistoryIST, IS)
-        [print "[AssignJob]"] .
+        [print "[AssignJob] " MI] .
 
     op handleJob : Oid Oid Module GrammarList Filters Bound IdSystemSet IdSystemSet -> Configuration .
     ceq handleJob(O, MI, M, GS, F, Nodes, HistoryIST, IS)
@@ -280,11 +287,9 @@ mod PARALLEL-MAUDE-NPA is
             upTerm(GS),
             --- upTerm(F),
             upTerm(Nodes),
-            --- upTerm(HistoryIST),
+            upTerm(HistoryIST),
             upTerm(IS)
-        ]
-        [print "Term 'nextBackNarrowParallel*"] .
-
+        ] .
         --- upTerm(nextBackNarrowParallel(M, GS, F, Nodes, IS))) .
         --- upTerm(nextBackNarrow(M, GS, F, Nodes, HistoryIST, IS))) .
 
@@ -301,7 +306,7 @@ mod PARALLEL-MAUDE-NPA is
         A >
     if RT == 'IdSystemSet or-else RT == 'IdSystem
     /\ IST' := downTerm(T, errIdSystemSet)
-    [print "[WorkerResult]"] .
+    [print "[WorkerResult] " MI] .
 
     crl [Switch] : < O : Manager |
         status : working,
