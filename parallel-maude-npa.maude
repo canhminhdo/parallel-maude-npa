@@ -194,7 +194,7 @@ mod PARALLEL-MAUDE-NPA is
 
     vars O O' MI : Oid .
     var  A : AttributeSet .
-    vars N N' D C C' : Nat .
+    vars N N' D C C' Pid : Nat .
     vars Nodes BStep Step Sess : Bound .
     vars Rem? : Bool .
     vars IST IST' IST'' INIT INIT' HistoryIST HistoryIST' : IdSystemSet .
@@ -327,7 +327,7 @@ mod PARALLEL-MAUDE-NPA is
         step : Step,
         A >
         handleJob(O, MI, M, GS, F, Step, if BStep == 1 then Nodes else unbounded fi, Sess, Rem?, HistoryIST, IS) --- todo: need to improve
-    if true [print "[AssignJob]"] .
+    if Pid := extractOid(MI) [print "[AssignJob] Pid = " Pid] .
 
     op handleJob : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
                     IdSystemSet IdSystemSet -> Configuration .
@@ -336,9 +336,9 @@ mod PARALLEL-MAUDE-NPA is
         T
     )
     --- if T := upTerm(searchStateMParallel(GS,Step,Nodes,Sess,Rem?,HistoryIST,IS)) [print "Term = " T] .
-    if N := extractOid(MI)
+    if Pid := extractOid(MI)
     /\ T := 'searchStateMParallel[
-        upTerm(N),
+        upTerm(Pid),
         upTerm(GS),
         --- upTerm(F),
         upTerm(Step),
