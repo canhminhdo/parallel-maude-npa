@@ -13,7 +13,7 @@ mod MAUDE-NPA-EXT is
     vars GS : GrammarList .
     vars F : Filters .
     vars BStep Step Nodes Sess : Bound .
-    vars C N N' : Nat .
+    vars C N N' Pid : Nat .
     vars Rem? : Bool .
     vars IS : IdSystem .
     vars IST IST' IST'' INIT INIT' HistoryIST HistoryIST' : IdSystemSet .
@@ -61,24 +61,24 @@ mod MAUDE-NPA-EXT is
         fi
     fi .
 
-    op searchStateMParallel : GrammarList Bound Bound Bound Bool
+    op searchStateMParallel : Nat GrammarList Bound Bound Bound Bool
                     IdSystemSet IdSystemSet -> IdSystemSetTuple .
-    op searchStateMParallel* : Module GrammarList Filters Bound Bound Bound Bool
+    op searchStateMParallel* : Nat Module GrammarList Filters Bound Bound Bound Bool
                     IdSystemSet IdSystemSet IdSystemSet IdSystemSet -> IdSystemSetTuple .
 
-    eq searchStateMParallel(GS,BStep,Nodes,Sess,Rem?,HistoryIST,IST)
-    = searchStateMParallel*(pM,GS,pF,BStep,Nodes,Sess,Rem?,HistoryIST, empty, empty, IST) .
+    eq searchStateMParallel(Pid,GS,BStep,Nodes,Sess,Rem?,HistoryIST,IST)
+    = searchStateMParallel*(Pid,pM,GS,pF,BStep,Nodes,Sess,Rem?,HistoryIST,empty,empty,IST) .
 
-    ceq searchStateMParallel*(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST, INIT, HistoryIST', IST)
+    ceq searchStateMParallel*(Pid,M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST,INIT,HistoryIST',IST)
     = if BStep == 0 or-else IST' == empty
     then
         < (INIT INIT'), IST', HistoryIST' >
     else
-        searchStateMParallel*(M,GS,F,dec(BStep),Nodes,Sess,Rem?,HistoryIST IST', (INIT INIT'), HistoryIST' IST',
+        searchStateMParallel*(Pid,M,GS,F,dec(BStep),Nodes,Sess,Rem?,HistoryIST IST',INIT INIT',HistoryIST' IST',
             IST''
         )
     fi
-    if < INIT', IST' > := searchState-CheckInit(M,Sess,HistoryIST, < empty, empty >, IST)
+    if < INIT', IST' > := searchState-CheckInit(M,Sess,HistoryIST,< empty, empty >,IST)
     /\ C := #jobs(IST')
     /\ N :=  #jobs(HistoryIST')
     /\ N' :=  #jobs(HistoryIST)
@@ -87,7 +87,7 @@ mod MAUDE-NPA-EXT is
                         if BStep == 1 then Nodes else unbounded fi,
                         HistoryIST IST',IST')
                 ))
-    [print "\nBStep = " BStep "\n#Jobs = " C "\n#His = " N "\nHisTotal = " N'] .
+    [print "\nPID = " Pid "\nBStep = " BStep "\n#Jobs = " C "\n#His = " N "\nHisTotal = " N'] .
 
     op pM : -> Module .
     op pGS : -> GrammarList .
@@ -336,8 +336,9 @@ mod PARALLEL-MAUDE-NPA is
         T
     )
     --- if T := upTerm(searchStateMParallel(GS,Step,Nodes,Sess,Rem?,HistoryIST,IS)) [print "Term = " T] .
-    if T := 'searchStateMParallel[
-        --- upTerm(M),
+    if N := extractOid(MI)
+    /\ T := 'searchStateMParallel[
+        upTerm(N),
         upTerm(GS),
         --- upTerm(F),
         upTerm(Step),
@@ -345,10 +346,14 @@ mod PARALLEL-MAUDE-NPA is
         upTerm(Sess),
         upTerm(Rem?),
         upTerm(HistoryIST),
-        upTerm(IS)] .
-        --- [print "Term = " T] .
+        upTerm(IS)]
+        --- [print "Term = " T]
+        .
         --- upTerm(nextBackNarrowParallel(M, GS, F, Nodes, IS))) .
         --- upTerm(nextBackNarrow(M, GS, F, Nodes, HistoryIST, IS))) .
+
+    op extractOid : Oid -> Nat .
+    eq extractOid(interpreter(N)) = N .
 
     crl [WorkerResult] : < O : Manager |
         status : working,
