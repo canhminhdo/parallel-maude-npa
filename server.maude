@@ -72,7 +72,7 @@ mod PARALLEL-MAUDE-NPA is
         p-run(N, BStep, O)
         [print "[CreatedSocket]"] .
 
-    rl [AcceptedClient] : < O : Server | 
+    rl [AcceptedClient] : < O : Server |
         workers : SW,
         cache : Cache,
         A >
@@ -124,21 +124,20 @@ mod PARALLEL-MAUDE-NPA is
                                         Step
                                     else sd(BStep, D)
                                     fi .
-    crl [Received] : < O : Server | 
+    crl [Received] : < O : Server |
         next : IST,
         init : INIT,
         nextHistory : HistoryIST,
-        A > 
+        A >
         Received(O, CLIENT, DATA)
-    => < O : Server | 
+    => < O : Server |
         next : (IST IST'),
         init : (INIT INIT'),
         nextHistory : (HistoryIST HistoryIST'),
         A >
     if DATA =/= getJob
     /\ < INIT', IST', HistoryIST' > := string2state(DATA)
-    [print "[Received]"]
-    .
+    [print "[Received]"] .
 
     crl [Switch] : < O : Server |
         status : working,
@@ -227,27 +226,27 @@ mod PARALLEL-MAUDE-NPA is
             A >
     fi .
 
-    crl [CheckTermination] : < O : Server | 
-        status : working, 
-        workers : SW, 
-        jobs : empty, 
-        next : empty, 
-        waitingWorkers : W, 
+    crl [CheckTermination] : < O : Server |
+        status : working,
+        workers : SW,
+        jobs : empty,
+        next : empty,
+        waitingWorkers : W,
         A >
-    => < O : Server | 
-        status : stopping, 
-        workers : SW, 
-        jobs : empty, 
-        next : empty, 
-        waitingWorkers : W, 
+    => < O : Server |
+        status : stopping,
+        workers : SW,
+        jobs : empty,
+        next : empty,
+        waitingWorkers : W,
         A >
         StopWorking(O, O)
     if qsize(W) == | SW | [print "[CheckTermination]"] .
 
-    rl [StopClient] : < O : Server | 
+    rl [StopClient] : < O : Server |
         status : stopping,
         workers : (CLIENT, SW),
-        A > 
+        A >
         StopWorking(O, O')
     => < O : Server |
         status : stopping,
@@ -295,14 +294,6 @@ endm
 
 load examples/Needham_Schroeder_Lowe_ECB.maude
 select PARALLEL-MAUDE-NPA .
-set print attribute on .
-set show timing on .
-set print conceal on .
-print conceal fmod_is_sorts_.____endfm
-              mod_is_sorts_._____endm
-              if_then_else_fi
-              procDecl
-              gs:_
-              .
+load debug.maude
 erew <> < aServer : Server | status : idle, attack : 0, bStep : unbounded, step : 1 >
         CreateServerTcpSocket(socketManager, aServer, 9000, 10) .

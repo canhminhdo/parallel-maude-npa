@@ -55,7 +55,7 @@ mod PARALLEL-MAUDE-NPA is
         socket : CLIENT,
         A >
         Send(CLIENT, O, getJob)
-        Receive(CLIENT, O) 
+        Receive(CLIENT, O)
         [print "[CreatedSocket]"] .
 
     rl [Sent] : < O : Client | status : waiting, A > Sent(O, CLIENT)
@@ -74,7 +74,7 @@ mod PARALLEL-MAUDE-NPA is
         rem : Rem?,
         history : HistoryIST,
         bStep : BStep,
-        A > 
+        A >
         Received(O, CLIENT, DATA)
     => if State == errIdSystemSetTuple then
         < O : Client |
@@ -104,19 +104,14 @@ mod PARALLEL-MAUDE-NPA is
         handleJob(O, CLIENT, M, GS, F, step(State), if step(State) == 1 then Nodes else unbounded fi, Sess, Rem?, (HistoryIST history(State)), jobs(State))
     fi
     if State := string2state(DATA)
-    [print "[Received]"]
-    --- [print "[Received] IST = " IST "\nINIT = " INIT "\nHistoryIST = " HistoryIST] .
-    .
+    [print "[Received]"] .
 
     op handleJob : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
                     IdSystemSet IdSystemSet -> Configuration .
     ceq handleJob(O, CLIENT, M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IS)
     = Send(CLIENT, O, state2string(State))
     if State := searchStateMParallel(M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IS)
-    [print "[HandleJob]"]
-    --- /\ C := #jobs(HistoryIST)
-    --- [print "[HandleJob] #HistoryIST = " C]
-    .
+    [print "[HandleJob]"] .
 
     rl [ClosedSocket] : < O : Client | A > ClosedSocket(O, CLIENT, S)
     => < O : Client | none > [print "[ClosedSocket]"] .
@@ -124,15 +119,7 @@ endm
 
 load examples/Needham_Schroeder_Lowe_ECB.maude
 select PARALLEL-MAUDE-NPA .
-set print attribute on .
-set show timing on .
-set print conceal on .
-print conceal fmod_is_sorts_.____endfm
-              mod_is_sorts_._____endm
-              if_then_else_fi
-              procDecl
-              gs:_
-              .
+load debug.maude
 erew <> p-run(0, unbounded, aClient)
         < aClient : Client | status : idle >
         CreateClientTcpSocket(socketManager, aClient, "localhost", 9000) .
