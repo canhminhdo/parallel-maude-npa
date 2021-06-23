@@ -137,6 +137,7 @@ mod PARALLEL-CONFIG is
     op waitingWorkers :_ : Queue{Worker} -> Attribute [ctor format(! o o o)] .
     op workers :_ : Set{Worker} -> Attribute [ctor format(! o o o)] .
     op cache :_ : Map{Worker,Bool} -> Attribute [ctor format(! o o o)] .
+    op attack :_ : Nat -> Attribute .
 
     op stopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
     op ShortIdSystem:_ : IdSystemSet-or-Error -> Msg [ctor msg] .

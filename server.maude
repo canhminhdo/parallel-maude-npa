@@ -26,41 +26,50 @@ mod PARALLEL-MAUDE-NPA is
     vars Cache : Map{Worker,Bool} .
     vars B : Bool .
 
-    rl [Initialize] : < O : Server |
-        status : idle,
+    crl [Initialize] : < O : Server |
+        status : initialized,
+        step : Step,
         A >
         initialize(O, O', M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST)
     => < O : Server |
-        status : initialized,
+        status : working,
+        step : Step,
         m : M,
         gs: GS,
         filter : F,
-        bStep : BStep,
+        --- bStep : BStep,
         nodes : Nodes,
         sess : Sess,
         rem : Rem?,
         history : HistoryIST,
         newHistory : empty,
-        nextHistory : empty,
-        jobs : IST,
-        next : empty,
-        init : empty,
+        nextHistory : HistoryIST',
+        jobs : empty,
+        next : IST',
+        init : INIT,
         depth : 0,
         count : #jobs(IST),
         cache : empty,
         A >
+    if < INIT, IST', HistoryIST' > := searchStateMParallel(M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IST) --- run fist job in master
     [print "[Initialize]"] .
 
     rl [CreatedSocket] : < O : Server |
-        status : initialized,
+        status : idle,
+        attack : N,
+        bStep : BStep,
         A >
         CreatedSocket(O, socketManager, LISTENER)
     => < O : Server |
-        status : working,
+        status : initialized,
+        attack : N,
+        bStep : BStep,
         listener : LISTENER,
         workers : empty,
         waitingWorkers : emptyq,
-        A > AcceptClient(LISTENER, O)
+        A >
+        AcceptClient(LISTENER, O)
+        p-run(N, BStep, O)
     [print "[CreatedSocket]"] .
 
     rl [AcceptedClient] :
@@ -252,6 +261,5 @@ print conceal fmod_is_sorts_.____endfm
               procDecl
               gs:_
               .
-erew <> p-run(0, unbounded, aServer)
-        < aServer : Server | status : idle, step : 1 >
+erew <> < aServer : Server | status : idle, attack : 0, bStep : unbounded, step : 1 >
         CreateServerTcpSocket(socketManager, aServer, 8811, 10) .
