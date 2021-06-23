@@ -30,7 +30,7 @@ mod PARALLEL-MAUDE-NPA is
         status : initialized,
         step : Step,
         A >
-        initialize(O, O', M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST)
+        Initialize(O, O', M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST)
     => < O : Server |
         status : working,
         step : Step,
@@ -70,43 +70,53 @@ mod PARALLEL-MAUDE-NPA is
         A >
         AcceptClient(LISTENER, O)
         p-run(N, BStep, O)
-    [print "[CreatedSocket]"] .
+        [print "[CreatedSocket]"] .
 
-    rl [AcceptedClient] :
-        < O : Server | workers : SW, cache : Cache, A > AcceptedClient(O, LISTENER, IP, CLIENT)
-        => < O : Server | workers : (CLIENT, SW), cache : insert(CLIENT, false, Cache), A > Receive(CLIENT, O)
+    rl [AcceptedClient] : < O : Server | 
+        workers : SW,
+        cache : Cache,
+        A >
+        AcceptedClient(O, LISTENER, IP, CLIENT)
+    => < O : Server |
+        workers : (CLIENT, SW),
+        cache : insert(CLIENT, false, Cache),
+        A >
+        Receive(CLIENT, O)
         AcceptClient(LISTENER, O) [print "[AcceptedClient]"] .
 
-    crl [GetJob] :
-        < O : Server | waitingWorkers : W, A > Received(O, CLIENT, DATA)
-        => < O : Server | waitingWorkers : (W | CLIENT), A >
-        if DATA == getJob [print "[GetJob]"] .
+    crl [GetJob] : < O : Server |
+        waitingWorkers : W,
+        A >
+        Received(O, CLIENT, DATA)
+    => < O : Server |
+        waitingWorkers : (W | CLIENT),
+        A >
+    if DATA == getJob [print "[GetJob]"] .
 
-    rl [SendJob] :
-        < O : Server |
-            jobs : (IS IST),
-            newHistory : HistoryIST,
-            waitingWorkers : (CLIENT | W),
-            cache : (CLIENT |-> B, Cache),
-            bStep : BStep,
-            step : Step,
-            depth : D,
-            A >
-        => < O : Server |
-            jobs : IST,
-            newHistory : HistoryIST,
-            waitingWorkers : W,
-            cache : (CLIENT |-> true, Cache),
-            bStep : BStep,
-            step : Step,
-            depth : D,
-            A >
-            if B == false then
-                Send(CLIENT, O, state2string(< empty, IS, HistoryIST, getStep(BStep, D, Step) >)) --- just send history in the first time
-            else
-                Send(CLIENT, O, state2string(< empty, IS, empty, getStep(BStep, D, Step) >))
-            fi
-            [print "[SendJob]"] .
+    rl [SendJob] : < O : Server |
+        jobs : (IS IST),
+        newHistory : HistoryIST,
+        waitingWorkers : (CLIENT | W),
+        cache : (CLIENT |-> B, Cache),
+        bStep : BStep,
+        step : Step,
+        depth : D,
+        A >
+    => < O : Server |
+        jobs : IST,
+        newHistory : HistoryIST,
+        waitingWorkers : W,
+        cache : (CLIENT |-> true, Cache),
+        bStep : BStep,
+        step : Step,
+        depth : D,
+        A >
+        if B == false then
+            Send(CLIENT, O, state2string(< empty, IS, HistoryIST, getStep(BStep, D, Step) >)) --- just send history in the first time
+        else
+            Send(CLIENT, O, state2string(< empty, IS, empty, getStep(BStep, D, Step) >))
+        fi
+        [print "[SendJob]"] .
 
     op getStep : Bound Nat Nat  -> Nat .
     eq getStep(unbounded, D, Step) = Step .
@@ -114,13 +124,21 @@ mod PARALLEL-MAUDE-NPA is
                                         Step
                                     else sd(BStep, D)
                                     fi .
-    crl [Received] :
-        < O : Server | next : IST, init : INIT, nextHistory : HistoryIST, A > Received(O, CLIENT, DATA)
-        => < O : Server | next : (IST IST'), init : (INIT INIT'), nextHistory : (HistoryIST HistoryIST'), A >
-        if DATA =/= getJob
-        /\ < INIT', IST', HistoryIST' > := string2state(DATA)
-        [print "[Received] DATA"]
-        .
+    crl [Received] : < O : Server | 
+        next : IST,
+        init : INIT,
+        nextHistory : HistoryIST,
+        A > 
+        Received(O, CLIENT, DATA)
+    => < O : Server | 
+        next : (IST IST'),
+        init : (INIT INIT'),
+        nextHistory : (HistoryIST HistoryIST'),
+        A >
+    if DATA =/= getJob
+    /\ < INIT', IST', HistoryIST' > := string2state(DATA)
+    [print "[Received]"]
+    .
 
     crl [Switch] : < O : Server |
         status : working,
@@ -188,51 +206,76 @@ mod PARALLEL-MAUDE-NPA is
         rem : Rem?,
         A >
     => if BStep == 0 or-else IST == empty then
-            --- Stop the search
-            stopWorking(O, O)
-            < O : Server |
-                status : stopping,
-                jobs : IST,
-                filter : F,
-                history : HistoryIST,
-                bStep : BStep,
-                rem : Rem?,
-                A >
-        else
-            < O : Server |
-                status : working,
-                jobs : IST,
-                filter : F,
-                history : HistoryIST,
-                bStep : BStep,
-                rem : Rem?,
-                A >
-        fi .
+        --- Stop the search
+        < O : Server |
+            status : stopping,
+            jobs : IST,
+            filter : F,
+            history : HistoryIST,
+            bStep : BStep,
+            rem : Rem?,
+            A >
+        StopWorking(O, O)
+    else
+        < O : Server |
+            status : working,
+            jobs : IST,
+            filter : F,
+            history : HistoryIST,
+            bStep : BStep,
+            rem : Rem?,
+            A >
+    fi .
 
-    crl [CheckTermination] :
-        < O : Server | status : working, workers : SW, jobs : empty, next : empty, waitingWorkers : W, A >
-        => < O : Server | status : stopping, workers : SW, jobs : empty, next : empty, waitingWorkers : W, A >
-        stopWorking(O, O)
-        if qsize(W) == | SW | [print "[CheckTermination]"] .
+    crl [CheckTermination] : < O : Server | 
+        status : working, 
+        workers : SW, 
+        jobs : empty, 
+        next : empty, 
+        waitingWorkers : W, 
+        A >
+    => < O : Server | 
+        status : stopping, 
+        workers : SW, 
+        jobs : empty, 
+        next : empty, 
+        waitingWorkers : W, 
+        A >
+        StopWorking(O, O)
+    if qsize(W) == | SW | [print "[CheckTermination]"] .
 
-    rl [StopClient] : < O : Server | status : stopping, workers : (CLIENT, SW), A > stopWorking(O, O')
-        => CloseSocket(CLIENT, O)
-        < O : Server | status : stopping, workers : SW, A > stopWorking(O, O')
+    rl [StopClient] : < O : Server | 
+        status : stopping,
+        workers : (CLIENT, SW),
+        A > 
+        StopWorking(O, O')
+    => < O : Server |
+        status : stopping,
+        workers : SW,
+        A >
+        CloseSocket(CLIENT, O)
+        StopWorking(O, O')
         [print "[StopClient] " CLIENT] .
 
-    rl [StopServer] : < O : Server | status : stopping, workers : empty, listener : LISTENER, A > stopWorking(O, O')
-        => CloseSocket(LISTENER, O)
-        < O : Server | status : terminated, workers : empty, listener : LISTENER, A >
+    rl [StopServer] : < O : Server |
+        status : stopping,
+        workers : empty,
+        listener : LISTENER,
+        A >
+        StopWorking(O, O')
+    => < O : Server |
+        status : terminated,
+        workers : empty,
+        listener : LISTENER,
+        A >
+        CloseSocket(LISTENER, O)
         [print "[StopServer] " LISTENER] .
 
-    rl [Sent] :
-        < O : Server | A > Sent(O, CLIENT)
-        => < O : Server | A >
-        [print "[Sent]"] .
+    rl [Sent] : < O : Server | A > Sent(O, CLIENT)
+    => < O : Server | A > [print "[Sent]"] .
 
-    rl [ClosedSocket] :
-        < O : Server | A > ClosedSocket(O, CLIENT, DATA)
-        => < O : Server | A > [print "[ClosedSocket]"] .
+    rl [ClosedSocket] : < O : Server | A > ClosedSocket(O, CLIENT, DATA)
+    => < O : Server | A > [print "[ClosedSocket]"] .
 
     rl [ShowResult] : < O : Server |
         status : terminated,
@@ -250,7 +293,7 @@ mod PARALLEL-MAUDE-NPA is
         [print "[ShowResult]"] .
 endm
 
-load examples/Needham_Schroeder.maude
+load examples/Needham_Schroeder_Lowe_ECB.maude
 select PARALLEL-MAUDE-NPA .
 set print attribute on .
 set show timing on .

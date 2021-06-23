@@ -78,7 +78,7 @@ mod MAUDE-NPA-EXT is
                     IdSystemSet IdSystemSet IdSystemSet IdSystemSet -> IdSystemSetTuple .
 
     eq searchStateMParallel(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST,IST)
-    = searchStateMParallel*(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST,empty,empty,IST) [print "\nBstep = " BStep] .
+    = searchStateMParallel*(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST,empty,empty,IST) .
 
     eq searchStateMParallel*(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST,INIT,HistoryIST',IST)
     = if BStep == 0 or-else IST == empty
@@ -97,10 +97,11 @@ mod MAUDE-NPA-EXT is
                 ))
         )
     if < INIT', IST' > := searchState-CheckInit(M,Sess,HistoryIST,< empty, empty >,IST)
-    /\ C := #jobs(IST')
-    /\ N :=  #jobs(HistoryIST')
-    /\ N' :=  #jobs(HistoryIST HistoryIST')
-    [print "\nBStep = " BStep "\n#Jobs = " C "\n#His = " N "\nHisTotal = " N'] .
+    --- /\ C := #jobs(IST')
+    --- /\ N :=  #jobs(HistoryIST')
+    --- /\ N' :=  #jobs(HistoryIST HistoryIST')
+    --- [print "\nBStep = " BStep "\n#Jobs = " C "\n#His = " N "\nHisTotal = " N']
+    .
 endm
 
 view Worker from TRIV to CONFIGURATION is
@@ -139,9 +140,9 @@ mod PARALLEL-CONFIG is
     op cache :_ : Map{Worker,Bool} -> Attribute [ctor format(! o o o)] .
     op attack :_ : Nat -> Attribute .
 
-    op stopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
+    op StopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
     op ShortIdSystem:_ : IdSystemSet-or-Error -> Msg [ctor msg] .
-    op initialize : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
+    op Initialize : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
                     IdSystemSet IdSystemSet -> Msg [ctor msg format (b o)] .
 
     ops Server Client : -> Cid [ctor] .
@@ -171,7 +172,7 @@ mod PARALLEL-GENERIC-TOOL is
 
     op toMsg : Oid IdSystemSet -> Msg .
     eq toMsg(O:Oid, < M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST >)
-    = initialize(O:Oid, npa, M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST) .
+    = Initialize(O:Oid, npa, M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST) .
 endm
 
 fmod REQUEST is
