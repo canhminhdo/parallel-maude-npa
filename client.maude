@@ -1,0 +1,138 @@
+load maude-npa.maude
+load socket/buffered-socket.maude
+load socket/queue.maude
+load common.maude .
+
+mod PARALLEL-MAUDE-NPA is
+    pr PARALLEL-GENERIC-TOOL .
+    pr REQUEST .
+    pr MESSAGE-CONVERTER .
+
+    vars O O' LISTENER CLIENT : Oid .
+    var  A : AttributeSet .
+    vars N N' D C C' Pid : Nat .
+    vars Nodes BStep Step Sess : Bound .
+    vars Rem? : Bool .
+    vars IST IST' IST'' INIT INIT' HistoryIST HistoryIST' : IdSystemSet .
+    var IS : IdSystem .
+    vars T T' : Term .
+    var RT : Type .
+    vars M M' M'' : Module .
+    var GS : GrammarList .
+    var F : Filters .
+    vars IP DATA S : String .
+    vars SW : Set{Worker} .
+    vars W : Queue{Worker} .
+    vars State : IdSystemSetTuple .
+
+    rl [Initialize] : < O : Client |
+        status : idle,
+        A >
+        initialize(O, O', M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST)
+    => < O : Client |
+        status : initialized,
+        m : M,
+        gs: GS,
+        filter : F,
+        bStep : BStep,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        history : empty,
+        nextHistory : empty,
+        jobs : empty,
+        next : empty,
+        init : empty,
+        A >
+    [print "[Initialize]"] .
+
+    rl [CreatedSocket] :
+        < O : Client | status : initialized, A > CreatedSocket(O, socketManager, CLIENT)
+        => < O : Client | status : waiting, socket : CLIENT, A >
+        Send(CLIENT, O, getJob)
+        Receive(CLIENT, O) [print "[CreatedSocket]"] .
+
+    rl [Sent] :
+        < O : Client | status : waiting, A > Sent(O, CLIENT)
+        => < O : Client | status : waiting, A >
+        [print "[Sent]" ] .
+
+    rl [SendData&GetJob] :
+        < O : Client | status : suspending, A > Sent(O, CLIENT)
+        => < O : Client | status : waiting, A > Send(CLIENT, O, getJob)
+        [print "[SendData&GetJob]" ] .
+
+    crl [Received] :
+        < O : Client |
+            status : waiting,
+            m : M,
+            gs: GS,
+            filter : F,
+            nodes : Nodes,
+            sess : Sess,
+            rem : Rem?,
+            history : HistoryIST,
+            bStep : BStep,
+            A > Received(O, CLIENT, DATA)
+        =>
+            if State == errIdSystemSetTuple then
+                < O : Client |
+                status : stopping,
+                m : M,
+                gs: GS,
+                filter : F,
+                nodes : Nodes,
+                sess : Sess,
+                rem : Rem?,
+                history : HistoryIST,
+                bStep : BStep,
+                A >
+                CloseSocket(CLIENT, O)
+            else
+
+                < O : Client |
+                status : suspending,
+                m : M,
+                gs: GS,
+                filter : F,
+                nodes : Nodes,
+                sess : Sess,
+                rem : Rem?,
+                history : (HistoryIST history(State)), --- update history if any
+                bStep : BStep,
+                A >
+                handleJob(O, CLIENT, M, GS, F, step(State), if step(State) == 1 then Nodes else unbounded fi, Sess, Rem?, (HistoryIST history(State)), jobs(State))
+            fi
+        if State := string2state(DATA)
+        [print "[Received] DATA"]
+        --- [print "[Received] IST = " IST "\nINIT = " INIT "\nHistoryIST = " HistoryIST] .
+        .
+
+    op handleJob : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
+                    IdSystemSet IdSystemSet -> Configuration .
+    ceq handleJob(O, CLIENT, M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IS)
+    = Send(CLIENT, O, state2string(State))
+    if State := searchStateMParallel(M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IS)
+    /\ C := #jobs(HistoryIST)
+    [print "[HandleJob] #HistoryIST = " C]
+    .
+
+    rl [ClosedSocket] :
+        < O : Client | A > ClosedSocket(O, CLIENT, S)
+        => < O : Client | none > [print "[ClosedSocket]"] .
+endm
+
+load examples/Needham_Schroeder.maude
+select PARALLEL-MAUDE-NPA .
+set print attribute on .
+set show timing on .
+set print conceal on .
+print conceal fmod_is_sorts_.____endfm
+              mod_is_sorts_._____endm
+              if_then_else_fi
+              procDecl
+              gs:_
+              .
+erew <> p-run(0, unbounded, aClient)
+        < aClient : Client | status : idle >
+        CreateClientTcpSocket(socketManager, aClient, "localhost", 8811) .

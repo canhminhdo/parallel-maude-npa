@@ -1,0 +1,257 @@
+load maude-npa.maude
+load socket/buffered-socket.maude
+load socket/queue.maude
+load common.maude .
+
+mod PARALLEL-MAUDE-NPA is
+    pr PARALLEL-GENERIC-TOOL .
+    pr REQUEST .
+    pr MESSAGE-CONVERTER .
+
+    vars O O' LISTENER CLIENT : Oid .
+    var  A : AttributeSet .
+    vars N N' D D' C C' : Nat .
+    vars Nodes BStep Step Sess : Bound .
+    vars Rem? : Bool .
+    vars IST IST' IST'' INIT INIT' HistoryIST HistoryIST' HistoryIST'' : IdSystemSet .
+    var IS : IdSystem .
+    vars T T' : Term .
+    var RT : Type .
+    vars M M' M'' : Module .
+    var GS : GrammarList .
+    var F : Filters .
+    vars IP DATA S : String .
+    vars SW : Set{Worker} .
+    vars W : Queue{Worker} .
+    vars Cache : Map{Worker,Bool} .
+    vars B : Bool .
+
+    rl [Initialize] : < O : Server |
+        status : idle,
+        A >
+        initialize(O, O', M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST)
+    => < O : Server |
+        status : initialized,
+        m : M,
+        gs: GS,
+        filter : F,
+        bStep : BStep,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        history : HistoryIST,
+        newHistory : empty,
+        nextHistory : empty,
+        jobs : IST,
+        next : empty,
+        init : empty,
+        depth : 0,
+        count : #jobs(IST),
+        cache : empty,
+        A >
+    [print "[Initialize]"] .
+
+    rl [CreatedSocket] : < O : Server |
+        status : initialized,
+        A >
+        CreatedSocket(O, socketManager, LISTENER)
+    => < O : Server |
+        status : working,
+        listener : LISTENER,
+        workers : empty,
+        waitingWorkers : emptyq,
+        A > AcceptClient(LISTENER, O)
+    [print "[CreatedSocket]"] .
+
+    rl [AcceptedClient] :
+        < O : Server | workers : SW, cache : Cache, A > AcceptedClient(O, LISTENER, IP, CLIENT)
+        => < O : Server | workers : (CLIENT, SW), cache : insert(CLIENT, false, Cache), A > Receive(CLIENT, O)
+        AcceptClient(LISTENER, O) [print "[AcceptedClient]"] .
+
+    crl [GetJob] :
+        < O : Server | waitingWorkers : W, A > Received(O, CLIENT, DATA)
+        => < O : Server | waitingWorkers : (W | CLIENT), A >
+        if DATA == getJob [print "[GetJob]"] .
+
+    rl [SendJob] :
+        < O : Server |
+            jobs : (IS IST),
+            newHistory : HistoryIST,
+            waitingWorkers : (CLIENT | W),
+            cache : (CLIENT |-> B, Cache),
+            bStep : BStep,
+            step : Step,
+            depth : D,
+            A >
+        => < O : Server |
+            jobs : IST,
+            newHistory : HistoryIST,
+            waitingWorkers : W,
+            cache : (CLIENT |-> true, Cache),
+            bStep : BStep,
+            step : Step,
+            depth : D,
+            A >
+            if B == false then
+                Send(CLIENT, O, state2string(< empty, IS, HistoryIST, getStep(BStep, D, Step) >)) --- just send history in the first time
+            else
+                Send(CLIENT, O, state2string(< empty, IS, empty, getStep(BStep, D, Step) >))
+            fi
+            [print "[SendJob]"] .
+
+    op getStep : Bound Nat Nat  -> Nat .
+    eq getStep(unbounded, D, Step) = Step .
+    eq getStep(BStep, D, Step) =   if sd(BStep, D) > Step then
+                                        Step
+                                    else sd(BStep, D)
+                                    fi .
+    crl [Received] :
+        < O : Server | next : IST, init : INIT, nextHistory : HistoryIST, A > Received(O, CLIENT, DATA)
+        => < O : Server | next : (IST IST'), init : (INIT INIT'), nextHistory : (HistoryIST HistoryIST'), A >
+        if DATA =/= getJob
+        /\ < INIT', IST', HistoryIST' > := string2state(DATA)
+        [print "[Received] DATA"]
+        .
+
+    crl [Switch] : < O : Server |
+        status : working,
+        workers : SW,
+        waitingWorkers : W,
+        m : M,
+        gs: GS,
+        filter : F,
+        bStep : BStep,
+        step : Step,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        jobs : empty,
+        next : IST,
+        init : INIT,
+        history : HistoryIST,
+        nextHistory : HistoryIST',
+        newHistory : HistoryIST'',
+        cache : Cache,
+        depth : D,
+        count : C,
+        A >
+    => < O : Server |
+        status : suspending,
+        workers : SW,
+        waitingWorkers : W,
+        m : M,
+        gs: GS,
+        filter : F,
+        bStep : decN(BStep,Step),
+        step : Step,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        jobs : IST'',
+        next : empty,
+        init : (INIT INIT'),
+        history : (HistoryIST HistoryIST'), --- merge next history to current history
+        nextHistory : empty, --- nextHistory becomes empty
+        newHistory : HistoryIST', --- update newHistory with nextHistory
+        cache : resetCache(Cache),
+        depth : (D + Step),
+        count : C',
+        A >
+    if qsize(W) == | SW |
+    /\ IST =/= empty
+    /\ < INIT', IST' > := searchState-CheckInit*(M, Sess, HistoryIST', < empty, empty >, IST, C) --- filter initial and other states
+    /\ IST'' := filterStates(F, HistoryIST', IST', C) --- filter sucessor states with history states
+    /\ C' := #jobs(IST'')
+    /\ D' := D + Step
+    /\ N := #jobs(INIT INIT')
+    [print "<================= [Switch at Depth " D' " #jobs = " C' " #init = " N "] =================>"] .
+
+    op resetCache : Map{Worker,Bool} -> Map{Worker,Bool} .
+    eq resetCache(empty) = empty .
+    eq resetCache((CLIENT |-> B, Cache)) = CLIENT |-> false, resetCache(Cache) .
+
+    rl [Resuming] : < O : Server |
+        status : suspending,
+        jobs : IST,
+        filter : F,
+        history : HistoryIST,
+        bStep : BStep,
+        rem : Rem?,
+        A >
+    => if BStep == 0 or-else IST == empty then
+            --- Stop the search
+            stopWorking(O, O)
+            < O : Server |
+                status : stopping,
+                jobs : IST,
+                filter : F,
+                history : HistoryIST,
+                bStep : BStep,
+                rem : Rem?,
+                A >
+        else
+            < O : Server |
+                status : working,
+                jobs : IST,
+                filter : F,
+                history : HistoryIST,
+                bStep : BStep,
+                rem : Rem?,
+                A >
+        fi .
+
+    crl [CheckTermination] :
+        < O : Server | status : working, workers : SW, jobs : empty, next : empty, waitingWorkers : W, A >
+        => < O : Server | status : stopping, workers : SW, jobs : empty, next : empty, waitingWorkers : W, A >
+        stopWorking(O, O)
+        if qsize(W) == | SW | [print "[CheckTermination]"] .
+
+    rl [StopClient] : < O : Server | status : stopping, workers : (CLIENT, SW), A > stopWorking(O, O')
+        => CloseSocket(CLIENT, O)
+        < O : Server | status : stopping, workers : SW, A > stopWorking(O, O')
+        [print "[StopClient] " CLIENT] .
+
+    rl [StopServer] : < O : Server | status : stopping, workers : empty, listener : LISTENER, A > stopWorking(O, O')
+        => CloseSocket(LISTENER, O)
+        < O : Server | status : terminated, workers : empty, listener : LISTENER, A >
+        [print "[StopServer] " LISTENER] .
+
+    rl [Sent] :
+        < O : Server | A > Sent(O, CLIENT)
+        => < O : Server | A >
+        [print "[Sent]"] .
+
+    rl [ClosedSocket] :
+        < O : Server | A > ClosedSocket(O, CLIENT, DATA)
+        => < O : Server | A > [print "[ClosedSocket]"] .
+
+    rl [ShowResult] : < O : Server |
+        status : terminated,
+        filter : F,
+        jobs : IST,
+        rem : Rem?,
+        init : INIT,
+        A >
+    => < O : Server | none >
+        ShortIdSystem: if Rem? then
+            changeShortSystem(F, INIT IST)
+        else
+            changeShortSystem(F, INIT)
+        fi
+        [print "[ShowResult]"] .
+endm
+
+load examples/Needham_Schroeder.maude
+select PARALLEL-MAUDE-NPA .
+set print attribute on .
+set show timing on .
+set print conceal on .
+print conceal fmod_is_sorts_.____endfm
+              mod_is_sorts_._____endm
+              if_then_else_fi
+              procDecl
+              gs:_
+              .
+erew <> p-run(0, unbounded, aServer)
+        < aServer : Server | status : idle, step : 1 >
+        CreateServerTcpSocket(socketManager, aServer, 8811, 10) .
