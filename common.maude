@@ -48,14 +48,6 @@ mod MAUDE-NPA-EXT is
     --- eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplify-theSystemSet(F,HistoryIST, IST))) .
     --- eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplifyByImplicationL(IST))) .
 
-    op searchState-CheckInit* : Module Bound IdSystemSet IdSystemSetPair IdSystemSet Nat -> IdSystemSetPair [memo] .
-    eq searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, IST, C)
-    = if C == 1 then
-        < INIT, IST >
-    else
-        searchState-CheckInit(M, Sess, HistoryIST, < INIT, IST' >, IST)
-    fi [print "CheckInit"] .
-
     op searchState-CheckInit : Module Bound IdSystemSet IdSystemSetPair IdSystemSet -> IdSystemSetPair [memo] .
     eq searchState-CheckInit(M, Sess, HistoryIST, < INIT, IST' >, empty) = < INIT, IST' > .
     eq searchState-CheckInit(M, Sess, HistoryIST, < INIT, IST' >, (IS IST))

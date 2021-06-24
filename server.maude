@@ -10,14 +10,12 @@ mod PARALLEL-MAUDE-NPA is
 
     vars O O' LISTENER CLIENT : Oid .
     var  A : AttributeSet .
-    vars N N' D D' C C' : Nat .
+    vars N D D' C C' : Nat .
     vars Nodes BStep Step Sess : Bound .
     vars Rem? : Bool .
     vars IST IST' IST'' INIT INIT' HistoryIST HistoryIST' HistoryIST'' : IdSystemSet .
     var IS : IdSystem .
-    vars T T' : Term .
-    var RT : Type .
-    vars M M' M'' : Module .
+    vars M : Module .
     var GS : GrammarList .
     var F : Filters .
     vars IP DATA S : String .
@@ -25,6 +23,24 @@ mod PARALLEL-MAUDE-NPA is
     vars W : Queue{Worker} .
     vars Cache : Map{Worker,Bool} .
     vars B : Bool .
+
+    rl [CreatedSocket] : < O : Server |
+        status : idle,
+        attack : N,
+        bStep : BStep,
+        A >
+        CreatedSocket(O, socketManager, LISTENER)
+    => < O : Server |
+        status : initialized,
+        attack : N,
+        bStep : BStep,
+        listener : LISTENER,
+        workers : empty,
+        waitingWorkers : emptyq,
+        A >
+        AcceptClient(LISTENER, O)
+        p-run(N, BStep, O)
+        [print "[CreatedSocket]"] .
 
     crl [Initialize] : < O : Server |
         status : initialized,
@@ -48,29 +64,12 @@ mod PARALLEL-MAUDE-NPA is
         next : IST',
         init : INIT,
         depth : 0,
+
         count : #jobs(IST),
         cache : empty,
         A >
     if < INIT, IST', HistoryIST' > := searchStateMParallel(M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IST) --- run fist job in master
     [print "[Initialize]"] .
-
-    rl [CreatedSocket] : < O : Server |
-        status : idle,
-        attack : N,
-        bStep : BStep,
-        A >
-        CreatedSocket(O, socketManager, LISTENER)
-    => < O : Server |
-        status : initialized,
-        attack : N,
-        bStep : BStep,
-        listener : LISTENER,
-        workers : empty,
-        waitingWorkers : emptyq,
-        A >
-        AcceptClient(LISTENER, O)
-        p-run(N, BStep, O)
-        [print "[CreatedSocket]"] .
 
     rl [AcceptedClient] : < O : Server |
         workers : SW,
@@ -185,7 +184,7 @@ mod PARALLEL-MAUDE-NPA is
         A >
     if qsize(W) == | SW |
     /\ IST =/= empty
-    /\ < INIT', IST' > := searchState-CheckInit*(M, Sess, HistoryIST', < empty, empty >, IST, C) --- filter initial and other states
+    /\ < INIT', IST' > := searchState-CheckInit(M, Sess, HistoryIST', < empty, empty >, IST) --- filter initial and other states
     /\ IST'' := filterStates(F, HistoryIST', IST', C) --- filter sucessor states with history states
     /\ C' := #jobs(IST'')
     /\ D' := D + Step

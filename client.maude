@@ -8,21 +8,15 @@ mod PARALLEL-MAUDE-NPA is
     pr REQUEST .
     pr MESSAGE-CONVERTER .
 
-    vars O O' LISTENER CLIENT : Oid .
+    vars O O' CLIENT : Oid .
     var  A : AttributeSet .
-    vars N N' D C C' Pid : Nat .
     vars Nodes BStep Step Sess : Bound .
     vars Rem? : Bool .
-    vars IST IST' IST'' INIT INIT' HistoryIST HistoryIST' : IdSystemSet .
-    var IS : IdSystem .
-    vars T T' : Term .
-    var RT : Type .
-    vars M M' M'' : Module .
+    vars IST HistoryIST : IdSystemSet .
+    vars M : Module .
     var GS : GrammarList .
     var F : Filters .
-    vars IP DATA S : String .
-    vars SW : Set{Worker} .
-    vars W : Queue{Worker} .
+    vars DATA S : String .
     vars State : IdSystemSetTuple .
 
     rl [Initialize] : < O : Client |
@@ -34,15 +28,10 @@ mod PARALLEL-MAUDE-NPA is
         m : M,
         gs: GS,
         filter : F,
-        bStep : BStep,
         nodes : Nodes,
         sess : Sess,
         rem : Rem?,
         history : empty,
-        nextHistory : empty,
-        jobs : empty,
-        next : empty,
-        init : empty,
         A >
         [print "[Initialize]"] .
 
@@ -61,8 +50,8 @@ mod PARALLEL-MAUDE-NPA is
     rl [Sent] : < O : Client | status : waiting, A > Sent(O, CLIENT)
     => < O : Client | status : waiting, A > [print "[Sent]"] .
 
-    rl [SendData&GetJob] : < O : Client | status : suspending, A > Sent(O, CLIENT)
-    => < O : Client | status : waiting, A > Send(CLIENT, O, getJob) [print "[SendData&GetJob]"] .
+    rl [SentData&GetJob] : < O : Client | status : suspending, A > Sent(O, CLIENT)
+    => < O : Client | status : waiting, A > Send(CLIENT, O, getJob) [print "[SentData&GetJob]"] .
 
     crl [Received] : < O : Client |
         status : waiting,
@@ -73,7 +62,6 @@ mod PARALLEL-MAUDE-NPA is
         sess : Sess,
         rem : Rem?,
         history : HistoryIST,
-        bStep : BStep,
         A >
         Received(O, CLIENT, DATA)
     => if State == errIdSystemSetTuple then
@@ -86,7 +74,6 @@ mod PARALLEL-MAUDE-NPA is
             sess : Sess,
             rem : Rem?,
             history : HistoryIST,
-            bStep : BStep,
             A >
         CloseSocket(CLIENT, O)
     else
@@ -99,7 +86,6 @@ mod PARALLEL-MAUDE-NPA is
             sess : Sess,
             rem : Rem?,
             history : (HistoryIST history(State)), --- update history if any
-            bStep : BStep,
             A >
         handleJob(O, CLIENT, M, GS, F, step(State), if step(State) == 1 then Nodes else unbounded fi, Sess, Rem?, (HistoryIST history(State)), jobs(State))
     fi
@@ -108,9 +94,9 @@ mod PARALLEL-MAUDE-NPA is
 
     op handleJob : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
                     IdSystemSet IdSystemSet -> Configuration .
-    ceq handleJob(O, CLIENT, M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IS)
+    ceq handleJob(O, CLIENT, M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IST)
     = Send(CLIENT, O, state2string(State))
-    if State := searchStateMParallel(M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IS)
+    if State := searchStateMParallel(M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IST)
     [print "[HandleJob]"] .
 
     rl [ClosedSocket] : < O : Client | A > ClosedSocket(O, CLIENT, S)
