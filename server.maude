@@ -92,7 +92,7 @@ mod PARALLEL-MAUDE-NPA is
         A >
     if DATA == getJob [print "[GetJob]"] .
 
-    rl [SendJob] : < O : Server |
+    crl [SendJob] : < O : Server |
         jobs : (IS IST),
         newHistory : HistoryIST,
         waitingWorkers : (CLIENT | W),
@@ -115,7 +115,8 @@ mod PARALLEL-MAUDE-NPA is
         else
             Send(CLIENT, O, state2string(< empty, IS, empty, getStep(BStep, D, Step) >))
         fi
-        [print "[SendJob]"] .
+    if N := #jobs(HistoryIST)
+    [print "[SendJob] #HistoryIST = " N " \nHistory = " HistoryIST] .
 
     op getStep : Bound Nat Nat  -> Nat .
     eq getStep(unbounded, D, Step) = Step .
