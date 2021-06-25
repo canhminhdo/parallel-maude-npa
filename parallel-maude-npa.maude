@@ -107,7 +107,7 @@ mod MAUDE-NPA-EXT is
     /\ C := #jobs(IST')
     /\ N :=  #jobs(HistoryIST')
     /\ N' :=  #jobs(HistoryIST HistoryIST')
-    [print "Pid = " Pid "\nBStep = " BStep "\n#Jobs = " C "\n#His = " N "\nHisTotal = " N']
+    [print "Pid = " Pid " BStep = " BStep " #Jobs = " C " #His = " N " HisTotal = " N']
     .
 endm
 
@@ -274,7 +274,7 @@ mod PARALLEL-MAUDE-NPA is
         status : initializing,
         workers : (W | MI),
         A >
-        [print "[InsertedModule]"] .
+        [print "[InsertedModule] " MI] .
 
     crl [CreatedWorkersDone] : < O : Manager |
         status : initializing,
@@ -327,8 +327,10 @@ mod PARALLEL-MAUDE-NPA is
         T
     )
     if Pid := extractOid(MI)
+    --- /\ T := upTerm(searchStateMParallel(Pid, GS, Step, Nodes, Sess, Rem?, HistoryIST, IS))
     /\ T := 'searchStateMParallel[
         upTerm(Pid),
+        --- upTerm(M),
         upTerm(GS),
         --- upTerm(F),
         upTerm(Step),
@@ -337,7 +339,7 @@ mod PARALLEL-MAUDE-NPA is
         upTerm(Rem?),
         upTerm(HistoryIST),
         upTerm(IS)]
-        --- [print "Term = " T] .
+        [print "[HandleJob] " MI]
         .
 
     op extractOid : Oid -> Nat .
@@ -360,7 +362,7 @@ mod PARALLEL-MAUDE-NPA is
         A >
     if RT == 'IdSystemSetTuple
     /\ < INIT', IST', HistoryIST' > := downTerm(T, errIdSystemSetTuple)
-    [print "[WorkerResult]"] .
+    [print "[WorkerResult] " MI] .
 
     crl [Switch] : < O : Manager |
         status : working,
