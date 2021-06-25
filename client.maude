@@ -12,7 +12,7 @@ mod PARALLEL-MAUDE-NPA is
     var  A : AttributeSet .
     vars Nodes BStep Step Sess : Bound .
     vars Rem? : Bool .
-    vars IST HistoryIST : IdSystemSet .
+    vars IST IST' HistoryIST : IdSystemSet .
     vars M : Module .
     var GS : GrammarList .
     var F : Filters .
@@ -95,15 +95,15 @@ mod PARALLEL-MAUDE-NPA is
     op handleJob : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
                     IdSystemSet IdSystemSet -> Configuration .
     ceq handleJob(O, CLIENT, M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IST)
-    = Send(CLIENT, O, state2string(State))
-    if State := searchStateMParallel(M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IST)
+    = Send(CLIENT, O, state2string(< empty, IST', empty >))
+    if IST' := nextBackNarrowParallel(M, GS, F, Nodes, IST)
     [print "[HandleJob]"] .
 
     rl [ClosedSocket] : < O : Client | A > ClosedSocket(O, CLIENT, S)
     => < O : Client | none > [print "[ClosedSocket]"] .
 endm
 
-load examples/Needham_Schroeder_Lowe_ECB.maude
+load examples/Needham_Schroeder.maude
 select PARALLEL-MAUDE-NPA .
 load debug.maude
 erew <> p-run(0, unbounded, aClient)

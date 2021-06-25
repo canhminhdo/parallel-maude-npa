@@ -38,13 +38,10 @@ mod MAUDE-NPA-EXT is
     eq #jobs(IS IST) = #jobs(IST) + 1 .
     eq #jobs(empty) = 0 .
 
-    op filterStates : Filters IdSystemSet IdSystemSet Nat -> IdSystemSet .
-    eq filterStates(F, HistoryIST, IST, C)
-    = if C == 1 then
-       IST
-    else
-        simplify-theSystemSet(F,HistoryIST, IST)
-    fi [print "simplify-theSystemSet"] .
+    op filterStates : Filters IdSystemSet IdSystemSet -> IdSystemSet .
+    eq filterStates(F, HistoryIST, IST)
+    = filterSMsgListX(F,filterIdX(F, simplify-theSystemSet(F,HistoryIST, IST)))
+    [print "simplify-theSystemSet"] .
     --- eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplify-theSystemSet(F,HistoryIST, IST))) .
     --- eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplifyByImplicationL(IST))) .
 
@@ -94,6 +91,25 @@ mod MAUDE-NPA-EXT is
     --- /\ N' :=  #jobs(HistoryIST HistoryIST')
     --- [print "\nBStep = " BStep "\n#Jobs = " C "\n#His = " N "\nHisTotal = " N']
     .
+
+    op nextBackNarrowParallel* : Module GrammarList Filters Bound IdSystemSet -> IdSystemSet [memo] .
+    eq nextBackNarrowParallel*(M, GS, F, Nodes, IST) = nextBackNarrowParallel(M, GS, F, Nodes, IST) .
+
+    op nextBackNarrowParallel : Module GrammarList Filters Bound IdSystemSet -> IdSystemSet [memo] .
+    eq nextBackNarrowParallel(M,GS,F:Filters,Nodes,IST)
+    = filter-eachSystem#Top(F:Filters,M,GS, --- filter systems with grammars, never patterns, ...
+        simplify-eachSystem#Top(F:Filters,M, --- always simplify before filtering
+            simplifyGhost#Top(F:Filters, --- simplify Ghost
+                createGhost#Top(M,F:Filters, --- create Ghost again
+                    reactivateGhost#Top(F:Filters, --- if messages are not ghost messages anymore, reactive the messages
+                        tryUnificationofKnowledge(M, --- create and check ghosts before and after
+                            nextBackNarrow*(M,GS,F:Filters,Nodes,empty,IST)
+                        )
+                    )
+                )
+             )
+        )
+    ) .
 endm
 
 view Worker from TRIV to CONFIGURATION is

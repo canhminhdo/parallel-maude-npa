@@ -53,32 +53,24 @@ mod PARALLEL-MAUDE-NPA is
         m : M,
         gs: GS,
         filter : F,
-        --- bStep : BStep,
         nodes : Nodes,
         sess : Sess,
         rem : Rem?,
         history : HistoryIST,
-        newHistory : empty,
-        nextHistory : HistoryIST',
         jobs : empty,
         next : IST',
-        init : INIT,
+        init : empty,
         depth : 0,
-
-        count : #jobs(IST),
-        cache : empty,
         A >
-    if < INIT, IST', HistoryIST' > := searchStateMParallel(M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IST) --- run fist job in master
+    if IST' := nextBackNarrowParallel(M, GS, F, Nodes, IST) --- run fist job in master
     [print "[Initialize]"] .
 
     rl [AcceptedClient] : < O : Server |
         workers : SW,
-        cache : Cache,
         A >
         AcceptedClient(O, LISTENER, IP, CLIENT)
     => < O : Server |
         workers : (CLIENT, SW),
-        cache : insert(CLIENT, false, Cache),
         A >
         Receive(CLIENT, O)
         AcceptClient(LISTENER, O) [print "[AcceptedClient]"] .
@@ -92,48 +84,31 @@ mod PARALLEL-MAUDE-NPA is
         A >
     if DATA == getJob [print "[GetJob]"] .
 
-    crl [SendJob] : < O : Server |
+    rl [SendJob] : < O : Server |
         jobs : (IS IST),
-        newHistory : HistoryIST,
         waitingWorkers : (CLIENT | W),
-        cache : (CLIENT |-> B, Cache),
         bStep : BStep,
         step : Step,
         depth : D,
+        history : HistoryIST,
         A >
     => < O : Server |
         jobs : IST,
-        newHistory : HistoryIST,
         waitingWorkers : W,
-        cache : (CLIENT |-> true, Cache),
         bStep : BStep,
         step : Step,
         depth : D,
+        history : (HistoryIST IS),
         A >
-        if B == false then
-            Send(CLIENT, O, state2string(< empty, IS, HistoryIST, getStep(BStep, D, Step) >)) --- just send history in the first time
-        else
-            Send(CLIENT, O, state2string(< empty, IS, empty, getStep(BStep, D, Step) >))
-        fi
-    if N := #jobs(HistoryIST)
-    [print "[SendJob] #HistoryIST = " N " \nHistory = " HistoryIST] .
+        Send(CLIENT, O, state2string(< empty, IS, empty, Step >))
+        [print "[SendJob]"] .
 
-    op getStep : Bound Nat Nat  -> Nat .
-    eq getStep(unbounded, D, Step) = Step .
-    eq getStep(BStep, D, Step) =   if sd(BStep, D) > Step then
-                                        Step
-                                    else sd(BStep, D)
-                                    fi .
     crl [Received] : < O : Server |
         next : IST,
-        init : INIT,
-        nextHistory : HistoryIST,
         A >
         Received(O, CLIENT, DATA)
     => < O : Server |
         next : (IST IST'),
-        init : (INIT INIT'),
-        nextHistory : (HistoryIST HistoryIST'),
         A >
     if DATA =/= getJob
     /\ < INIT', IST', HistoryIST' > := string2state(DATA)
@@ -155,11 +130,7 @@ mod PARALLEL-MAUDE-NPA is
         next : IST,
         init : INIT,
         history : HistoryIST,
-        nextHistory : HistoryIST',
-        newHistory : HistoryIST'',
-        cache : Cache,
         depth : D,
-        count : C,
         A >
     => < O : Server |
         status : suspending,
@@ -176,17 +147,13 @@ mod PARALLEL-MAUDE-NPA is
         jobs : IST'',
         next : empty,
         init : (INIT INIT'),
-        history : (HistoryIST HistoryIST'), --- merge next history to current history
-        nextHistory : empty, --- nextHistory becomes empty
-        newHistory : HistoryIST', --- update newHistory with nextHistory
-        cache : resetCache(Cache),
-        depth : (D + Step),
-        count : C',
+        history : HistoryIST,
+        depth : D',
         A >
     if qsize(W) == | SW |
     /\ IST =/= empty
-    /\ < INIT', IST' > := searchState-CheckInit(M, Sess, HistoryIST', < empty, empty >, IST) --- filter initial and other states
-    /\ IST'' := filterStates(F, HistoryIST', IST', C) --- filter sucessor states with history states
+    /\ < INIT', IST' > := searchState-CheckInit(M, Sess, HistoryIST, < empty, empty >, IST) --- filter initial and other states
+    /\ IST'' := filterStates(F, HistoryIST, IST') --- filter sucessor states with history states
     /\ C' := #jobs(IST'')
     /\ D' := D + Step
     /\ N := #jobs(INIT INIT')
@@ -224,7 +191,7 @@ mod PARALLEL-MAUDE-NPA is
             bStep : BStep,
             rem : Rem?,
             A >
-    fi .
+    fi [print "[Resuming]"] .
 
     crl [CheckTermination] : < O : Server |
         status : working,
@@ -241,7 +208,8 @@ mod PARALLEL-MAUDE-NPA is
         waitingWorkers : W,
         A >
         StopWorking(O, O)
-    if qsize(W) == | SW | [print "[CheckTermination]"] .
+    if qsize(W) == | SW |
+    /\ qsize(W) > 0 [print "[CheckTermination]"] .
 
     rl [StopClient] : < O : Server |
         status : stopping,
@@ -292,7 +260,7 @@ mod PARALLEL-MAUDE-NPA is
         [print "[ShowResult]"] .
 endm
 
-load examples/Needham_Schroeder_Lowe_ECB.maude
+load examples/Needham_Schroeder.maude
 select PARALLEL-MAUDE-NPA .
 load debug.maude
 erew <> < aServer : Server | status : idle, attack : 0, bStep : unbounded, step : 1 >
