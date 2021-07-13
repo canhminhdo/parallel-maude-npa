@@ -45,8 +45,8 @@ mod MAUDE-NPA-EXT is
 
     op nextBackNarrowParallel : Nat Module GrammarList Filters Bound IdSystemSet IdSystemSet -> IdSystemSet [memo] .
     ceq nextBackNarrowParallel(Pid,M,GS,F,Nodes,HistoryIST,IST)
-    = IST'
-    if IST' := filterSMsgListX(F,
+    = IST':[IdSystemSet-or-Error]
+    if IST':[IdSystemSet-or-Error] := filterSMsgListX(F,
         filterIdX(F,
             simplify-theSystemSet(F,HistoryIST,
                 filter-eachSystem#Top(F,M,GS, --- filter systems with grammars, never patterns, ...
@@ -288,15 +288,18 @@ mod PARALLEL-MAUDE-NPA is
         'MAUDE-NPA-EXT-ADDEDEQS,
         T)
     if Pid := extractPid(MI)
-    /\ T := 'nextBackNarrowParallel*[
+    /\ T := 'nextBackNarrowParallel[
             upTerm(Pid),
-            --- upTerm(M),
+            upTerm(M),
             upTerm(GS),
-            --- upTerm(F),
+            upTerm(F),
             upTerm(Nodes),
             upTerm(HistoryIST),
             upTerm(IS)
-        ] .
+        ]
+    /\ RP?:ResultPair := metaReduce(upModule('MAUDE-NPA-EXT, false), T)
+    [print "RP? = " RP?:ResultPair]
+    .
         --- upTerm(nextBackNarrowParallel(M, GS, F, Nodes, IS))) .
         --- upTerm(nextBackNarrow(M, GS, F, Nodes, HistoryIST, IS))) .
 
@@ -310,10 +313,11 @@ mod PARALLEL-MAUDE-NPA is
         A >
         reducedTerm(O, MI, N, T, RT)
     => < O : Manager |
-        status : working,
+        status : stopping,
         workers : (W, MI),
         next : (IST IST'),
         A >
+        stopWorking(O, O)
     if RT == 'IdSystemSet or-else RT == 'IdSystem
     /\ IST' := downTerm(T, errIdSystemSet)
     /\ Pid := extractPid(MI)
