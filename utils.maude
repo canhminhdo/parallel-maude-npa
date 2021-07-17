@@ -1,0 +1,14 @@
+fmod TERMSET-EXT is
+    pr FM-EXT-TERMSET .
+
+    vars TS TS' TS'' : TermSet .
+    vars T : TermSet .
+
+    op _except_ : TermSet TermSet -> TermSet .
+    eq TS except emptyTermSet = TS .
+    eq TS except TS' = diff(TS, TS', emptyTermSet) .
+
+    op diff : TermSet TermSet TermSet -> TermSet .
+    eq diff(emptyTermSet, TS', TS'') = TS'' .
+    eq diff((T | TS), TS', TS'') = diff(TS, TS', if T in TS' then TS'' else T | TS'' fi) .
+endfm

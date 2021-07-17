@@ -1,0 +1,117 @@
+fmod LOC is
+  sort Loc .
+  ops ss ws cs fs : -> Loc [ctor] .
+endfm
+
+fmod PID is
+  sort Pid .
+  ops p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 : -> Pid [ctor] .
+endfm
+
+fmod QUEUE {D :: TRIV} is
+  sort Queue{D} .
+  subsort D$Elt < Queue{D} .
+  op empq : -> Queue{D} [ctor] .
+  op _|_ : Queue{D} Queue{D} -> Queue{D} [ctor assoc id: empq] .
+  op deq : Queue{D} -> D$Elt .
+  var Q : Queue{D} .
+  var E : D$Elt .
+  eq deq(empq) = empq .
+  eq deq(E | Q) = Q .
+endfm
+
+view Pid from TRIV to PID is
+  sort Elt to Pid .
+endv
+
+fmod SOUP {D :: TRIV} is
+  sort Soup{D} .
+  subsort D$Elt < Soup{D} .
+  op empty : -> Soup{D} [ctor] .
+  op _ _ : Soup{D} Soup{D} -> Soup{D} [ctor assoc comm id: empty] .
+endfm
+
+fmod NAT+DEC is
+  pr NAT .
+  op dec : Nat -> Nat .
+  var N : Nat .
+  eq dec(0) = 0 .
+  eq dec(s(N)) = N .
+endfm
+
+fmod OCOMP is
+  pr LOC .
+  pr QUEUE{Pid} .
+  pr NAT+DEC .
+  sort OComp .
+  op (queue:_) : Queue{Pid} -> OComp [ctor] .
+  op (pc[_]:_) :  Pid Loc -> OComp [ctor] .
+  op (cnt:_) :  Nat -> OComp [ctor] .
+endfm
+
+view OComp from TRIV to OCOMP is
+  sort Elt to OComp .
+endv
+
+fmod CONFIG is
+  pr META-LEVEL .
+  pr SOUP{OComp} .
+  sort Config .
+  op {_} : Soup{OComp} -> Config [ctor] .
+  op init : -> Config .
+  op init3 : -> Config .
+  op init5 : -> Config .
+  op init10 : -> Config .
+  eq init = {(queue: empq) (pc[p1]: ss) (pc[p2]: ss) (cnt: 2)} .
+  eq init3 = {(queue: empq) (pc[p1]: ss) (pc[p2]: ss) (pc[p3]: ss) (cnt: 3)} .
+  eq init5 = {(queue: empq) (pc[p1]: ss) (pc[p2]: ss) (pc[p3]: ss)
+                     (pc[p4]: ss) (pc[p5]: ss) (cnt: 5) } .
+  eq init10 = {(queue: empq) (pc[p1]: ss) (pc[p2]: ss) (pc[p3]: ss)
+                       (pc[p4]: ss) (pc[p5]: ss) (pc[p6]: ss) (pc[p7]: ss)
+                       (pc[p8]: ss) (pc[p9]: ss) (pc[p10]: ss) (cnt: 10) } .
+endfm
+
+mod QLOCK is
+  inc CONFIG .
+  var Q : Queue{Pid} .
+  var I : Pid .
+  var N :  Nat .
+  var OCs : Soup{OComp} .
+  rl [start] : {(queue: Q) (pc[I]: ss) OCs} => {(queue: (Q | I)) (pc[I]: ws) OCs} .
+  rl [wait] : {(queue: (I | Q)) (pc[I]: ws) OCs} => {(queue: (I | Q)) (pc[I]: cs) OCs} .
+  rl [exit] : {(queue: Q) (pc[I]: cs) (cnt: N) OCs} => {(queue: deq(Q)) (pc[I]: fs) (cnt: dec(N)) OCs} .
+  rl [fin] : {(cnt: 0) OCs} => {(cnt: 0) OCs} .
+endm
+
+in model-checker .
+
+mod QLOCK-PREDS is
+  pr QLOCK .
+  inc SATISFACTION .
+  subsort Config < State .
+  ops inWs1 inCs1 inFs1 : -> Prop .
+  var OCs : Soup{OComp} .
+  var PROP : Prop .
+  eq {(pc[p1]: ws) OCs} |= inWs1 = true .
+  eq {(pc[p1]: cs) OCs} |= inCs1 = true .
+  eq {(pc[p1]: fs) OCs} |= inFs1 = true .
+  eq {OCs} |= PROP = false [owise] .
+endm
+
+mod QLOCK-CHECK is
+  inc QLOCK-PREDS .
+  inc MODEL-CHECKER .
+  inc LTL-SIMPLIFIER .
+  op lofree : -> Formula .
+  eq lofree = inWs1 |-> inCs1 .
+  op halt : -> Formula .
+  eq halt = <> inFs1 .
+  op cstable : -> Formula .
+  eq cstable = inWs1 |-> <> inFs1 .
+endm
+
+***(
+  red in QLOCK-CHECK : modelCheck(init,lofree) .
+  red in QLOCK-CHECK : modelCheck(init5,lofree) .
+  red in QLOCK-CHECK : modelCheck(init10,lofree) .
+)

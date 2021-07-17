@@ -1,0 +1,9 @@
+in debug.maude
+in full-maude.maude
+in specs/qlock.maude
+in parallel-meta-search.maude
+in init.maude
+
+select PARALLEL-META-SEARCH .
+
+erew <> p-metaSearch(upModule('QLOCK, true), 'init.Config, '`{_`}['OCs:Soup`{OComp`}], nil, '+, unbounded, 2, 2) .

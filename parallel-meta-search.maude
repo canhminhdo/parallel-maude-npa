@@ -1,0 +1,257 @@
+in file.maude
+in metaInterpreter.maude
+in utils.maude
+
+fmod IQUEUE{X :: TRIV} is
+    protecting BOOL .
+    pr NAT .
+
+    sort Queue{X} .
+    subsort X$Elt < Queue{X} .
+    op emptyq : -> Queue{X} [ctor] .
+    op _|_ : Queue{X} Queue{X} -> Queue{X} [ctor assoc id: emptyq] .
+    op isEmpty : Queue{X} -> Bool .
+    op qsize : Queue{X} -> Nat .
+    var Q : Queue{X} .
+    var E : X$Elt .
+
+    eq qsize(emptyq) = 0 .
+    eq qsize(E | Q) = qsize(Q) + 1 .
+
+    eq isEmpty(emptyq) = true .
+    eq isEmpty(E | Q) = false .
+endfm
+
+view Worker from TRIV to CONFIGURATION is
+    sort Elt to Oid .
+endv
+
+mod PARALLEL-FUNC is
+    pr META-LEVEL .
+    pr TERMSET-EXT .
+
+    op pM : -> Module [ctor] .
+
+    vars M : Module .
+    vars N BStep : Nat .
+    vars T T' : Term .
+    vars History : TermSet .
+    vars Q : Qid .
+    vars C : Condition .
+
+    op searchStates : Nat Term Term Condition Qid Nat TermSet -> TermSet .
+    eq searchStates(N, T, T', C, Q, BStep, History) = searchStates*(pM, T, T', C, Q, BStep, History) [print "Handled by pid = " N] .
+
+    op searchStates* : Module Term Term Condition Qid Nat TermSet -> TermSet .
+    eq searchStates*(M, T, T', C, Q, BStep, History) = emptyTermSet
+    [print "M " M "\nT = " T "\nT' = " T' "\nC = " C "\nBStep = " BStep "\nHistory = " History]
+    .
+    *** start searching here ...
+endm
+
+mod PARALLEL-CONFIG is
+    pr META-INTERPRETER .
+    pr PARALLEL-FUNC .
+    pr IQUEUE{Worker} .
+
+    sort Status .
+    ops idle initializing initialized waiting suspending working stopping terminated : -> Status .
+    op status :_ : Status -> Attribute [ctor format(m o o o)] .
+    op m :_ : Module -> Attribute .
+    op init :_ : Term -> Attribute .
+    op goal :_ : Term -> Attribute .
+    op cond :_ : Condition -> Attribute .
+    op type :_ : Qid -> Attribute .
+    op depth :_ : Bound -> Attribute .
+    op step :_ : Bound -> Attribute .
+    op #workers :_ : Nat -> Attribute [ctor format(! o o o)] .
+    op history :_ : TermSet -> Attribute .
+    op nextHistory :_ : TermSet -> Attribute .
+    op jobs :_ : TermSet -> Attribute .
+    op next :_ : TermSet -> Attribute .
+    op workers :_ : Queue{Worker} -> Attribute [ctor format(! o o o)] .
+    op stopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
+
+    op Manager : -> Cid [ctor] .
+    op aManager : -> Oid [ctor] .
+endm
+
+mod PARALLEL-GENERIC-TOOLS is
+    pr STD-STREAM .
+    pr PARALLEL-CONFIG .
+    pr FM-MODULE-HANDLING .
+
+    vars O O' MI : Oid .
+    vars  A : AttributeSet .
+    vars M M' M'' : Module .
+    vars T T' T'' T''' : Term .
+    vars C : Condition .
+    vars B : Bound .
+    vars N Step Pid : Nat .
+    vars Q : Qid .
+    vars RP : ResultPair .
+    vars W : Queue{Worker} .
+    vars RT : Type .
+    vars TS TS' History NextHistory : TermSet .
+
+    --- op p-metaSearch : Module Term Term Condition Qid Bound Nat ~> ResultTriple? .
+    --- eq p-metaSearch(M, T, T', C, Q, B, N) = metaSearch(M, T, T', C, Q, B, N) [print "T = " T " T' = " T'] .
+
+    *** 1st: Module, 2nd: Term, 3rd: Term, 4th: Condition, 5th: Type, 6th: Depth, 7th: step, 7th: #workers
+    op p-metaSearch : Module Term Term Condition Qid Bound Nat Nat -> Configuration .
+    ceq p-metaSearch(M, T, T', C, Q, B, Step, N)
+    = < aManager : Manager |
+        status : idle,
+        m : M,
+        init : getTerm(RP),
+        goal : T',
+        cond : C,
+        type : Q,
+        depth : B,
+        step : Step,
+        #workers : N >
+    if RP := metaReduce(M, T) .
+
+    eq p-metaSearch(M, T, T', C, Q, B, Step, N) = none write(stdout, aManager, "Cannot reduce the init term") [owise] .
+
+    rl [CreateWorkers] : < O : Manager |
+        status : idle,
+        init : T,
+        #workers : N,
+        A >
+    => < O : Manager |
+        status : initializing,
+        init : T,
+        #workers : N,
+        workers : emptyq,
+        history : T,
+        nextHistory : emptyTermSet,
+        jobs : T,
+        next : emptyTermSet,
+        A >
+        produceInterpreter(O, N)
+        [print "[CreateWorkers]"] .
+
+    op produceInterpreter : Oid Nat -> Configuration .
+    ceq produceInterpreter(O, N) = createInterpreter(interpreterManager, O, newProcess)
+        produceInterpreter(O, sd(N, 1)) if N > 0 .
+    eq produceInterpreter(O, N) = none [owise] .
+
+    crl [CreatedWorker] : < O : Manager |
+        status : initializing,
+        #workers : N,
+        workers : emptyq,
+        m : M,
+        A >
+        createdInterpreter(O, O', MI)
+    => < O : Manager |
+        status : initializing,
+        #workers : N,
+        workers : emptyq,
+        m : M,
+        A >
+        insertModule(MI, O, M'')
+        if M' := upModule('PARALLEL-FUNC, true)
+        /\ M'' := addEqs(
+            (eq 'pM.Module = upTerm(M) [none] . )
+            , M'
+        )
+        [print "[CreatedWorker]"] .
+
+    rl [InsertedModule] : < O : Manager |
+        status : initializing,
+        workers : W,
+        A >
+        insertedModule(O, MI)
+    => < O : Manager |
+        status : initializing,
+        workers : (W | MI),
+        A >
+        [print "[InsertedModule] " MI] .
+
+    crl [CreatedWorkersDone] : < O : Manager |
+        status : initializing,
+        #workers : N,
+        workers : W,
+        A >
+    => < O : Manager |
+        status : working,
+        #workers : N,
+        workers : W,
+        A >
+    if qsize(W) == N
+    [print "[CreatedWorkersDone]"] .
+
+    crl [AssignJob] : < O : Manager |
+        status : working,
+        jobs : (T | TS),
+        workers : (MI | W),
+        m : M,
+        goal : T',
+        cond : C,
+        type : Q,
+        history : History,
+        step : Step,
+        depth : B,
+        A >
+    => < O : Manager |
+        status : working,
+        jobs : TS,
+        workers : W,
+        m : M,
+        goal : T',
+        cond : C,
+        type : Q,
+        history : History,
+        step : Step,
+        depth : B,
+        A >
+        reduceTerm(MI, O, 'PARALLEL-FUNC-ADDEDEQS, T'')
+    if Pid := extractOid(MI)
+    /\ T''' := '0.Zero
+    /\ T'' := 'searchStates[
+        upTerm(Pid),
+        upTerm(T),
+        upTerm(T'),
+        upTerm(C),
+        upTerm(Q),
+        upTerm(Step),
+        upTerm(History)
+        ]
+        [print "[AssignJob] " MI " T = " T'']
+        .
+
+    op extractOid : Oid -> Nat .
+    eq extractOid(interpreter(N)) = N .
+
+    --- Stop working from here
+    rl [StopWorkers] : < O : Manager |
+        workers : W,
+        A >
+        stopWorking(O, O')
+    => < O : Manager |
+        workers : W,
+        A >
+        produceQuitMsg(O, W)
+        [print "[StopWorkers]"] .
+
+    op produceQuitMsg : Oid Queue{Worker} -> Configuration .
+    eq produceQuitMsg(O, (MI | W)) = quit(MI, O) produceQuitMsg(O, W) .
+    eq produceQuitMsg(O, emptyq) = none .
+
+    rl [Bye] : < O : Manager |
+        workers : (MI | W),
+        A >
+        bye(O, MI)
+    => < O : Manager |
+        workers : W,
+        A >
+        [print "[Bye]"] .
+
+    rl [CleanUp] : < O : Manager |
+        status : stopping,
+        workers : emptyq,
+        A >
+    => < O : Manager | none >
+        [print "[CleanUp]"] .
+endm

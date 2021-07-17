@@ -1,0 +1,22 @@
+fmod BANNER-PARALLEL is
+  pr FM-EXT-QID-LIST .
+  op banner : -> QidList .
+  eq banner =
+    '\b string2qidList("PARALLEL META SEARCH Available Now") '\o '\n
+    '\t string2qidList("red in PARALLEL-META-SEARCH : p-metaSearch(<module>, <initState>, <goalState>, <condition>, <type>, <depth>, <step>, <#workers>)") '\n
+    .
+endfm
+
+mod PARALLEL-META-SEARCH is
+  pr PARALLEL-GENERIC-TOOLS .
+
+  inc LOOP-MODE * (sort System to System-Loop) .
+  pr BANNER-PARALLEL .
+
+  op init : -> System-Loop .
+  op empty : -> State .
+
+  eq [init] : init  = [nil, empty, banner] .
+endm
+
+loop init .
