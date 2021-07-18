@@ -1,0 +1,103 @@
+fmod LOC is
+  sort Loc .
+  ops ss ws cs fs : -> Loc [ctor] .
+endfm
+
+fmod PID is
+  sort Pid .
+  ops p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 : -> Pid [ctor] .
+endfm
+
+fmod SOUP {D :: TRIV} is
+  sort Soup{D} .
+  subsort D$Elt < Soup{D} .
+  op empty : -> Soup{D} [ctor] .
+  op _ _ : Soup{D} Soup{D} -> Soup{D} [ctor assoc comm id: empty] .
+endfm
+
+fmod NAT+DEC is
+  pr NAT .
+  op dec : Nat -> Nat .
+  var N : Nat .
+  eq dec(0) = 0 .
+  eq dec(s(N)) = N .
+endfm
+
+fmod OCOMP is
+  pr PID .
+  pr LOC .
+  pr NAT+DEC .
+  sort OComp .
+  op (locked:_) : Bool -> OComp [ctor] .
+  op (pc[_]:_) :  Pid Loc -> OComp [ctor] .
+  op (cnt:_) :  Nat -> OComp [ctor] .
+endfm
+
+view OComp from TRIV to OCOMP is
+  sort Elt to OComp .
+endv
+
+fmod CONFIG is
+  pr SOUP{OComp} .
+  sort Config .
+  op {_} : Soup{OComp} -> Config [ctor] .
+  ops init init3 init5 init10 init13 init14 init15 : -> Config .
+  eq init = {(locked: false) (pc[p1]: ss) (pc[p2]: ss) (cnt: 2) } .
+  eq init3 = {(locked: false) (pc[p1]: ss) (pc[p2]: ss) (pc[p3]: ss) (cnt: 3) } .
+  eq init5 = {(locked: false) (pc[p1]: ss) (pc[p2]: ss) (pc[p3]: ss) (pc[p4]: ss) (pc[p5]: ss) (cnt: 5) } .
+  eq init10 = {(locked: false) (pc[p1]: ss) (pc[p2]: ss) (pc[p3]: ss) (pc[p4]: ss) (pc[p5]: ss)
+              (pc[p6]: ss) (pc[p7]: ss) (pc[p8]: ss) (pc[p9]: ss) (pc[p10]: ss) (cnt: 10) } .
+  eq init13 = {(locked: false) (pc[p1]: ss) (pc[p2]: ss) (pc[p3]: ss) (pc[p4]: ss) (pc[p5]: ss)
+              (pc[p6]: ss) (pc[p7]: ss) (pc[p8]: ss) (pc[p9]: ss) (pc[p10]: ss) (pc[p11]: ss)
+              (pc[p12]: ss) (pc[p13]: ss) (cnt: 13) } .
+  eq init14 = {(locked: false) (pc[p1]: ss) (pc[p2]: ss) (pc[p3]: ss) (pc[p4]: ss) (pc[p5]: ss)
+              (pc[p6]: ss) (pc[p7]: ss) (pc[p8]: ss) (pc[p9]: ss) (pc[p10]: ss) (pc[p11]: ss)
+              (pc[p12]: ss) (pc[p13]: ss) (pc[p14]: ss) (cnt: 14) } .
+  eq init15 = {(locked: false) (pc[p1]: ss) (pc[p2]: ss) (pc[p3]: ss) (pc[p4]: ss) (pc[p5]: ss)
+              (pc[p6]: ss) (pc[p7]: ss) (pc[p8]: ss) (pc[p9]: ss) (pc[p10]: ss) (pc[p11]: ss)
+              (pc[p12]: ss) (pc[p13]: ss) (pc[p14]: ss) (pc[p15]: ss) (cnt: 15) } .
+endfm
+
+mod TAS is
+  inc CONFIG .
+  var B : Bool .
+  var I : Pid .
+  var N :  Nat .
+  var OCs : Soup{OComp} .
+  rl [start] : {(pc[I]: ss) OCs} => {(pc[I]: ws) OCs} .
+  rl [wait] : {(locked: false) (pc[I]: ws) OCs} => {(locked: true) (pc[I]: cs) OCs} .
+  rl [exit] : {(locked: B) (pc[I]: cs) (cnt: N) OCs} => {(locked: false) (pc[I]: fs) (cnt: dec(N)) OCs} .
+  rl [fin] : {(cnt: 0) OCs} => {(cnt: 0) OCs} .
+endm
+
+in model-checker .
+
+mod TAS-PREDS is
+  pr TAS .
+  inc SATISFACTION .
+  subsort Config < State .
+  ops inWs1 inCs1 inFs1 : -> Prop .
+  var OCs : Soup{OComp} .
+  var PROP : Prop .
+  eq {(pc[p2]: ws) OCs} |= inWs1 = true .
+  eq {(pc[p2]: cs) OCs} |= inCs1 = true .
+  eq {(pc[p2]: fs) OCs} |= inFs1 = true .
+  eq {OCs} |= PROP = false [owise] .
+endm
+
+mod TAS-CHECK is
+  inc TAS-PREDS .
+  inc MODEL-CHECKER .
+  inc LTL-SIMPLIFIER .
+  op lofree : -> Formula .
+  eq lofree = inWs1 |-> inCs1 .
+  op cstable : -> Formula .
+  eq cstable = inWs1 |-> <> inFs1 .
+endm
+
+***(
+search [1] in TAS : init =>! {OCs} .
+search in TAS : init =>* {OCs} such that false .
+red in TAS-CHECK : modelCheck(init, lofree) .
+red in TAS-CHECK : modelCheck(init10, lofree) .
+)***

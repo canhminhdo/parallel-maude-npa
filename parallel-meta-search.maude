@@ -30,23 +30,96 @@ mod PARALLEL-FUNC is
     pr META-LEVEL .
     pr TERMSET-EXT .
 
+    sorts ResultState MatchState .
     op pM : -> Module [ctor] .
+    op errorResultState : -> ResultState .
+    op <_,_,_> : Bool TermSet TermSet -> ResultState .
+    op <_,_,_> : Bool Term TermSet -> ResultState .
+    op <_,_,_> : Bool TermSet Term -> ResultState .
+    op <_,_,_> : Bool Term Term -> ResultState .
+    op <_,_,_,_,_,_,_,_> : Nat TermSet Term Condition Qid Nat TermSet Type -> ResultState .
+    op <_,_> : Bool TermSet -> MatchState .
 
     vars M : Module .
-    vars N BStep : Nat .
-    vars T T' : Term .
-    vars History : TermSet .
+    vars N N' Step : Nat .
+    vars NzStep : NzNat .
+    vars T T' T'' : Term .
+    vars TS TS' TS'' TS''' History History' : TermSet .
     vars Q : Qid .
+    vars Type : Type .
     vars C : Condition .
+    vars RT : ResultTriple .
+    vars B : Bool .
+    vars Sub? : Substitution? .
 
-    op searchStates : Nat Term Term Condition Qid Nat TermSet -> TermSet .
-    eq searchStates(N, T, T', C, Q, BStep, History) = searchStates*(pM, T, T', C, Q, BStep, History) [print "Handled by pid = " N] .
+    op dec : Bound Nat -> Bound .
+    eq dec(unbounded, N) = unbounded .
+    eq dec(s(N), s(N')) = dec(N, N') .
+    eq dec(0, N) = 0 .
+    eq dec(N, 0) = N .
 
-    op searchStates* : Module Term Term Condition Qid Nat TermSet -> TermSet .
-    eq searchStates*(M, T, T', C, Q, BStep, History) = emptyTermSet
-    [print "M " M "\nT = " T "\nT' = " T' "\nC = " C "\nBStep = " BStep "\nHistory = " History]
-    .
-    *** start searching here ...
+    op searchStates : Nat TermSet Term Condition Qid Nat TermSet Type -> ResultState .
+    eq searchStates(N, TS, T', C, Q, NzStep, History, Type)
+    --- = < N, TS, T', C, Q, Step, History, Type > .
+    = searchStates*(pM, TS, T', C, Q, sd(NzStep, 1), History, Type, emptyTermSet, emptyTermSet) [print "Handled by pid = " N] .
+
+    op searchStates* : Module TermSet Term Condition Qid Nat TermSet Type TermSet TermSet -> ResultState .
+    eq searchStates*(M, emptyTermSet, T', C, Q, Step, History, Type, TS', History')
+    =   if Step == 0 or-else TS' == emptyTermSet then
+            < false, TS', History' >
+        else
+            searchStates*(M, TS', T', C, Q, sd(Step,1), History | TS', Type, emptyTermSet, History' | TS')
+        fi .
+
+    ceq searchStates*(M, T | TS, T', C, Q, Step, History, Type, TS', History')
+    =   if B == true then
+            < true, TS''', TS'' >
+        else
+            searchStates*(M, TS, T', C, Q, Step, History | TS'', Type, TS' | TS'', History')
+        fi
+    if TS'' := filterStates(getSuccessors(M, T, getVarTerm(Type)), History)
+    /\ < B, TS''' > := matchingStates(M, T', TS'', C) .
+
+    *** check matching states
+    op matchingStates : Module Term TermSet Condition -> MatchState .
+    eq matchingStates(M, T', emptyTermSet, C) = < false, emptyTermSet > .
+    eq matchingStates(M, T', T | TS, C) =  if metaMatch(M, T', T, C, 0) == noMatch then
+                                                matchingStates(M, T', TS, C)
+                                            else
+                                                < true, T >
+                                            fi .
+
+    *** filter states with history
+    op filterStates : TermSet TermSet -> TermSet .
+    eq filterStates(emptyTermSet, History) = emptyTermSet .
+    eq filterStates(T | TS, History) =  if T in History then
+                                            filterStates(TS, History)
+                                        else
+                                            T | filterStates(TS, History)
+                                        fi .
+
+    *** get all sucessors states from a state.
+    op getVarTerm : Type -> Term .
+    eq getVarTerm(Type) = qid("VAR-" + string(Type) + ":" + string(Type)) .
+
+    op getSuccessors : Module Term Term -> TermSet .
+    eq getSuccessors(M, T, T') = getSuccessors*(
+        metaSearch(M, T, T', nil, '+, 1, 0),
+        M,
+        T,
+        T',
+        0
+    ) .
+
+    op getSuccessors* : ResultTriple? Module Term Term Nat -> TermSet .
+    eq getSuccessors*(failure, M, T, T', N) = emptyTermSet .
+    eq getSuccessors*(RT, M, T, T', N) = getTerm(RT) | getSuccessors*(
+        metaSearch(M, T, T', nil, '+, 1, N + 1),
+        M,
+        T,
+        T',
+        N + 1
+    ) .
 endm
 
 mod PARALLEL-CONFIG is
@@ -59,16 +132,19 @@ mod PARALLEL-CONFIG is
     op status :_ : Status -> Attribute [ctor format(m o o o)] .
     op m :_ : Module -> Attribute .
     op init :_ : Term -> Attribute .
+    op initType :_ : Type -> Attribute .
     op goal :_ : Term -> Attribute .
     op cond :_ : Condition -> Attribute .
     op type :_ : Qid -> Attribute .
-    op depth :_ : Bound -> Attribute .
+    op bound :_ : Bound -> Attribute .
+    op depth :_ : Nat -> Attribute .
     op step :_ : Bound -> Attribute .
     op #workers :_ : Nat -> Attribute [ctor format(! o o o)] .
     op history :_ : TermSet -> Attribute .
     op nextHistory :_ : TermSet -> Attribute .
     op jobs :_ : TermSet -> Attribute .
     op next :_ : TermSet -> Attribute .
+    op result :_ : TermSet -> Attribute .
     op workers :_ : Queue{Worker} -> Attribute [ctor format(! o o o)] .
     op stopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
 
@@ -82,35 +158,39 @@ mod PARALLEL-GENERIC-TOOLS is
     pr FM-MODULE-HANDLING .
 
     vars O O' MI : Oid .
-    vars  A : AttributeSet .
+    vars A : AttributeSet .
     vars M M' M'' : Module .
-    vars T T' T'' T''' : Term .
+    vars T T' T'' : Term .
     vars C : Condition .
     vars B : Bound .
-    vars N Step Pid : Nat .
+    vars N N' N'' D D' Step Pid : Nat .
     vars Q : Qid .
     vars RP : ResultPair .
     vars W : Queue{Worker} .
-    vars RT : Type .
-    vars TS TS' History NextHistory : TermSet .
+    vars Type RType : Type .
+    vars TS TS' History History' NextHistory NextHistory' RTS : TermSet .
+    vars RB : Bool .
+    vars RS : ResultState .
 
     --- op p-metaSearch : Module Term Term Condition Qid Bound Nat ~> ResultTriple? .
     --- eq p-metaSearch(M, T, T', C, Q, B, N) = metaSearch(M, T, T', C, Q, B, N) [print "T = " T " T' = " T'] .
 
-    *** 1st: Module, 2nd: Term, 3rd: Term, 4th: Condition, 5th: Type, 6th: Depth, 7th: step, 7th: #workers
+    *** 1st: Module, 2nd: Term, 3rd: Term, 4th: Condition, 5th: Type, 6th: Bound, 7th: step, 7th: #workers
     op p-metaSearch : Module Term Term Condition Qid Bound Nat Nat -> Configuration .
     ceq p-metaSearch(M, T, T', C, Q, B, Step, N)
     = < aManager : Manager |
         status : idle,
         m : M,
         init : getTerm(RP),
+        initType : getType(RP),
         goal : T',
         cond : C,
         type : Q,
-        depth : B,
+        bound : B,
+        depth : 0,
         step : Step,
         #workers : N >
-    if RP := metaReduce(M, T) .
+    if RP := metaReduce(M, T)  [print RP] .
 
     eq p-metaSearch(M, T, T', C, Q, B, Step, N) = none write(stdout, aManager, "Cannot reduce the init term") [owise] .
 
@@ -124,10 +204,11 @@ mod PARALLEL-GENERIC-TOOLS is
         init : T,
         #workers : N,
         workers : emptyq,
-        history : T,
-        nextHistory : emptyTermSet,
         jobs : T,
+        history : T,
         next : emptyTermSet,
+        nextHistory : emptyTermSet,
+        result : emptyTermSet,
         A >
         produceInterpreter(O, N)
         [print "[CreateWorkers]"] .
@@ -190,9 +271,10 @@ mod PARALLEL-GENERIC-TOOLS is
         goal : T',
         cond : C,
         type : Q,
+        initType : Type,
         history : History,
         step : Step,
-        depth : B,
+        bound : B,
         A >
     => < O : Manager |
         status : working,
@@ -202,13 +284,13 @@ mod PARALLEL-GENERIC-TOOLS is
         goal : T',
         cond : C,
         type : Q,
+        initType : Type,
         history : History,
         step : Step,
-        depth : B,
+        bound : B,
         A >
         reduceTerm(MI, O, 'PARALLEL-FUNC-ADDEDEQS, T'')
     if Pid := extractOid(MI)
-    /\ T''' := '0.Zero
     /\ T'' := 'searchStates[
         upTerm(Pid),
         upTerm(T),
@@ -216,13 +298,117 @@ mod PARALLEL-GENERIC-TOOLS is
         upTerm(C),
         upTerm(Q),
         upTerm(Step),
-        upTerm(History)
+        upTerm(History),
+        upTerm(Type)
         ]
-        [print "[AssignJob] " MI " T = " T'']
+        [print "[AssignJob] " MI]
         .
 
     op extractOid : Oid -> Nat .
     eq extractOid(interpreter(N)) = N .
+
+    crl [WorkerResult] : < O : Manager |
+        status : working,
+        workers : W,
+        next : TS,
+        nextHistory : NextHistory,
+        result : RTS,
+        A >
+        reducedTerm(O, MI, N, T, RType)
+    =>  if RB then
+            < O : Manager |
+                status : stopping,
+                workers : (W | MI),
+                next : TS,
+                nextHistory : NextHistory,
+                result : (RTS | TS'),
+                A >
+            stopWorking(O, O)
+        else
+            < O : Manager |
+                status : working,
+                workers : (W | MI),
+                next : (TS | TS'),
+                nextHistory : (NextHistory | NextHistory'),
+                result : RTS,
+            A >
+        fi
+    if RType == 'ResultState
+    /\ < RB, TS', NextHistory' > := downTerm(T, errorResultState)
+    [print "[WorkerResult] MI = " MI " isMatch = " RB]
+    --- [print "[WorkerResult] MI = " MI "\nRB = " RB "\nTS' = " TS' "\nHistory = " NextHistory']
+    .
+
+    crl [Switch] : < O : Manager |
+        status : working,
+        #workers : N,
+        workers : W,
+        jobs : emptyTermSet,
+        history : History,
+        next : TS,
+        nextHistory : NextHistory,
+        step : Step,
+        bound : B,
+        depth : D,
+        A >
+    => < O : Manager |
+        status : suspending,
+        #workers : N,
+        workers : W,
+        jobs : TS',
+        history : (History | NextHistory | TS'),
+        next : emptyTermSet,
+        nextHistory : emptyTermSet,
+        step : Step,
+        bound : dec(B,Step),
+        depth : D',
+        A >
+    if qsize(W) == N
+    /\ TS =/= emptyTermSet
+    /\ TS' := filterStates(TS, NextHistory)
+    /\ N' := size(TS')
+    /\ D' := (D + Step)
+    /\ N'' := size(History | NextHistory | TS')
+    [print "<================= [Switch at Depth " D' " #jobs = " N' " #History = " N'' "] =================>"] .
+
+    rl [Resuming] : < O : Manager |
+        status : suspending,
+        jobs : TS,
+        bound : B,
+        A >
+    => if B == 0 or-else TS == emptyTermSet then
+        --- Stop the search
+        < O : Manager |
+            status : stopping,
+            jobs : TS,
+            bound : B,
+            A >
+        stopWorking(O, O)
+    else
+        < O : Manager |
+            status : working,
+            jobs : TS,
+            bound : B,
+            A >
+    fi [print "Resuming"] .
+
+    crl [terminate] : < O : Manager |
+        status : working,
+        #workers : N,
+        workers : W,
+        jobs : emptyTermSet,
+        next : emptyTermSet,
+        A >
+    => < O : Manager |
+        status : stopping,
+        #workers : N,
+        workers : W,
+        jobs : emptyTermSet,
+        next : emptyTermSet,
+        A >
+        stopWorking(O, O)
+    if qsize(W) == N
+    [print "[terminate]"] .
 
     --- Stop working from here
     rl [StopWorkers] : < O : Manager |
@@ -251,7 +437,8 @@ mod PARALLEL-GENERIC-TOOLS is
     rl [CleanUp] : < O : Manager |
         status : stopping,
         workers : emptyq,
+        result : RTS,
         A >
-    => < O : Manager | none >
+    => < O : Manager | result : RTS >
         [print "[CleanUp]"] .
 endm

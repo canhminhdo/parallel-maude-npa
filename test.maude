@@ -1,9 +1,16 @@
 in debug.maude
 in full-maude.maude
-in specs/qlock.maude
+in specs/tas.maude
 in parallel-meta-search.maude
 in init.maude
 
 select PARALLEL-META-SEARCH .
 
-erew <> p-metaSearch(upModule('QLOCK, true), 'init.Config, '`{_`}['OCs:Soup`{OComp`}], nil, '+, unbounded, 2, 2) .
+erew <> p-metaSearch(upModule('TAS, true), 'init.Config, '`{_`}['__['OCs:Soup`{OComp`},'pc`[_`]:_['p1.Pid,'fs.Loc],'pc`[_`]:_['p2.Pid,'fs.Loc]]], nil, '+, unbounded, 1, 1) .
+--- erew <> p-metaSearch(upModule('QLOCK, true), 'init.Config, '`{_`}['OCs:Soup`{OComp`}], nil, '+, unbounded, 1, 1) .
+--- red searchStates*(upModule('TAS, true), '`{_`}['__['cnt:_['0.Zero],'locked:_['false.Bool],'pc`[_`]:_['p1.Pid,'fs.Loc],'pc`[_`]:_['p2.Pid,'fs.Loc]]], '`{_`}['__['OCs:Soup`{OComp`},'pc`[_`]:_['p1.Pid,'cs.Loc],'pc`[_`]:_['p2.Pid,'cs.Loc]]], nil, '+, 4, emptyTermSet, 'Config, emptyTermSet, emptyTermSet) .
+--- red getSuccessors(upModule('TAS, true), '`{_`}['__['cnt:_['0.Zero],'locked:_['false.Bool],'pc`[_`]:_['p1.Pid,'fs.Loc],'pc`[_`]:_['p2.Pid,'fs.Loc]]], '`{_`}['OCs:Soup`{OComp`}]) .
+--- red metaSearch(upModule('TAS, true), '`{_`}['__['cnt:_['0.Zero],'locked:_['false.Bool],'pc`[_`]:_['p1.Pid,'fs.Loc],'pc`[_`]:_['p2.Pid,'fs.Loc]]], '`{_`}['OCs:Soup`{OComp`}], nil, '+, 1, 1) .
+--- red matchingStates(upModule('TAS, true), '`{_`}['__['pc`[_`]:_['p1.Pid, 'ws.Loc], 'OCs:Soup`{OComp`}]], '`{_`}['__['cnt:_['s_^2['0.Zero]],'queue:_['empq.Queue`{Pid`}],'pc`[_`]:_['p1.Pid,'ss.Loc],'pc`[_`]:_['p2.Pid, 'ss.Loc]]], nil) .
+--- red matchingStates(upModule('TAS, true), '`{_`}['__['pc`[_`]:_['p1.Pid, 'ss.Loc], 'OCs:Soup`{OComp`}]], '`{_`}['__['cnt:_['s_^2['0.Zero]],'queue:_['empq.Queue`{Pid`}],'pc`[_`]:_['p1.Pid,'ss.Loc],'pc`[_`]:_['p2.Pid, 'ss.Loc]]], nil) .
+--- red matchingStates(upModule('TAS, true), '`{_`}['OCs:Soup`{OComp`}], '`{_`}['__['cnt:_['s_^2['0.Zero]],'queue:_['empq.Queue`{Pid`}],'pc`[_`]:_['p1.Pid,'ss.Loc],'pc`[_`]:_['p2.Pid, 'ss.Loc]]], nil) .

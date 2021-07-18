@@ -11,4 +11,8 @@ fmod TERMSET-EXT is
     op diff : TermSet TermSet TermSet -> TermSet .
     eq diff(emptyTermSet, TS', TS'') = TS'' .
     eq diff((T | TS), TS', TS'') = diff(TS, TS', if T in TS' then TS'' else T | TS'' fi) .
+
+    op size : TermSet -> Nat .
+    eq size(emptyTermSet) = 0 .
+    eq size(T | TS) = size(TS) + 1 .
 endfm
