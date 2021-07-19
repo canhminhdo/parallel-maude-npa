@@ -96,6 +96,7 @@ mod TAS-CHECK is
 endm
 
 ***(
+search [1] in TAS : init10 =>* {(pc[p1]: cs) (pc[p2]: cs) OCs} .
 search [1] in TAS : init =>! {OCs} .
 search in TAS : init =>* {OCs} such that false .
 red in TAS-CHECK : modelCheck(init, lofree) .

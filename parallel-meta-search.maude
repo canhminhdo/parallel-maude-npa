@@ -58,24 +58,23 @@ mod PARALLEL-FUNC is
     eq dec(0, N) = 0 .
     eq dec(N, 0) = N .
 
-    op searchStates : Nat TermSet Term Condition Qid Nat TermSet Type -> ResultState .
-    eq searchStates(N, TS, T', C, Q, NzStep, History, Type)
-    --- = < N, TS, T', C, Q, Step, History, Type > .
-    = searchStates*(pM, TS, T', C, Q, sd(NzStep, 1), History, Type, emptyTermSet, emptyTermSet) [print "Handled by pid = " N] .
+    op searchStates : Nat TermSet Term Condition Qid Nat Type -> ResultState .
+    eq searchStates(N, TS, T', C, Q, NzStep, Type)
+    = searchStates*(pM, TS, T', C, Q, sd(NzStep, 1), Type, TS, emptyTermSet) [print "Handled by pid = " N] .
 
-    op searchStates* : Module TermSet Term Condition Qid Nat TermSet Type TermSet TermSet -> ResultState .
-    eq searchStates*(M, emptyTermSet, T', C, Q, Step, History, Type, TS', History')
+    op searchStates* : Module TermSet Term Condition Qid Nat Type TermSet TermSet -> ResultState .
+    eq searchStates*(M, emptyTermSet, T', C, Q, Step, Type, History, TS')
     =   if Step == 0 or-else TS' == emptyTermSet then
-            < false, TS', History' >
+            < false, TS', History >
         else
-            searchStates*(M, TS', T', C, Q, sd(Step,1), History | TS', Type, emptyTermSet, History' | TS')
+            searchStates*(M, TS', T', C, Q, sd(Step,1), Type, History | TS', emptyTermSet)
         fi .
 
-    ceq searchStates*(M, T | TS, T', C, Q, Step, History, Type, TS', History')
+    ceq searchStates*(M, T | TS, T', C, Q, Step, Type, History, TS')
     =   if B == true then
             < true, TS''', TS'' >
         else
-            searchStates*(M, TS, T', C, Q, Step, History | TS'', Type, TS' | TS'', History')
+            searchStates*(M, TS, T', C, Q, Step, Type, History, TS' | TS'')
         fi
     if TS'' := filterStates(getSuccessors(M, T, getVarTerm(Type)), History)
     /\ < B, TS''' > := matchingStates(M, T', TS'', C) .
@@ -141,7 +140,6 @@ mod PARALLEL-CONFIG is
     op step :_ : Bound -> Attribute .
     op #workers :_ : Nat -> Attribute [ctor format(! o o o)] .
     op history :_ : TermSet -> Attribute .
-    op nextHistory :_ : TermSet -> Attribute .
     op jobs :_ : TermSet -> Attribute .
     op next :_ : TermSet -> Attribute .
     op result :_ : TermSet -> Attribute .
@@ -168,12 +166,9 @@ mod PARALLEL-GENERIC-TOOLS is
     vars RP : ResultPair .
     vars W : Queue{Worker} .
     vars Type RType : Type .
-    vars TS TS' History History' NextHistory NextHistory' RTS : TermSet .
+    vars TS TS' History History' RTS : TermSet .
     vars RB : Bool .
     vars RS : ResultState .
-
-    --- op p-metaSearch : Module Term Term Condition Qid Bound Nat ~> ResultTriple? .
-    --- eq p-metaSearch(M, T, T', C, Q, B, N) = metaSearch(M, T, T', C, Q, B, N) [print "T = " T " T' = " T'] .
 
     *** 1st: Module, 2nd: Term, 3rd: Term, 4th: Condition, 5th: Type, 6th: Bound, 7th: step, 7th: #workers
     op p-metaSearch : Module Term Term Condition Qid Bound Nat Nat -> Configuration .
@@ -205,9 +200,8 @@ mod PARALLEL-GENERIC-TOOLS is
         #workers : N,
         workers : emptyq,
         jobs : T,
-        history : T,
+        history : emptyTermSet,
         next : emptyTermSet,
-        nextHistory : emptyTermSet,
         result : emptyTermSet,
         A >
         produceInterpreter(O, N)
@@ -298,7 +292,6 @@ mod PARALLEL-GENERIC-TOOLS is
         upTerm(C),
         upTerm(Q),
         upTerm(Step),
-        upTerm(History),
         upTerm(Type)
         ]
         [print "[AssignJob] " MI]
@@ -311,7 +304,7 @@ mod PARALLEL-GENERIC-TOOLS is
         status : working,
         workers : W,
         next : TS,
-        nextHistory : NextHistory,
+        history : History,
         result : RTS,
         A >
         reducedTerm(O, MI, N, T, RType)
@@ -320,7 +313,7 @@ mod PARALLEL-GENERIC-TOOLS is
                 status : stopping,
                 workers : (W | MI),
                 next : TS,
-                nextHistory : NextHistory,
+                history : History,
                 result : (RTS | TS'),
                 A >
             stopWorking(O, O)
@@ -329,14 +322,16 @@ mod PARALLEL-GENERIC-TOOLS is
                 status : working,
                 workers : (W | MI),
                 next : (TS | TS'),
-                nextHistory : (NextHistory | NextHistory'),
+                history : (History | History'),
                 result : RTS,
             A >
         fi
     if RType == 'ResultState
-    /\ < RB, TS', NextHistory' > := downTerm(T, errorResultState)
+    /\ < RB, TS', History' > := downTerm(T, errorResultState)
+    --- /\ D := size(TS')
+    --- /\ D' := size(History')
+    --- [print "[WorkerResult] MI = " MI " isMatch = " RB " #TS = " D " #History = " D']
     [print "[WorkerResult] MI = " MI " isMatch = " RB]
-    --- [print "[WorkerResult] MI = " MI "\nRB = " RB "\nTS' = " TS' "\nHistory = " NextHistory']
     .
 
     crl [Switch] : < O : Manager |
@@ -346,7 +341,6 @@ mod PARALLEL-GENERIC-TOOLS is
         jobs : emptyTermSet,
         history : History,
         next : TS,
-        nextHistory : NextHistory,
         step : Step,
         bound : B,
         depth : D,
@@ -356,20 +350,21 @@ mod PARALLEL-GENERIC-TOOLS is
         #workers : N,
         workers : W,
         jobs : TS',
-        history : (History | NextHistory | TS'),
+        history : History,
         next : emptyTermSet,
-        nextHistory : emptyTermSet,
         step : Step,
         bound : dec(B,Step),
         depth : D',
         A >
     if qsize(W) == N
     /\ TS =/= emptyTermSet
-    /\ TS' := filterStates(TS, NextHistory)
-    /\ N' := size(TS')
+    /\ TS' := filterStates(TS, History)
     /\ D' := (D + Step)
-    /\ N'' := size(History | NextHistory | TS')
-    [print "<================= [Switch at Depth " D' " #jobs = " N' " #History = " N'' "] =================>"] .
+    /\ N' := size(TS')
+    --- /\ N'' := size(History)
+    --- [print "<================= [Switch at Depth " D' " #jobs = " N' " #History = " N'' "] =================>"]
+    [print "<================= [Switch at Depth " D' " #jobs = " N' "] =================>"]
+    .
 
     rl [Resuming] : < O : Manager |
         status : suspending,
@@ -434,11 +429,13 @@ mod PARALLEL-GENERIC-TOOLS is
         A >
         [print "[Bye]"] .
 
-    rl [CleanUp] : < O : Manager |
+    crl [CleanUp] : < O : Manager |
         status : stopping,
         workers : emptyq,
         result : RTS,
+        history : History,
         A >
     => < O : Manager | result : RTS >
-        [print "[CleanUp]"] .
+    if N := size(History)
+        [print "[CleanUp] #states = " N] .
 endm
