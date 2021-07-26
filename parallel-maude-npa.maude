@@ -145,9 +145,9 @@ mod PARALLEL-CONFIG is
     --- pr SET{Worker} .
     pr IQUEUE{Worker} .
 
-    sort Status .
-    ops idle initializing initialized waiting suspending working stopping terminated : -> Status .
-    op status :_ : Status -> Attribute [ctor format(m o o o)] .
+    sort IStatus .
+    ops idle initializing initialized waiting suspending working stopping terminated : -> IStatus .
+    op status :_ : IStatus -> Attribute [ctor format(m o o o)] .
     op m :_ : Module -> Attribute .
     op gs :_ : GrammarList -> Attribute .
     op filter :_ : Filters -> Attribute .

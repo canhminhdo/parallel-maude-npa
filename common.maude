@@ -59,6 +59,14 @@ mod MAUDE-NPA-EXT is
         fi
     fi .
 
+    op filterStateWithHistory : Module IdSystemSet IdSystemSet -> IdSystemSet .
+    eq filterStateWithHistory(M, HistoryIST, empty) = empty .
+    eq filterStateWithHistory(M, HistoryIST, IS IST)
+    = if isNFSystem(M, HistoryIST, IS)
+    then filterStateWithHistory(M, HistoryIST, IST)
+    else IS filterStateWithHistory(M, HistoryIST, IST)
+    fi .
+
     op searchStateMParallel : Module GrammarList Filters Bound Bound Bound Bool
                     IdSystemSet IdSystemSet -> IdSystemSetTuple .
     op searchStateMParallel* : Module GrammarList Filters Bound Bound Bound Bool
@@ -122,9 +130,9 @@ mod PARALLEL-CONFIG is
     pr IQUEUE{Worker} .
     pr MAP{Worker,Bool} .
 
-    sort Status .
-    ops idle initializing initialized waiting suspending working stopping terminated : -> Status .
-    op status :_ : Status -> Attribute [ctor format(m o o o)] .
+    sort IStatus .
+    ops idle initializing initialized waiting suspending working stopping terminated : -> IStatus .
+    op status :_ : IStatus -> Attribute [ctor format(m o o o)] .
     op m :_ : Module -> Attribute .
     op gs:_ : GrammarList -> Attribute .
     op filter :_ : Filters -> Attribute .
@@ -145,7 +153,6 @@ mod PARALLEL-CONFIG is
     op socket :_ : Oid -> Attribute .
     op waitingWorkers :_ : Queue{Worker} -> Attribute [ctor format(! o o o)] .
     op workers :_ : Set{Worker} -> Attribute [ctor format(! o o o)] .
-    op cache :_ : Map{Worker,Bool} -> Attribute [ctor format(! o o o)] .
     op attack :_ : Nat -> Attribute .
 
     op StopWorking : Oid Oid -> Msg [ctor msg format (b o)] .

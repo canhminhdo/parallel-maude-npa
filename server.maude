@@ -21,7 +21,6 @@ mod PARALLEL-MAUDE-NPA is
     vars IP DATA S : String .
     vars SW : Set{Worker} .
     vars W : Queue{Worker} .
-    vars Cache : Map{Worker,Bool} .
     vars B : Bool .
 
     rl [CreatedSocket] : < O : Server |
@@ -158,10 +157,6 @@ mod PARALLEL-MAUDE-NPA is
     /\ D' := D + Step
     /\ N := #jobs(INIT INIT')
     [print "<================= [Switch at Depth " D' " #jobs = " C' " #init = " N "] =================>"] .
-
-    op resetCache : Map{Worker,Bool} -> Map{Worker,Bool} .
-    eq resetCache(empty) = empty .
-    eq resetCache((CLIENT |-> B, Cache)) = CLIENT |-> false, resetCache(Cache) .
 
     rl [Resuming] : < O : Server |
         status : suspending,

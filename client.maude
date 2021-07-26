@@ -12,7 +12,7 @@ mod PARALLEL-MAUDE-NPA is
     var  A : AttributeSet .
     vars Nodes BStep Step Sess : Bound .
     vars Rem? : Bool .
-    vars IST IST' HistoryIST : IdSystemSet .
+    vars IST IST' HistoryIST HistoryIST' : IdSystemSet .
     vars M : Module .
     var GS : GrammarList .
     var F : Filters .
@@ -85,19 +85,24 @@ mod PARALLEL-MAUDE-NPA is
             nodes : Nodes,
             sess : Sess,
             rem : Rem?,
-            history : (HistoryIST history(State)), --- update history if any
+            history : (HistoryIST' IST'), --- update history if any
             A >
-        handleJob(O, CLIENT, M, GS, F, step(State), if step(State) == 1 then Nodes else unbounded fi, Sess, Rem?, (HistoryIST history(State)), jobs(State))
+            Send(CLIENT, O, state2string(< empty, IST', empty >))
+        --- handleJob(O, CLIENT, M, GS, F, step(State), if step(State) == 1 then Nodes else unbounded fi, Sess, Rem?, HistoryIST', IST)
     fi
     if State := string2state(DATA)
-    [print "[Received]"] .
+    /\ IST := jobs(State)
+    /\ HistoryIST' := (HistoryIST IST)
+    /\ IST' := filterStateWithHistory(M, HistoryIST, nextBackNarrowParallel(M, GS, F, Nodes, IST))
+    [print "[Received] & [HandleJob]"] .
 
-    op handleJob : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
-                    IdSystemSet IdSystemSet -> Configuration .
-    ceq handleJob(O, CLIENT, M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IST)
-    = Send(CLIENT, O, state2string(< empty, IST', empty >))
-    if IST' := nextBackNarrowParallel(M, GS, F, Nodes, IST)
-    [print "[HandleJob]"] .
+    --- op handleJob : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
+    ---                 IdSystemSet IdSystemSet -> Configuration .
+    --- ceq handleJob(O, CLIENT, M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IST)
+    --- = Send(CLIENT, O, state2string(< empty, IST', empty >))
+    --- if IST' := nextBackNarrowParallel(M, GS, F, Nodes, IST)
+    --- if IST' := filterStateWithHistory(M, HistoryIST, nextBackNarrowParallel(M, GS, F, Nodes, IST))
+    --- [print "[HandleJob]"] .
 
     rl [ClosedSocket] : < O : Client | A > ClosedSocket(O, CLIENT, S)
     => < O : Client | none > [print "[ClosedSocket]"] .
