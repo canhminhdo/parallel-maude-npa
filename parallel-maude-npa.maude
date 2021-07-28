@@ -60,7 +60,7 @@ mod MAUDE-NPA-EXT is
     --- eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplify-theSystemSet(F,HistoryIST, IST))) .
     --- eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplifyByImplicationL(IST))) .
 
-    op searchState-CheckInit* : Module Bound IdSystemSet IdSystemSetPair IdSystemSet Nat -> IdSystemSetPair [memo] .
+    op searchState-CheckInit* : Module Bound IdSystemSet IdSystemSetPair IdSystemSet Nat -> IdSystemSetPair .
     eq searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, IST, C)
     = if C == 1 then
         < INIT, IST >
@@ -68,7 +68,7 @@ mod MAUDE-NPA-EXT is
         searchState-CheckInit(M, Sess, HistoryIST, < INIT, IST' >, IST)
     fi [print "CheckInit"] .
 
-    op searchState-CheckInit : Module Bound IdSystemSet IdSystemSetPair IdSystemSet -> IdSystemSetPair [memo] .
+    op searchState-CheckInit : Module Bound IdSystemSet IdSystemSetPair IdSystemSet -> IdSystemSetPair .
     eq searchState-CheckInit(M, Sess, HistoryIST, < INIT, IST' >, empty) = < INIT, IST' > .
     eq searchState-CheckInit(M, Sess,HistoryIST, < INIT, IST' >, (IS IST))
     = if Sess =/= unbounded and-then countSessions(IS) > Sess
@@ -115,10 +115,10 @@ mod MAUDE-NPA-EXT is
     op pF : -> Filters .
 
     --- parallel back narrowing wrapper function
-    op nextBackNarrowParallel* : GrammarList Filters Bound IdSystemSet -> IdSystemSet [memo] .
+    op nextBackNarrowParallel* : GrammarList Filters Bound IdSystemSet -> IdSystemSet .
     eq nextBackNarrowParallel*(GS, F, Nodes, IST) = nextBackNarrowParallel(pM, GS, F, Nodes, IST) .
 
-    op nextBackNarrowParallel : Module GrammarList Filters Bound IdSystemSet -> IdSystemSet [memo] .
+    op nextBackNarrowParallel : Module GrammarList Filters Bound IdSystemSet -> IdSystemSet .
     eq nextBackNarrowParallel(M,GS,F:Filters,Nodes,IST)
     = filter-eachSystem#Top(F:Filters,M,GS, --- filter systems with grammars, never patterns, ...
         simplify-eachSystem#Top(F:Filters,M, --- always simplify before filtering
