@@ -14,26 +14,26 @@ Moreover, encription/decription have the following algebraic properties:
 )***
 
 fmod PROTOCOL-EXAMPLE-SYMBOLS is
-  --- Importing sorts IMsg, Fresh, Public, and GhostData
+  --- Importing sorts Msg, Fresh, Public, and GhostData
   protecting DEFINITION-PROTOCOL-RULES .
 
   ----------------------------------------------------------
   --- Overwrite this module with the syntax of your protocol
   --- Notes:
-  --- * Sort IMsg and Fresh are special and imported
-  --- * Every sort must be a subsort of IMsg
-  --- * No sort can be a supersort of IMsg
+  --- * Sort Msg and Fresh are special and imported
+  --- * Every sort must be a subsort of Msg
+  --- * No sort can be a supersort of Msg
   ----------------------------------------------------------
 
   --- Sort Information
   sorts Name Nonce Key .
-  subsort Name Nonce Key < IMsg .
+  subsort Name Nonce Key < Msg .
   subsort Name < Key .
   subsort Name < Public .
 
   --- Encoding operators for public/private encryption
-  op pk : Key IMsg -> IMsg [frozen] .
-  op sk : Key IMsg -> IMsg [frozen] .
+  op pk : Key Msg -> Msg [frozen] .
+  op sk : Key Msg -> Msg [frozen] .
 
   --- Nonce operator
   op n : Name Fresh -> Nonce [frozen] .
@@ -44,7 +44,7 @@ fmod PROTOCOL-EXAMPLE-SYMBOLS is
   op i : -> Name . --- Intruder
 
  --- Associativity operator
-  op _;_ : IMsg  IMsg  -> IMsg [gather (e E) frozen] .
+  op _;_ : Msg  Msg  -> Msg [gather (e E) frozen] .
 
 endfm
 
@@ -56,7 +56,7 @@ fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
   --- of your protocol
   ----------------------------------------------------------
 
-  var Z : IMsg .
+  var Z : Msg .
   var Ke : Key .
 
   *** Encryption/Decryption Cancellation
@@ -76,7 +76,7 @@ fmod PROTOCOL-SPECIFICATION is
   ----------------------------------------------------------
 
   var Ke : Key .
-  vars X Y Z : IMsg .
+  vars X Y Z : Msg .
   vars r r' : Fresh .
   vars A B : Name .
   vars N N1 N2 : Nonce .

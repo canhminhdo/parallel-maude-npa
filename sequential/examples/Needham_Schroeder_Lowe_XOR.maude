@@ -1,39 +1,50 @@
 ***(
-The informal journal-level description of this protocol is as follows:
+Lowe's fix but with an attack using exlusive or.
+The informal journal-level description [Hosc07] of this protocol is as follows:
 
-A --> B: pk(B,A ; N_A)
-B --> A: pk(A, N_A ; N_B)
+A --> B: pk(B, N_A ; A)
+B --> A: pk(A, N_A ; B * N_B)
 A --> B: pk(B, N_B)
 
 where N_A and N_B are nonces, pk(x,y) means message y encripted using public
 key x, and sk(x,y) means message y encripted using private key x.
-Moreover, encription/decription have the following algebraic properties:
+Symbol * is the exclusive or operator.
+Encription/decription have the following algebraic properties:
 
   pk(K,sk(K,M)) = M .
   sk(K,pk(K,M)) = M .
+
+And exclusive or has the following algebraic properties:
+
+  X * X = 0 .
+  X * X * Y = Y .
+  X * 0 = X .
 )***
 
 fmod PROTOCOL-EXAMPLE-SYMBOLS is
-  --- Importing sorts IMsg, Fresh, Public, and GhostData
+  --- Importing sorts Msg, Fresh, Public, and GhostData
   protecting DEFINITION-PROTOCOL-RULES .
 
   ----------------------------------------------------------
   --- Overwrite this module with the syntax of your protocol
   --- Notes:
-  --- * Sort IMsg and Fresh are special and imported
-  --- * Every sort must be a subsort of IMsg
-  --- * No sort can be a supersort of IMsg
+  --- * Sort Msg and Fresh are special and imported
+  --- * Every sort must be a subsort of Msg
+  --- * No sort can be a supersort of Msg
   ----------------------------------------------------------
 
   --- Sort Information
-  sorts Name Nonce Key .
-  subsort Name Nonce Key < IMsg .
-  subsort Name < Key .
+  sorts Name Nonce NNSet .
+  subsort Name Nonce NNSet < Msg .
   subsort Name < Public .
+  subsort Name Nonce < NNSet .
 
   --- Encoding operators for public/private encryption
-  op pk : Key IMsg -> IMsg [frozen] .
-  op sk : Key IMsg -> IMsg [frozen] .
+  op pk : Name Msg -> Msg [frozen] .
+  op sk : Name Msg -> Msg [frozen] .
+
+  --- Concatenation operator
+  op _;_ : Msg Msg -> Msg [gather (e E) frozen] .
 
   --- Nonce operator
   op n : Name Fresh -> Nonce [frozen] .
@@ -43,8 +54,9 @@ fmod PROTOCOL-EXAMPLE-SYMBOLS is
   op b : -> Name . --- Bob
   op i : -> Name . --- Intruder
 
- --- Associativity operator
-  op _;_ : IMsg  IMsg  -> IMsg [gather (e E) frozen] .
+ --- Exclusive or
+  op _*_ : NNSet NNSet -> NNSet [assoc comm frozen] .
+  op null : -> NNSet .
 
 endfm
 
@@ -56,13 +68,18 @@ fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
   --- of your protocol
   ----------------------------------------------------------
 
-  var Z : IMsg .
-  var Ke : Key .
+  var A : Name .
+  vars X Y Z : Msg .
+  vars XN YN : NNSet .
 
   *** Encryption/Decryption Cancellation
-  eq pk(Ke,sk(Ke,Z)) = Z [variant] .
-  eq sk(Ke,pk(Ke,Z)) = Z [variant] .
+  eq pk(A,sk(A,Z)) = Z [variant] .
+  eq sk(A,pk(A,Z)) = Z [variant] .
 
+  *** Exclusive or properties
+  eq XN * XN = null    [variant] .
+  eq XN * XN * YN = YN [variant] .
+  eq XN * null = XN    [variant] .
 endfm
 
 fmod PROTOCOL-SPECIFICATION is
@@ -75,56 +92,42 @@ fmod PROTOCOL-SPECIFICATION is
   --- of your protocol
   ----------------------------------------------------------
 
-  var Ke : Key .
-  vars X Y Z : IMsg .
+  vars X Y Z : Msg .
   vars r r' : Fresh .
   vars A B : Name .
-  vars N N1 N2 : Nonce .
+  vars N NA NB : Nonce .
+  vars XN YN : NNSet .
 
   eq STRANDS-DOLEVYAO
    = :: nil :: [ nil | -(X), -(Y), +(X ; Y), nil ] &
      :: nil :: [ nil | -(X ; Y), +(X), nil ] &
      :: nil :: [ nil | -(X ; Y), +(Y), nil ] &
+     :: nil :: [ nil | -(XN), -(YN), +(XN * YN), nil ] &
      :: nil :: [ nil | -(X), +(sk(i,X)), nil ] &
-     :: nil :: [ nil | -(X), +(pk(Ke,X)), nil ] &
+     :: nil :: [ nil | -(X), +(pk(A,X)), nil ] &
+     :: nil :: [ nil | +(null), nil ] &
+     :: r   :: [ nil | +(n(i,r)), nil ] &
      :: nil :: [ nil | +(A), nil ]
   [nonexec] .
 
   eq STRANDS-PROTOCOL
-   = :: r ::
-     [ nil | +(pk(B,A ; n(A,r))), -(pk(A,n(A,r) ; N)), +(pk(B, N)), nil ] &
-     :: r ::
-     [ nil | -(pk(B,A ; N)), +(pk(A, N ; n(B,r))), -(pk(B,n(B,r))), nil ]
+  = :: r ::  *** Bob ***
+    [nil | +(pk(B, n(A,r) ; A)),
+           -(pk(A, n(A,r) ; B * YN)),
+           +(pk(B, YN)), nil]
+    &
+    :: r' :: *** Alice ***
+    [nil | -(pk(B, XN ; A)),
+           +(pk(A, XN ; B * n(B,r'))),
+           -(pk(B,n(B,r'))), nil]
   [nonexec] .
 
   eq ATTACK-STATE(0)
-   = :: r ::
-     [ nil, -(pk(b,a ; N)), +(pk(a, N ; n(b,r))), -(pk(b,n(b,r))) | nil ]
-     || n(b,r) inI, empty
-     || nil
-     || nil
-     || nil
-  [nonexec] .
-
-  eq ATTACK-STATE(1)
-   = :: r ::
-     [ nil, -(pk(b,a ; N)), +(pk(a,  N ; n(b,r))), -(pk(b,n(b,r))) | nil ]
-     ||  empty
-     || nil
-     || nil
-     || never *** for authentication
-     (:: r' ::
-     [ nil, +(pk(b,a ; N)), -(pk(a,  N ; n(b,r))) | +(pk(b,n(b,r))), nil ]
-     & S:StrandSet
-     || K:IntruderKnowledge)
-  [nonexec] .
-
-  eq ATTACK-STATE(2)
-   = :: r ::
-     [ nil, +(pk(b,a ; n(a,r))), -(pk(a,n(a,r) ; N1)), +(pk(b, N1)) | nil ] &
-     :: r' ::
-     [ nil, -(pk(b,a ; N2)), +(pk(a, N2 ; n(b,r'))), -(pk(b,n(b,r'))) | nil ]
-     || N2 != n(a,r)
+   = :: r' :: *** Alice ***
+     [nil, -(pk(b, XN ; a)),
+           +(pk(a, XN ; b * n(b,r'))),
+           -(pk(b, n(b,r'))) | nil]
+     || n(b,r') inI, empty
      || nil
      || nil
      || nil

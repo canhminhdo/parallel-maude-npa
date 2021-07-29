@@ -22,29 +22,29 @@ And exclusive or has the following algebraic properties:
 )***
 
 fmod PROTOCOL-EXAMPLE-SYMBOLS is
-  --- Importing sorts Msg, Fresh, Public, and GhostData
+  --- Importing sorts IMsg, Fresh, Public, and GhostData
   protecting DEFINITION-PROTOCOL-RULES .
 
   ----------------------------------------------------------
   --- Overwrite this module with the syntax of your protocol
   --- Notes:
-  --- * Sort Msg and Fresh are special and imported
-  --- * Every sort must be a subsort of Msg
-  --- * No sort can be a supersort of Msg
+  --- * Sort IMsg and Fresh are special and imported
+  --- * Every sort must be a subsort of IMsg
+  --- * No sort can be a supersort of IMsg
   ----------------------------------------------------------
 
   --- Sort Information
   sorts Name Nonce NNSet .
-  subsort Name Nonce NNSet < Msg .
+  subsort Name Nonce NNSet < IMsg .
   subsort Name < Public .
   subsort Name Nonce < NNSet .
 
   --- Encoding operators for public/private encryption
-  op pk : Name Msg -> Msg [frozen] .
-  op sk : Name Msg -> Msg [frozen] .
+  op pk : Name IMsg -> IMsg [frozen] .
+  op sk : Name IMsg -> IMsg [frozen] .
 
   --- Concatenation operator
-  op _;_ : Msg Msg -> Msg [gather (e E) frozen] .
+  op _;_ : IMsg IMsg -> IMsg [gather (e E) frozen] .
 
   --- Nonce operator
   op n : Name Fresh -> Nonce [frozen] .
@@ -69,7 +69,7 @@ fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
   ----------------------------------------------------------
 
   var A : Name .
-  vars X Y Z : Msg .
+  vars X Y Z : IMsg .
   vars XN YN : NNSet .
 
   *** Encryption/Decryption Cancellation
@@ -92,7 +92,7 @@ fmod PROTOCOL-SPECIFICATION is
   --- of your protocol
   ----------------------------------------------------------
 
-  vars X Y Z : Msg .
+  vars X Y Z : IMsg .
   vars r r' : Fresh .
   vars A B : Name .
   vars N NA NB : Nonce .

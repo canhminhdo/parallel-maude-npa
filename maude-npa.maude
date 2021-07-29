@@ -5707,38 +5707,38 @@ fmod XorUnif is
 ****x<-0, y<-b
 
 
-    eq p30 = 'XOR['g['g['XOR['2.Msg,'2.Msg],'f['^7:Msg,'^10:Msg]],'g['f['^5:Msg,'^12:Msg],'f['^8:Msg,'^10:Msg]]],'XOR['g['^4:Msg,'^6:Msg],'g['^8:Msg,'3.Msg]]] =? 'XOR['g['g['XOR['2.Msg,'&1:Msg],'f['XOR['&9:Msg,'2.Msg],'&16:Msg]],'g['f['&11:Msg,'g[
-    '&8:Msg,'&3:Msg]],'f['&12:Msg,'&13:Msg]]],'XOR['g['g['&8:Msg,'&2:Msg],'&9:Msg],'g['&1:Msg,'&2:Msg]]] .
+    eq p30 = 'XOR['g['g['XOR['2.IMsg,'2.IMsg],'f['^7:IMsg,'^10:IMsg]],'g['f['^5:IMsg,'^12:IMsg],'f['^8:IMsg,'^10:IMsg]]],'XOR['g['^4:IMsg,'^6:IMsg],'g['^8:IMsg,'3.IMsg]]] =? 'XOR['g['g['XOR['2.IMsg,'&1:IMsg],'f['XOR['&9:IMsg,'2.IMsg],'&16:IMsg]],'g['f['&11:IMsg,'g[
+    '&8:IMsg,'&3:IMsg]],'f['&12:IMsg,'&13:IMsg]]],'XOR['g['g['&8:IMsg,'&2:IMsg],'&9:IMsg],'g['&1:IMsg,'&2:IMsg]]] .
 
-	eq p31 = 'XOR['g['^4:Msg,'^6:Msg],'g['^8:Msg,'3.Msg]] =? 'XOR['g['g['&8:Msg,'&2:Msg],'&9:Msg],'g['&1:Msg,'&2:Msg]] .
+	eq p31 = 'XOR['g['^4:IMsg,'^6:IMsg],'g['^8:IMsg,'3.IMsg]] =? 'XOR['g['g['&8:IMsg,'&2:IMsg],'&9:IMsg],'g['&1:IMsg,'&2:IMsg]] .
 
-	eq p32 = 'g['g['XOR['2.Msg,'2.Msg],'f['^7:Msg,'^10:Msg]],'g['f['^5:Msg,'^12:Msg],'f['^8:Msg,'^10:Msg]]] =? 'g['g['XOR['2.Msg,'&1:Msg],'f['XOR['&9:Msg,'2.Msg],'&16:Msg]],'g['f['&11:Msg,'g[
-    '&8:Msg,'&3:Msg]],'f['&12:Msg,'&13:Msg]]] .
+	eq p32 = 'g['g['XOR['2.IMsg,'2.IMsg],'f['^7:IMsg,'^10:IMsg]],'g['f['^5:IMsg,'^12:IMsg],'f['^8:IMsg,'^10:IMsg]]] =? 'g['g['XOR['2.IMsg,'&1:IMsg],'f['XOR['&9:IMsg,'2.IMsg],'&16:IMsg]],'g['f['&11:IMsg,'g[
+    '&8:IMsg,'&3:IMsg]],'f['&12:IMsg,'&13:IMsg]]] .
 
-	eq p33 = 'g['XOR['2.Msg,'2.Msg],'f['^7:Msg,'^10:Msg]] =? 'g['u['2.Msg,'&1:Msg],'f['XOR['&9:Msg,'2.Msg],'&16:Msg]] .
+	eq p33 = 'g['XOR['2.IMsg,'2.IMsg],'f['^7:IMsg,'^10:IMsg]] =? 'g['u['2.IMsg,'&1:IMsg],'f['XOR['&9:IMsg,'2.IMsg],'&16:IMsg]] .
 
-	eq p34 = 'XOR['2.Msg,'2.Msg] =? 'u['2.Msg,'&1:Msg] .
+	eq p34 = 'XOR['2.IMsg,'2.IMsg] =? 'u['2.IMsg,'&1:IMsg] .
 
-	eq p37 = 'f['^7:Msg,'^10:Msg] =? 'f['XOR['&9:Msg,'2.Msg],'&16:Msg] .
+	eq p37 = 'f['^7:IMsg,'^10:IMsg] =? 'f['XOR['&9:IMsg,'2.IMsg],'&16:IMsg] .
 
-	eq p35 = 'XOR['2.Msg,'2.Msg] =? 'XOR['2.Msg,'&1:Msg] .
+	eq p35 = 'XOR['2.IMsg,'2.IMsg] =? 'XOR['2.IMsg,'&1:IMsg] .
 
-	eq p36 = 'g['g['XOR['2.Msg,'2.Msg],'f['^7:Msg,'^10:Msg]],'g['f['^5:Msg,'^12:Msg],'f['^8:Msg,'^10:Msg]]] =? 'g['^4:Msg,'^6:Msg] .
+	eq p36 = 'g['g['XOR['2.IMsg,'2.IMsg],'f['^7:IMsg,'^10:IMsg]],'g['f['^5:IMsg,'^12:IMsg],'f['^8:IMsg,'^10:IMsg]]] =? 'g['^4:IMsg,'^6:IMsg] .
 
-	eq p38 = 'pk['#4:Name,'_;_['#0:Msg,'XOR['#5:Name,'n['#4:Name,'#6:Fresh]]]] =? 'pk['#7:Name,'_;_['n['#8:Name,'#9:Fresh],'XOR['#8:Name,'#10:NNSet]]] .
+	eq p38 = 'pk['#4:Name,'_;_['#0:IMsg,'XOR['#5:Name,'n['#4:Name,'#6:Fresh]]]] =? 'pk['#7:Name,'_;_['n['#8:Name,'#9:Fresh],'XOR['#8:Name,'#10:NNSet]]] .
 
-	eq p39 = 'x:Msg =? 'y:Nonce .
+	eq p39 = 'x:IMsg =? 'y:Nonce .
 
-	eq p40 = 'x:Msg =? 'y:NNSet .
+	eq p40 = 'x:IMsg =? 'y:NNSet .
 	eq p41 = 'x:NNSet =? 'y:Nonce .
-	eq p42 = 'x:Nonce =? 'y:Msg .
-	eq p43 = 'x:Msg =? 'y:Msg .
-	eq p44 = 'f['x:Msg] =? 'f['y:Msg] .
-	eq p45 = 'f['x:Msg] =? 'f['y:NNSet] .
+	eq p42 = 'x:Nonce =? 'y:IMsg .
+	eq p43 = 'x:IMsg =? 'y:IMsg .
+	eq p44 = 'f['x:IMsg] =? 'f['y:IMsg] .
+	eq p45 = 'f['x:IMsg] =? 'f['y:NNSet] .
 	eq p46 = 'f['x:NNSet] =? 'f['y:Nonce] .
-	eq p47 = 'f['x:Nonce] =? 'f['y:Msg] .
-	eq p48 = 'f['x:Msg] =? 'f['y:Msg] .
-	eq p49 = 'f['x:NNSet] =? 'f['y:Msg] .
+	eq p47 = 'f['x:Nonce] =? 'f['y:IMsg] .
+	eq p48 = 'f['x:IMsg] =? 'f['y:IMsg] .
+	eq p49 = 'f['x:NNSet] =? 'f['y:IMsg] .
 	eq p50 = EmptyEq .
 
 endfm
@@ -6559,10 +6559,10 @@ eq GetConPairListL(IllegalAsyEquationThere) = NilConPair .
 
 	ops sub1 sub2 sub3 sub4 sub5 : -> Substitution .
 
-	eq sub1 = 'x:Msg <- 'y:Msg ; 'z:Msg <- XO('w:Msg, 'a.Msg) ; 'v:Msg <- 'f['y:Msg, 'g[XO('w:Msg, 'a.Msg), 'b.Msg]] .
-	eq sub2 = 'y:Msg <- 'x:Msg ; 'w:Msg <- XO('z:Msg, 'a.Msg) ; 'v:Msg <- 'f['x:Msg, 'g['z:Msg, 'b.Msg]] .
-	eq sub3 = 'x:Msg <- 'a.Msg ; 'y:Msg <- XO('z:Msg,'w:Msg,'b.Msg) .
-	eq sub4 = 'x:Msg <- 'a.Msg ; 'y:Msg <- 'z:Msg ; 'w:Msg <- 'b.Msg .
+	eq sub1 = 'x:IMsg <- 'y:IMsg ; 'z:IMsg <- XO('w:IMsg, 'a.IMsg) ; 'v:IMsg <- 'f['y:IMsg, 'g[XO('w:IMsg, 'a.IMsg), 'b.IMsg]] .
+	eq sub2 = 'y:IMsg <- 'x:IMsg ; 'w:IMsg <- XO('z:IMsg, 'a.IMsg) ; 'v:IMsg <- 'f['x:IMsg, 'g['z:IMsg, 'b.IMsg]] .
+	eq sub3 = 'x:IMsg <- 'a.IMsg ; 'y:IMsg <- XO('z:IMsg,'w:IMsg,'b.IMsg) .
+	eq sub4 = 'x:IMsg <- 'a.IMsg ; 'y:IMsg <- 'z:IMsg ; 'w:IMsg <- 'b.IMsg .
 
 
 *********x<- y+T1 +T, and 	x <- T
@@ -7078,95 +7078,95 @@ eq GetConPairListL(IllegalAsyEquationThere) = NilConPair .
    eq c61 = 'pk['#5:Name,'_*_['n['i.Name,'#0:Fresh],'n['#5:Name,'#3:Fresh]]] =? 'pk['i.Name,'_*_['n['a.Name,'#1:Fresh],'#2:NNSet]] .
 
 
-   eq c41 = 'XOR['x:Msg, 'y:Msg] =? 'XOR['x:Msg, 'y:Msg] .
-   eq c42 = 'XOR['z1:Msg, 'z11:Msg] =? 'XOR['z1:Msg, 'z11:Msg] .
-   eq c43 = 'XOR['z2:Msg, 'z13:Msg] =? 'XOR['z2:Msg, 'z13:Msg] .
-   eq c44 = 'XOR['z3:Msg, 'z12:Msg] =? 'XOR['z3:Msg, 'z12:Msg] .
+   eq c41 = 'XOR['x:IMsg, 'y:IMsg] =? 'XOR['x:IMsg, 'y:IMsg] .
+   eq c42 = 'XOR['z1:IMsg, 'z11:IMsg] =? 'XOR['z1:IMsg, 'z11:IMsg] .
+   eq c43 = 'XOR['z2:IMsg, 'z13:IMsg] =? 'XOR['z2:IMsg, 'z13:IMsg] .
+   eq c44 = 'XOR['z3:IMsg, 'z12:IMsg] =? 'XOR['z3:IMsg, 'z12:IMsg] .
 
-   eq c45 = 'XOR['x:Msg, 'XOR['y:Msg , 'XOR['z1:Msg, 'XOR['z2:Msg, 'z3:Msg]]]] =? '0.Null .
-   eq c46 = 'XOR['z11:Msg, 'XOR['y:Msg , 'XOR['z1:Msg, 'z2:Msg]]] =? '0.Null .
-   eq c47 = 'XOR['z12:Msg, 'XOR['y:Msg , 'XOR['z1:Msg, 'z3:Msg]]] =? '0.Null .
-   eq c48 = 'XOR['z13:Msg, 'XOR['y:Msg , 'XOR['z2:Msg, 'z3:Msg]]] =? '0.Null .
+   eq c45 = 'XOR['x:IMsg, 'XOR['y:IMsg , 'XOR['z1:IMsg, 'XOR['z2:IMsg, 'z3:IMsg]]]] =? '0.Null .
+   eq c46 = 'XOR['z11:IMsg, 'XOR['y:IMsg , 'XOR['z1:IMsg, 'z2:IMsg]]] =? '0.Null .
+   eq c47 = 'XOR['z12:IMsg, 'XOR['y:IMsg , 'XOR['z1:IMsg, 'z3:IMsg]]] =? '0.Null .
+   eq c48 = 'XOR['z13:IMsg, 'XOR['y:IMsg , 'XOR['z2:IMsg, 'z3:IMsg]]] =? '0.Null .
    eq c49 = c41 /\ c42 /\ c43 /\ c44 /\ c45 /\ c46 /\ c47 /\ c48 .
 
-   eq c1 = 'XOR['x:Msg, 'a.Msg] =? 'XOR['x:Msg, 'a.Msg] .
-   eq c2 = 'XOR['x:Msg, 'b.Msg] =? 'XOR['x:Msg, 'b.Msg] .
-   eq c3 = 'XOR['x:Msg, 'c.Msg] =? 'XOR['x:Msg, 'c.Msg] .
-   eq c4 = 'XOR['x:Msg, 'd.Msg] =? 'XOR['x:Msg, 'd.Msg] .
-   eq c5 = 'XOR['y:Msg, 'a.Msg] =? 'XOR['y:Msg, 'a.Msg] .
-   eq c6 = 'XOR['y:Msg, 'b.Msg] =? 'XOR['y:Msg, 'b.Msg] .
-   eq c7 = 'XOR['y:Msg, 'c.Msg] =? 'XOR['y:Msg, 'c.Msg] .
-   eq c8 = 'XOR['y:Msg, 'd.Msg] =? 'XOR['y:Msg, 'd.Msg] .
-   eq c9 = 'XOR['z:Msg, 'a.Msg] =? 'XOR['z:Msg, 'a.Msg] .
-   eq c10 = 'XOR['z:Msg, 'b.Msg] =? 'XOR['z:Msg, 'b.Msg] .
-   eq c11 = 'XOR['z:Msg, 'c.Msg] =? 'XOR['z:Msg, 'c.Msg] .
-   eq c12 = 'XOR['z:Msg, 'd.Msg] =? 'XOR['z:Msg, 'd.Msg] .
-   eq c13 = 'XOR['x:Msg, 'y:Msg] =? 'XOR['x:Msg, 'y:Msg] .
-   eq c14 = 'XOR['x:Msg, 'z:Msg] =? 'XOR['x:Msg, 'z:Msg] .
-   eq c15 = 'XOR['x:Msg, 'w:Msg] =? 'XOR['x:Msg, 'w:Msg] .
-   eq c16 = 'XOR['y:Msg, 'z:Msg] =? 'XOR['y:Msg, 'z:Msg] .
-   eq c17 = 'XOR['y:Msg, 'w:Msg] =? 'XOR['y:Msg, 'w:Msg] .
-   eq c18 = 'XOR['z:Msg, 'w:Msg] =? 'XOR['z:Msg, 'w:Msg] .
-   eq c19 = 'XOR['x:Msg, '0.Null] =? 'XOR['x:Msg, '0.Null] .
-   eq c20 = 'XOR['y:Msg, '0.Null] =? 'XOR['y:Msg, '0.Null] .
-   eq c21 = 'XOR['z:Msg, '0.Null] =? 'XOR['z:Msg, '0.Null] .
-   eq c22 = 'XOR['w:Msg, '0.Null] =? 'XOR['w:Msg, '0.Null] .
+   eq c1 = 'XOR['x:IMsg, 'a.IMsg] =? 'XOR['x:IMsg, 'a.IMsg] .
+   eq c2 = 'XOR['x:IMsg, 'b.IMsg] =? 'XOR['x:IMsg, 'b.IMsg] .
+   eq c3 = 'XOR['x:IMsg, 'c.IMsg] =? 'XOR['x:IMsg, 'c.IMsg] .
+   eq c4 = 'XOR['x:IMsg, 'd.IMsg] =? 'XOR['x:IMsg, 'd.IMsg] .
+   eq c5 = 'XOR['y:IMsg, 'a.IMsg] =? 'XOR['y:IMsg, 'a.IMsg] .
+   eq c6 = 'XOR['y:IMsg, 'b.IMsg] =? 'XOR['y:IMsg, 'b.IMsg] .
+   eq c7 = 'XOR['y:IMsg, 'c.IMsg] =? 'XOR['y:IMsg, 'c.IMsg] .
+   eq c8 = 'XOR['y:IMsg, 'd.IMsg] =? 'XOR['y:IMsg, 'd.IMsg] .
+   eq c9 = 'XOR['z:IMsg, 'a.IMsg] =? 'XOR['z:IMsg, 'a.IMsg] .
+   eq c10 = 'XOR['z:IMsg, 'b.IMsg] =? 'XOR['z:IMsg, 'b.IMsg] .
+   eq c11 = 'XOR['z:IMsg, 'c.IMsg] =? 'XOR['z:IMsg, 'c.IMsg] .
+   eq c12 = 'XOR['z:IMsg, 'd.IMsg] =? 'XOR['z:IMsg, 'd.IMsg] .
+   eq c13 = 'XOR['x:IMsg, 'y:IMsg] =? 'XOR['x:IMsg, 'y:IMsg] .
+   eq c14 = 'XOR['x:IMsg, 'z:IMsg] =? 'XOR['x:IMsg, 'z:IMsg] .
+   eq c15 = 'XOR['x:IMsg, 'w:IMsg] =? 'XOR['x:IMsg, 'w:IMsg] .
+   eq c16 = 'XOR['y:IMsg, 'z:IMsg] =? 'XOR['y:IMsg, 'z:IMsg] .
+   eq c17 = 'XOR['y:IMsg, 'w:IMsg] =? 'XOR['y:IMsg, 'w:IMsg] .
+   eq c18 = 'XOR['z:IMsg, 'w:IMsg] =? 'XOR['z:IMsg, 'w:IMsg] .
+   eq c19 = 'XOR['x:IMsg, '0.Null] =? 'XOR['x:IMsg, '0.Null] .
+   eq c20 = 'XOR['y:IMsg, '0.Null] =? 'XOR['y:IMsg, '0.Null] .
+   eq c21 = 'XOR['z:IMsg, '0.Null] =? 'XOR['z:IMsg, '0.Null] .
+   eq c22 = 'XOR['w:IMsg, '0.Null] =? 'XOR['w:IMsg, '0.Null] .
 
-   eq c60 = 'XOR['x:Msg, 'y:Msg] =? 'XOR['a.Msg, 'b.Msg] .
-   eq c23 = 'XOR['x:Msg, 'y:Msg, 'z:Msg] =? 'a.Msg .
-   eq c33 = 'XOR['x1:Msg, 'y1:Msg, 'z1:Msg] =? 'b.Msg .
-   eq c34 = 'XOR['x1:Msg, 'y1:Msg] =? 'XOR['x1:Msg, 'y1:Msg] .
-   eq c35 = 'XOR['x1:Msg, 'z1:Msg] =? 'XOR['x1:Msg, 'z1:Msg] .
+   eq c60 = 'XOR['x:IMsg, 'y:IMsg] =? 'XOR['a.IMsg, 'b.IMsg] .
+   eq c23 = 'XOR['x:IMsg, 'y:IMsg, 'z:IMsg] =? 'a.IMsg .
+   eq c33 = 'XOR['x1:IMsg, 'y1:IMsg, 'z1:IMsg] =? 'b.IMsg .
+   eq c34 = 'XOR['x1:IMsg, 'y1:IMsg] =? 'XOR['x1:IMsg, 'y1:IMsg] .
+   eq c35 = 'XOR['x1:IMsg, 'z1:IMsg] =? 'XOR['x1:IMsg, 'z1:IMsg] .
 
-   eq c24 = 'XOR['x:Msg, 'y:Msg, 'z:Msg] =? 'XOR['a.Msg, 'b.Msg] .
-   eq c25 = 'XOR['x:Msg, 'y:Msg, 'z:Msg] =? 'XOR['a.Msg, 'b.Msg, 'c.Msg] .
-   eq c26 = 'XOR['x:Msg, 'y:Msg, 'z:Msg] =? 'XOR['a.Msg, 'b.Msg, 'c.Msg, 'd.Msg] .
-   eq c27 = 'XOR['x:Msg, 'y:Msg, 'z:Msg] =? 'XOR['a.Msg, 'b.Msg, 'c.Msg, 'd.Msg, 'e.Msg] .
-   eq c27 = 'XOR['x:Msg, 'y:Msg, 'z:Msg] =? 'XOR['a.Msg, 'b.Msg, 'c.Msg, 'd.Msg, 'e.Msg] .
-   eq c32 = 'XOR['x:Msg, 'y:Msg, 'z:Msg, 'w:Msg] =? 'XOR['a.Msg, 'b.Msg, 'c.Msg, 'd.Msg, 'e.Msg] .
+   eq c24 = 'XOR['x:IMsg, 'y:IMsg, 'z:IMsg] =? 'XOR['a.IMsg, 'b.IMsg] .
+   eq c25 = 'XOR['x:IMsg, 'y:IMsg, 'z:IMsg] =? 'XOR['a.IMsg, 'b.IMsg, 'c.IMsg] .
+   eq c26 = 'XOR['x:IMsg, 'y:IMsg, 'z:IMsg] =? 'XOR['a.IMsg, 'b.IMsg, 'c.IMsg, 'd.IMsg] .
+   eq c27 = 'XOR['x:IMsg, 'y:IMsg, 'z:IMsg] =? 'XOR['a.IMsg, 'b.IMsg, 'c.IMsg, 'd.IMsg, 'e.IMsg] .
+   eq c27 = 'XOR['x:IMsg, 'y:IMsg, 'z:IMsg] =? 'XOR['a.IMsg, 'b.IMsg, 'c.IMsg, 'd.IMsg, 'e.IMsg] .
+   eq c32 = 'XOR['x:IMsg, 'y:IMsg, 'z:IMsg, 'w:IMsg] =? 'XOR['a.IMsg, 'b.IMsg, 'c.IMsg, 'd.IMsg, 'e.IMsg] .
 
   *********Dont try c32. It will go forever....
-   eq c36 = 'XOR['x:Msg, 'y:Msg, 'z:Msg, 'w:Msg] =? 'a.Msg .
-   eq c37 = 'XOR['x:Msg, 'y:Msg, 'z:Msg, 'w:Msg] =? 'XOR['a.Msg, 'b.Msg] .
-   eq c38 = 'XOR['x:Msg, 'y:Msg, 'z:Msg, 'w:Msg] =? 'XOR['a.Msg, 'b.Msg, 'c.Msg] .
-   eq c39 = 'XOR['x:Msg, 'y:Msg, 'z:Msg, 'w:Msg] =? 'XOR['a.Msg, 'b.Msg, 'c.Msg, 'd.Msg] .
+   eq c36 = 'XOR['x:IMsg, 'y:IMsg, 'z:IMsg, 'w:IMsg] =? 'a.IMsg .
+   eq c37 = 'XOR['x:IMsg, 'y:IMsg, 'z:IMsg, 'w:IMsg] =? 'XOR['a.IMsg, 'b.IMsg] .
+   eq c38 = 'XOR['x:IMsg, 'y:IMsg, 'z:IMsg, 'w:IMsg] =? 'XOR['a.IMsg, 'b.IMsg, 'c.IMsg] .
+   eq c39 = 'XOR['x:IMsg, 'y:IMsg, 'z:IMsg, 'w:IMsg] =? 'XOR['a.IMsg, 'b.IMsg, 'c.IMsg, 'd.IMsg] .
 
   ********this problem c39 will go about half an hour.
 
-   eq c28 = 'XOR['x:Msg, 'y:Msg] =? 'a.Msg .
-   eq c29 = 'XOR['x:Msg, 'y:Msg] =? 'XOR['a.Msg, 'b.Msg] .
-   eq c30 = 'XOR['x:Msg, 'y:Msg] =? 'XOR['a.Msg, 'b.Msg, 'c.Msg] .
-   eq c31 = 'XOR['x:Msg, 'y:Msg] =? 'XOR['a.Msg, 'b.Msg, 'c.Msg, 'd.Msg] .
+   eq c28 = 'XOR['x:IMsg, 'y:IMsg] =? 'a.IMsg .
+   eq c29 = 'XOR['x:IMsg, 'y:IMsg] =? 'XOR['a.IMsg, 'b.IMsg] .
+   eq c30 = 'XOR['x:IMsg, 'y:IMsg] =? 'XOR['a.IMsg, 'b.IMsg, 'c.IMsg] .
+   eq c31 = 'XOR['x:IMsg, 'y:IMsg] =? 'XOR['a.IMsg, 'b.IMsg, 'c.IMsg, 'd.IMsg] .
 
-   eq q0 = 'a:Msg =? '0.Null .
-   eq q1 = 'a:Msg =? 'b:Msg .
-   eq q2 = 'y:Msg =? 'XOR['a.Msg, 'x:Msg] .
-   eq q3 = 'a:Msg =? 'XOR['a:Msg, 'b:Msg, 'c:Msg] .
-   eq q4 = 'a:Msg =? 'XOR['a:Msg, 'b:Msg, 'd.Msg] .
-   eq q5 = 'a:Msg =? 'f['XOR['a:Msg, 'c:Msg]] .
-   eq q6 = 'a:Msg =? 'g['XOR['a:Msg, 'b:Msg], 'c:Msg] .
-   eq q7 = 'a:Msg =? 'XOR['f['a:Msg, 'b:Msg], 'd.Msg] .
-   eq q8 = 'a:Msg =? 'XOR['g['a:Msg, 'XOR['b:Msg, 'd:Msg, 'e:Msg]], 'a:Msg, 'e:Msg] .
-   eq q9 = 'a:Msg =? ('g['XOR['b:Msg, 'f['XOR['d:Msg, 'e:Msg]]], 'a:Msg]) .
-   eq q10 = 'XOR['g:Msg, 'f:Msg] =? 'XOR['f['XOR['m:Msg,'o:Msg]], 'n:Msg, 'o:Msg] .
-   eq q11 = 'g:Msg =? 'XOR['f['XOR['m:Msg,'o:Msg]], 'n:Msg, 'o:Msg] .
+   eq q0 = 'a:IMsg =? '0.Null .
+   eq q1 = 'a:IMsg =? 'b:IMsg .
+   eq q2 = 'y:IMsg =? 'XOR['a.IMsg, 'x:IMsg] .
+   eq q3 = 'a:IMsg =? 'XOR['a:IMsg, 'b:IMsg, 'c:IMsg] .
+   eq q4 = 'a:IMsg =? 'XOR['a:IMsg, 'b:IMsg, 'd.IMsg] .
+   eq q5 = 'a:IMsg =? 'f['XOR['a:IMsg, 'c:IMsg]] .
+   eq q6 = 'a:IMsg =? 'g['XOR['a:IMsg, 'b:IMsg], 'c:IMsg] .
+   eq q7 = 'a:IMsg =? 'XOR['f['a:IMsg, 'b:IMsg], 'd.IMsg] .
+   eq q8 = 'a:IMsg =? 'XOR['g['a:IMsg, 'XOR['b:IMsg, 'd:IMsg, 'e:IMsg]], 'a:IMsg, 'e:IMsg] .
+   eq q9 = 'a:IMsg =? ('g['XOR['b:IMsg, 'f['XOR['d:IMsg, 'e:IMsg]]], 'a:IMsg]) .
+   eq q10 = 'XOR['g:IMsg, 'f:IMsg] =? 'XOR['f['XOR['m:IMsg,'o:IMsg]], 'n:IMsg, 'o:IMsg] .
+   eq q11 = 'g:IMsg =? 'XOR['f['XOR['m:IMsg,'o:IMsg]], 'n:IMsg, 'o:IMsg] .
    eq q12 = q9 /\ q2 .
    eq q13 = q3 /\ q2 .
-   eq q14 = 'XOR['x:Msg , 'a.Msg] =? 'XOR['x:Msg , 'a.Msg] .
-   eq q15 = 'XOR['x:Msg , 'b.Msg] =? 'XOR['x:Msg , 'b.Msg] .
-   eq q16 = 'XOR['y:Msg , 'a.Msg] =? 'XOR['y:Msg , 'a.Msg] .
-   eq q17 = 'XOR['y:Msg , 'b.Msg] =? 'XOR['y:Msg , 'b.Msg] .
-   eq q18 = 'z:Msg =? 'z:Msg .
+   eq q14 = 'XOR['x:IMsg , 'a.IMsg] =? 'XOR['x:IMsg , 'a.IMsg] .
+   eq q15 = 'XOR['x:IMsg , 'b.IMsg] =? 'XOR['x:IMsg , 'b.IMsg] .
+   eq q16 = 'XOR['y:IMsg , 'a.IMsg] =? 'XOR['y:IMsg , 'a.IMsg] .
+   eq q17 = 'XOR['y:IMsg , 'b.IMsg] =? 'XOR['y:IMsg , 'b.IMsg] .
+   eq q18 = 'z:IMsg =? 'z:IMsg .
    eq q19 = q14 /\ q15 /\ q16 /\ q17 /\ q18 .
-   eq q20 = 'XOR['y:Msg , 'x:Msg] =? 'XOR['y:Msg , 'x:Msg] .
+   eq q20 = 'XOR['y:IMsg , 'x:IMsg] =? 'XOR['y:IMsg , 'x:IMsg] .
    eq q21 = q14 /\ q15 /\ q16 /\ q17 /\ q18 /\ q20 .
-   eq q22 = 'XOR['x:Msg , 'y:Msg , 'z:Msg] =? 'XOR['x:Msg , 'y:Msg , 'z:Msg] .
+   eq q22 = 'XOR['x:IMsg , 'y:IMsg , 'z:IMsg] =? 'XOR['x:IMsg , 'y:IMsg , 'z:IMsg] .
    eq q23 = q22 /\ q14 /\ q16 .
-   eq q24 = 'XOR['x:Msg , 'y:Msg , 'z:Msg] =? 'XOR['a.Msg , 'b.Msg , 'c.Msg] .
+   eq q24 = 'XOR['x:IMsg , 'y:IMsg , 'z:IMsg] =? 'XOR['a.IMsg , 'b.IMsg , 'c.IMsg] .
    eq q25 = q24 /\ q14 /\ q16 .
    eq q26 = q24 /\ q20 .
-   eq q27 = 'XOR['a.Msg, 'b.Msg] =? 'XOR['x:Msg , 'y:Msg] .
-   eq q28 = 'XOR['f['a.Msg] , 'f['b.Msg]] =? 'XOR['x:Msg , 'f['y:Msg]] .
+   eq q27 = 'XOR['a.IMsg, 'b.IMsg] =? 'XOR['x:IMsg , 'y:IMsg] .
+   eq q28 = 'XOR['f['a.IMsg] , 'f['b.IMsg]] =? 'XOR['x:IMsg , 'f['y:IMsg]] .
    eq q29 = ('XOR['x:sort, 'f['y:sort] , 'f['x1:sort]] =? '0.Null) /\ ('XOR['y:sort , 'f['z:sort], 'f['x2:sort]] =? '0.Null) /\ ('XOR['z:sort , 'f['x:sort] , 'f['x3:sort]] =? '0.Null) .
 
 ***x1 <- (f(f0+fx3) + fx2) x<-0, y<- (f(f0+fx3) + fx2), z<- f0+fx3
@@ -7174,77 +7174,77 @@ eq GetConPairListL(IllegalAsyEquationThere) = NilConPair .
 ***x3<- (f(f0+fx2)+fx1) x<-f(f0+fx2)+fx1  y<-f0+fx2 z<-0
 
 
-	eq q30 = 'XOR['g['g['XOR['2.Msg,'2.Msg],'f['^7:Msg,'^10:Msg]],'g['f['^5:Msg,'^12:Msg],'f['^8:Msg,'^10:Msg]]],'XOR['g['^4:Msg,'^6:Msg],'g['^8:Msg,'3.Msg]]] =? 'XOR['g['g['XOR['2.Msg,'&1:Msg],'f['XOR['&9:Msg,'2.Msg],'&16:Msg]],'g['f['&11:Msg,'g[
-    '&8:Msg,'&3:Msg]],'f['&12:Msg,'&13:Msg]]],'XOR['g['g['&8:Msg,'&2:Msg],'&9:Msg],'g['&1:Msg,'&2:Msg]]] .
+	eq q30 = 'XOR['g['g['XOR['2.IMsg,'2.IMsg],'f['^7:IMsg,'^10:IMsg]],'g['f['^5:IMsg,'^12:IMsg],'f['^8:IMsg,'^10:IMsg]]],'XOR['g['^4:IMsg,'^6:IMsg],'g['^8:IMsg,'3.IMsg]]] =? 'XOR['g['g['XOR['2.IMsg,'&1:IMsg],'f['XOR['&9:IMsg,'2.IMsg],'&16:IMsg]],'g['f['&11:IMsg,'g[
+    '&8:IMsg,'&3:IMsg]],'f['&12:IMsg,'&13:IMsg]]],'XOR['g['g['&8:IMsg,'&2:IMsg],'&9:IMsg],'g['&1:IMsg,'&2:IMsg]]] .
 
 	eq q31 = EmptyEq .
 
-    eq q32 = 'XOR['x:Msg, 'a.Msg] =? 'XOR['b.Msg, 'c.Msg] .
+    eq q32 = 'XOR['x:IMsg, 'a.IMsg] =? 'XOR['b.IMsg, 'c.IMsg] .
 
-	eq q33 = 'z:Msg =? 'XOR['f['XOR['x:Msg, 'c.Msg]], 'f['b.Msg, 'c.Msg]] .
+	eq q33 = 'z:IMsg =? 'XOR['f['XOR['x:IMsg, 'c.IMsg]], 'f['b.IMsg, 'c.IMsg]] .
 
 	eq q34 = q32 /\ q33 .
 
-	eq q35 = 'XOR['f['x:Msg], 'f['a.Msg]] =? 'XOR['x:Msg, 'XOR['y:Msg, 'c.Msg]] .
+	eq q35 = 'XOR['f['x:IMsg], 'f['a.IMsg]] =? 'XOR['x:IMsg, 'XOR['y:IMsg, 'c.IMsg]] .
 
-    eq q36 = 'x:Msg =? '0.Null .
+    eq q36 = 'x:IMsg =? '0.Null .
 
-	eq q37 = 'x:Msg =? 'XOR['y:Msg , 'c.Msg, 'd.Msg] .
-	eq q38 = 'XOR['y:Msg , 'c.Msg] =? 'XOR['y:Msg , 'c.Msg] .
-	eq q39 = 'XOR['x:Msg , 'c.Msg] =? 'XOR['x:Msg , 'c.Msg] .
+	eq q37 = 'x:IMsg =? 'XOR['y:IMsg , 'c.IMsg, 'd.IMsg] .
+	eq q38 = 'XOR['y:IMsg , 'c.IMsg] =? 'XOR['y:IMsg , 'c.IMsg] .
+	eq q39 = 'XOR['x:IMsg , 'c.IMsg] =? 'XOR['x:IMsg , 'c.IMsg] .
 
    ops s0 s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20 s21 s22 s23 s24 s25 s26 s27 s28 s29 s30 s31 s32 s33 s34 s35 s36 s37 s38 s39 s40 s41 s42 s43 s44 s45 s46 s47 : -> Substitution .
 
 
-   eq s0 = 'x:Msg <- 'a.Msg .
-   eq s1 = 'x:Msg <- 'y:Msg .
-   eq s2 = 'x:Msg <- 'XOR['a.Msg, 'y:Msg] .
-   eq s3 = 'x:Msg <- 'f['a.Msg] .
-   eq s4 = 'x:Msg <- 'XOR['f['a.Msg], 'b.Msg, 'd.Msg] .
-   eq s5 = 'x:Msg <- 'g['XOR['a.Msg, 'y:Msg, 'd.Msg], 'e.Msg] .
-   eq s6 = 'x:Msg <- 'XOR['y:Msg , 'z:Msg , 'a.Msg , 'b.Msg] .
-   eq s7 = 'x:Msg <- 'XOR['y:Msg , 'a.Msg , 'b.Msg] .
-   eq s8 = 'x:Msg <- 'XOR['v1:Msg, 'v2:Msg, 'a.Msg] .
-   eq s9 = 'y:Msg <- 'XOR['v1:Msg, 'b.Msg] .
-   eq s10 = 'z:Msg <- 'XOR['v2:Msg , 'c.Msg] .
+   eq s0 = 'x:IMsg <- 'a.IMsg .
+   eq s1 = 'x:IMsg <- 'y:IMsg .
+   eq s2 = 'x:IMsg <- 'XOR['a.IMsg, 'y:IMsg] .
+   eq s3 = 'x:IMsg <- 'f['a.IMsg] .
+   eq s4 = 'x:IMsg <- 'XOR['f['a.IMsg], 'b.IMsg, 'd.IMsg] .
+   eq s5 = 'x:IMsg <- 'g['XOR['a.IMsg, 'y:IMsg, 'd.IMsg], 'e.IMsg] .
+   eq s6 = 'x:IMsg <- 'XOR['y:IMsg , 'z:IMsg , 'a.IMsg , 'b.IMsg] .
+   eq s7 = 'x:IMsg <- 'XOR['y:IMsg , 'a.IMsg , 'b.IMsg] .
+   eq s8 = 'x:IMsg <- 'XOR['v1:IMsg, 'v2:IMsg, 'a.IMsg] .
+   eq s9 = 'y:IMsg <- 'XOR['v1:IMsg, 'b.IMsg] .
+   eq s10 = 'z:IMsg <- 'XOR['v2:IMsg , 'c.IMsg] .
    eq s11 = (s8 ; s9 ; s10) .
-   eq s12 = 'x:Msg <- 'XOR['v1:Msg , 'a.Msg] .
-   eq s13 = 'y:Msg <- 'XOR['v1:Msg , 'b.Msg] .
+   eq s12 = 'x:IMsg <- 'XOR['v1:IMsg , 'a.IMsg] .
+   eq s13 = 'y:IMsg <- 'XOR['v1:IMsg , 'b.IMsg] .
    eq s14 = (s12 ; s13) .
-   eq s15 = 'x:Msg <- 'XOR['f['a.Msg] , 'f['b.Msg] , 'f['y:Msg]] .
+   eq s15 = 'x:IMsg <- 'XOR['f['a.IMsg] , 'f['b.IMsg] , 'f['y:IMsg]] .
 
-   eq s16 = 'x:Msg <- XO('NV#1:Msg, XO('NV#2:Msg , XO('NV#3:Msg , 'NV#4:Msg))) .
-   eq s17 = 'y:Msg <- 'NV#1:Msg .
-   eq s18 = 'z1:Msg <- 'NV#2:Msg .
-   eq s19 = 'z2:Msg <- 'NV#3:Msg .
-   eq s20 = 'z3:Msg <- 'NV#4:Msg .
-   eq s21 = 'z11:Msg <- XO('NV#1:Msg, XO('NV#2:Msg , 'NV#3:Msg)) .
-   eq s22 = 'z12:Msg <- XO('NV#1:Msg, XO('NV#2:Msg , 'NV#4:Msg)) .
-   eq s23 = 'z13:Msg <- XO('NV#1:Msg, XO('NV#3:Msg , 'NV#4:Msg)) .
+   eq s16 = 'x:IMsg <- XO('NV#1:IMsg, XO('NV#2:IMsg , XO('NV#3:IMsg , 'NV#4:IMsg))) .
+   eq s17 = 'y:IMsg <- 'NV#1:IMsg .
+   eq s18 = 'z1:IMsg <- 'NV#2:IMsg .
+   eq s19 = 'z2:IMsg <- 'NV#3:IMsg .
+   eq s20 = 'z3:IMsg <- 'NV#4:IMsg .
+   eq s21 = 'z11:IMsg <- XO('NV#1:IMsg, XO('NV#2:IMsg , 'NV#3:IMsg)) .
+   eq s22 = 'z12:IMsg <- XO('NV#1:IMsg, XO('NV#2:IMsg , 'NV#4:IMsg)) .
+   eq s23 = 'z13:IMsg <- XO('NV#1:IMsg, XO('NV#3:IMsg , 'NV#4:IMsg)) .
    eq s24 = (s16 ; s17 ; s18 ; s19 ; s20 ; s21 ; s22 ; s23) .
-   eq s25 = 'NV#1:Msg <- XO('w1:Msg, XO('w2:Msg , 'w3:Msg)) .
-   eq s26 = 'NV#2:Msg <- XO('w1:Msg, 'w:Msg) .
-   eq s27 = 'NV#3:Msg <- XO('w2:Msg, 'w:Msg) .
-   eq s28 = 'NV#4:Msg <- XO('w3:Msg, 'w:Msg) .
+   eq s25 = 'NV#1:IMsg <- XO('w1:IMsg, XO('w2:IMsg , 'w3:IMsg)) .
+   eq s26 = 'NV#2:IMsg <- XO('w1:IMsg, 'w:IMsg) .
+   eq s27 = 'NV#3:IMsg <- XO('w2:IMsg, 'w:IMsg) .
+   eq s28 = 'NV#4:IMsg <- XO('w3:IMsg, 'w:IMsg) .
    eq s29 = (s25 ; s26 ; s27 ; s28) .
 
-   eq s30 = 'x:Msg <- XO('NV#1:Msg , XO('NV#2:Msg , 'NV#3:Msg)) .
+   eq s30 = 'x:IMsg <- XO('NV#1:IMsg , XO('NV#2:IMsg , 'NV#3:IMsg)) .
 
-   eq c50 = 'XOR['z1:Msg , 'z2:Msg] =? 'XOR['x:Msg , 'y:Msg] .
+   eq c50 = 'XOR['z1:IMsg , 'z2:IMsg] =? 'XOR['x:IMsg , 'y:IMsg] .
 
    ops tl1 tl2 tl3 tl4 tl5 tl6 : -> TermList .
    ops cpl1 cpl2 cpl3 cpl4 cpl5 : -> ConPairList .
 
-   eq cpl1 = (('x:Msg <<< 'a.Msg) , ('x:Msg <<< 'b.Msg) , ('y:Msg <<< 'x:Msg) , ('x:Msg <<< 'f['y:Msg] ) , ('x:Msg  <<< 't:Msg)) .
+   eq cpl1 = (('x:IMsg <<< 'a.IMsg) , ('x:IMsg <<< 'b.IMsg) , ('y:IMsg <<< 'x:IMsg) , ('x:IMsg <<< 'f['y:IMsg] ) , ('x:IMsg  <<< 't:IMsg)) .
 
-   eq cpl2 = 'x:Msg <<< 'a.Msg .
+   eq cpl2 = 'x:IMsg <<< 'a.IMsg .
 
-   eq cpl3 = (('x:Msg <<< 'a.Msg) , ('x:Msg <<< 'b.Msg), ('y:Msg <<< 'x:Msg)).
-   eq cpl3 = (('x:Msg <<< 'a.Msg) , ('x:Msg <<< 'b.Msg), ('y:Msg <<< 'x:Msg)).
+   eq cpl3 = (('x:IMsg <<< 'a.IMsg) , ('x:IMsg <<< 'b.IMsg), ('y:IMsg <<< 'x:IMsg)).
+   eq cpl3 = (('x:IMsg <<< 'a.IMsg) , ('x:IMsg <<< 'b.IMsg), ('y:IMsg <<< 'x:IMsg)).
 
    ops xor1 xor2 xor3 xor4 xor5 xor6 : -> XORTerm .
 
-    eq xor1 = XO('x:Msg, XO('a.Msg, XO('b.Msg, XO('e.Msg, XO('f['y:Msg] , 't:Msg))))) .
+    eq xor1 = XO('x:IMsg, XO('a.IMsg, XO('b.IMsg, XO('e.IMsg, XO('f['y:IMsg] , 't:IMsg))))) .
 
 
 endfm
@@ -7418,7 +7418,7 @@ fmod META-MSG-UNIFICATION-INTEGRATION is
      then getTypeHomoUnify(M)
      else if IsMetaXORUnify(M)
           then getXorType(getEqs(M))
-          else 'Msg
+          else 'IMsg
           fi
      fi .
 
@@ -8312,7 +8312,7 @@ fmod META-MSG-UNIFICATION is
       UTS) .
 
   ********************************************************************
-  *** generalize terms of sort Msg
+  *** generalize terms of sort IMsg
   ********************************************************************
 
   sort TripleGenVar .
@@ -9897,40 +9897,40 @@ fmod META-NARROWING-SEARCH is
 endfm
 fmod DEFINITION-PROTOCOL-RULES is
   sort Universal . --- Special sort used for unsorted actions (don't remove)
-  sort Msg . --- Generic sort for messages
+  sort IMsg . --- Generic sort for messages
   sort Fresh . --- Sort for private information.
   sort Public . --- Every term of sort Public can be generated by the intruder
   sort Private . --- No term of sort Private can be generated by the intruder
-  subsort Public < Msg .
-  subsort Private < Msg .
+  subsort Public < IMsg .
+  subsort Private < IMsg .
   op emptyPublic : -> Public .
   op emptyPrivate : -> Private .
   op nullFresh : -> Fresh .
 
-  op pair : Msg Msg -> Msg [frozen] . --- Special treatment for indistinguishability
+  op pair : IMsg IMsg -> IMsg [frozen] . --- Special treatment for indistinguishability
 
   sort MsgSet .
-  subsort Msg < MsgSet .
+  subsort IMsg < MsgSet .
   op emptyMsgSet : -> MsgSet [ctor] .
   op _,_ : MsgSet MsgSet -> MsgSet
     [ctor assoc comm id: emptyMsgSet] .
 
-  op noMsg : -> Msg . --- Auxiliar useless message used as a marker
+  op noMsg : -> IMsg . --- Auxiliar useless message used as a marker
 
   sort SMsg .
 
   sort SignedSMsg .
   subsort SignedSMsg < SMsg .
-  op +`(_`) : Msg -> SignedSMsg [format (ni++r d d d o--)] .
-  op -`(_`) : Msg -> SignedSMsg [format (ni++b d d d o--)] .
+  op +`(_`) : IMsg -> SignedSMsg [format (ni++r d d d o--)] .
+  op -`(_`) : IMsg -> SignedSMsg [format (ni++b d d d o--)] .
 
   sort Resuscitated .
   subsort Resuscitated < SMsg .
-  op resuscitated`(_`) : Msg -> Resuscitated [ctor format (nic d d d o)] .
+  op resuscitated`(_`) : IMsg -> Resuscitated [ctor format (nic d d d o)] .
 
   sort LazyLearnt .
   subsort LazyLearnt < SMsg .
-  op generatedByIntruder`(_`) : Msg -> LazyLearnt [ctor format (nic d d d o)] .
+  op generatedByIntruder`(_`) : IMsg -> LazyLearnt [ctor format (nic d d d o)] .
 
   sort EmptyList .
   op nil : -> EmptyList [ctor format (ni d)] .
@@ -9938,8 +9938,8 @@ fmod DEFINITION-PROTOCOL-RULES is
     [ctor assoc id: nil format (d d s d)] .
 
   sort StrandConstraint .
-  op _eq_ : Msg Msg -> StrandConstraint [prec 1 format (ni d d d)] .
-  op _neq_ : Msg Msg -> StrandConstraint [prec 1 format (ni d d d)].
+  op _eq_ : IMsg IMsg -> StrandConstraint [prec 1 format (ni d d d)] .
+  op _neq_ : IMsg IMsg -> StrandConstraint [prec 1 format (ni d d d)].
 
   sort SMsgList SMsgElem .
   subsort SMsg Synchro Resuscitated StrandConstraint < SMsgElem < SMsgList .
@@ -9976,7 +9976,7 @@ fmod DEFINITION-PROTOCOL-RULES is
 
   --- Composition
   sort Synchro .
-  op {_->_;;_;;_} : RoleSet RoleSet How Msg -> Synchro [format (nig d d d d d d d d o)] .
+  op {_->_;;_;;_} : RoleSet RoleSet How IMsg -> Synchro [format (nig d d d d d d d d o)] .
 
   sorts RoleSet Role .
   subsort Role < RoleSet .
@@ -10011,13 +10011,13 @@ fmod DEFINITION-PROTOCOL-RULES is
        Knowledge-irr Knowledge-inst Knowledge-CPSA .
   subsort Knowledge-!inI Knowledge-inI Knowledge-!=
           Knowledge-irr Knowledge-inst Knowledge-CPSA < Knowledge .
-  op _!inI : Msg -> Knowledge-!inI [format (ni d o)] .
-  op _inI : Msg -> Knowledge-inI [format (niu d o)] .
-  op _!=_ : Msg Msg -> Knowledge-!= [comm format (nig d d o)] .
-  op irr`(_`) : Msg -> Knowledge-irr [format (nim d d d o)] .
-  op inst`(_`) : Msg -> Knowledge-inst [format (nim d d d o)] .
+  op _!inI : IMsg -> Knowledge-!inI [format (ni d o)] .
+  op _inI : IMsg -> Knowledge-inI [format (niu d o)] .
+  op _!=_ : IMsg IMsg -> Knowledge-!= [comm format (nig d d o)] .
+  op irr`(_`) : IMsg -> Knowledge-irr [format (nim d d d o)] .
+  op inst`(_`) : IMsg -> Knowledge-inst [format (nim d d d o)] .
   op _before_ : MsgInStrand MsgInStrand -> Knowledge-CPSA [format (nim d d o)] .
-  op secret`(_`) : Msg -> Knowledge-CPSA [format (nim d d d o)] .
+  op secret`(_`) : IMsg -> Knowledge-CPSA [format (nim d d d o)] .
 
   sort MsgInStrand PosNat .
   op `(_InStrand_`) : PosNat Fresh -> MsgInStrand .
@@ -10027,11 +10027,11 @@ fmod DEFINITION-PROTOCOL-RULES is
   op s : PosNat -> PosNat [iter] .
 
   sort Ghost .
-  op ghost`(_`,_`,_`,_`,_`) : Msg StrandSet IntruderKnowledge SMsgList Properties
+  op ghost`(_`,_`,_`,_`,_`) : IMsg StrandSet IntruderKnowledge SMsgList Properties
                         -> Ghost
      [frozen format (ni d s+++ d d d si d si d si s--- d)] .
   sort ShortGhost .
-  op ghost : Msg -> ShortGhost .
+  op ghost : IMsg -> ShortGhost .
 
   sort GhostList .
   subsorts Ghost ShortGhost < GhostList .
@@ -10169,8 +10169,8 @@ fmod DEFINITION-CONSTRAINTS is
   sort LConstraint DConstraint nIConstraint Constraint .
   subsort LConstraint DConstraint nIConstraint < Constraint .
   op _inL : MsgSet -> LConstraint [format (d g o)] .
-  op _notLeq_ : Msg Msg -> DConstraint [format (d g d o)] .
-  op _notInI : Msg -> nIConstraint [format (d g o)] .
+  op _notLeq_ : IMsg IMsg -> DConstraint [format (d g d o)] .
+  op _notInI : IMsg -> nIConstraint [format (d g o)] .
 
   sort CtrSet .
   subsort Constraint < CtrSet .
@@ -10212,26 +10212,26 @@ fmod DEFINITION-CONSTRAINTS is
 
 endfm
 fmod PROTOCOL-EXAMPLE-SYMBOLS is
-  --- Importing sorts Msg, Fresh, Public, and GhostData
+  --- Importing sorts IMsg, Fresh, Public, and GhostData
   protecting DEFINITION-PROTOCOL-RULES .
 
   ----------------------------------------------------------
   --- Overwrite this module with the syntax of your protocol
   --- Notes:
-  --- * Sort Msg and Fresh are special and imported
-  --- * Every sort must be a subsort of Msg
-  --- * No sort can be a supersort of Msg
+  --- * Sort IMsg and Fresh are special and imported
+  --- * Every sort must be a subsort of IMsg
+  --- * No sort can be a supersort of IMsg
   ----------------------------------------------------------
 
   --- Sort Information
   sorts Name Nonce Key Enc .
-  subsort Name Nonce Enc Key < Msg .
+  subsort Name Nonce Enc Key < IMsg .
   subsort Name < Key .
   subsort Name < Public .
 
   --- Encoding operators for public/private encryption
-  op pk : Key Msg -> Enc [frozen] .
-  op sk : Key Msg -> Enc [frozen] .
+  op pk : Key IMsg -> Enc [frozen] .
+  op sk : Key IMsg -> Enc [frozen] .
 
   --- Nonce operator
   op n : Name Fresh -> Nonce [frozen] .
@@ -10242,7 +10242,7 @@ fmod PROTOCOL-EXAMPLE-SYMBOLS is
   op i : -> Name . --- Intruder
 
  --- Associativity operator
-  op _;_ : Msg  Msg  -> Msg [frozen] .
+  op _;_ : IMsg  IMsg  -> IMsg [frozen] .
 
 endfm
 
@@ -10254,7 +10254,7 @@ fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
   --- of your protocol
   ----------------------------------------------------------
 
-  var Z : Msg .
+  var Z : IMsg .
   var Ke : Key .
 
   *** Encryption/Decryption Cancellation
@@ -10287,7 +10287,7 @@ mod STRAND-GENERAL-RULES is
   var ML : SMsgList .
   var L1 : SMsgList-L .
   var L2 : SMsgList-R .
-  var M : Msg .
+  var M : IMsg .
   var rrL : FreshSet .
   var GL : GhostList .
   var PP : Properties .
@@ -10349,7 +10349,7 @@ mod COMPOSITION-RULES is
   var ML : SMsgList .
   var L1 : SMsgList-L .
   var L2 : SMsgList-R .
-  var M : Msg .
+  var M : IMsg .
   vars rrL1 rrL2 : FreshSet .
   var GL : GhostList .
   var PP : Properties .
@@ -10410,7 +10410,7 @@ mod STRAND-GENERAL-RULES-INPUT is
   var ML : SMsgList .
   var L1 : SMsgList-L .
   var L2 : SMsgList-R .
-  vars M M1 M2 : Msg .
+  vars M M1 M2 : IMsg .
   var rrL : FreshSet .
   var GL : GhostList .
   var PP : Properties .
@@ -10513,8 +10513,8 @@ fmod DEFINITION-CONSTRAINTS-HANDLING is
    = G:GrammarList [owise] .
 
   op only-inL : GrammarList -> GrammarList .
-  eq only-inL(grl X:Msg inL => Y:Msg inL . ; G:GrammarRuleSet)
-   = grl X:Msg inL => Y:Msg inL . ; only-inL(G:GrammarRuleSet) .
+  eq only-inL(grl X:IMsg inL => Y:IMsg inL . ; G:GrammarRuleSet)
+   = grl X:IMsg inL => Y:IMsg inL . ; only-inL(G:GrammarRuleSet) .
   eq only-inL(G:GrammarRuleSet)
    = empty [owise] .
 
@@ -10528,7 +10528,7 @@ fmod DEFINITION-PROTOCOL-RULES-HANDLING is
   protecting TERMSET .
   protecting RESULT-CONTEXT-SET .
 
-  eq X:Msg , X:Msg = X:Msg . ---Moved from DEFINITION-PROTOCOL-RULES
+  eq X:IMsg , X:IMsg = X:IMsg . ---Moved from DEFINITION-PROTOCOL-RULES
 
   eq X:Role X:Role = X:Role .  ---Moved from DEFINITION-PROTOCOL-RULES
 
@@ -10555,9 +10555,9 @@ fmod DEFINITION-PROTOCOL-RULES-HANDLING is
   eq toMsgSet((nil).SMsgList) = emptyMsgSet .
   eq toMsgSet((M:SMsg,L:SMsgList)) = toMsg(M:SMsg), toMsgSet(L:SMsgList) .
 
-  op toMsg : SMsg -> Msg .
-  eq toMsg(+(M:Msg)) = M:Msg .
-  eq toMsg(-(M:Msg)) = M:Msg .
+  op toMsg : SMsg -> IMsg .
+  eq toMsg(+(M:IMsg)) = M:IMsg .
+  eq toMsg(-(M:IMsg)) = M:IMsg .
 
   *** Extract ********************************************
   op extract : Term Module ~> Term .
@@ -10716,8 +10716,8 @@ fmod DEFINITION-PROTOCOL-RULES-HANDLING is
   op yesSynchro&noConstraint : SMsgList$ -> SMsgList$ .
   eq yesSynchro&noConstraint(nil)
    = nil .
-  eq yesSynchro&noConstraint(L1:SMsgList$,{X:RoleSet -> Y:RoleSet ;; X:How ;; X:Msg},L2:SMsgList$)
-   = yesSynchro&noConstraint(L1:SMsgList$,-(X:Msg),L2:SMsgList$) .
+  eq yesSynchro&noConstraint(L1:SMsgList$,{X:RoleSet -> Y:RoleSet ;; X:How ;; X:IMsg},L2:SMsgList$)
+   = yesSynchro&noConstraint(L1:SMsgList$,-(X:IMsg),L2:SMsgList$) .
   eq yesSynchro&noConstraint(L1:SMsgList$,M:StrandConstraint,L2:SMsgList$)
    = yesSynchro&noConstraint(L1:SMsgList$,L2:SMsgList$) .
   eq yesSynchro&noConstraint(L:SMsgList$)
@@ -10751,9 +10751,9 @@ fmod DEFINITION-PROTOCOL-RULES-HANDLING is
   eq X:SMsg in (L1:SMsgList,X:SMsg,L2:SMsgList) = true .
   eq X:SMsg in L:SMsgList = false [owise] .
 
-  op _in_ : Msg MsgSet -> Bool .
-  eq X:Msg in (X:Msg,S:MsgSet) = true .
-  eq X:Msg in S:MsgSet = false [owise] .
+  op _in_ : IMsg MsgSet -> Bool .
+  eq X:IMsg in (X:IMsg,S:MsgSet) = true .
+  eq X:IMsg in S:MsgSet = false [owise] .
 
   op _in_ : Term TermList -> Bool .
   eq X:Term in (X1:TermList,X:Term,X2:TermList) = true .
@@ -10860,23 +10860,23 @@ fmod DEFINITION-PROTOCOL-RULES-HANDLING is
   op toSMsgList$ : SMsgList -> SMsgList$ .
   ops toSMsgList$+ toSMsgList$- : SMsgList SMsgSet -> SMsgList$ .
   eq toSMsgList$((nil).SMsgList) = (nil).SMsgList .
-  eq toSMsgList$((+(M:Msg),L:SMsgList)) = toSMsgList$+(L:SMsgList,+(M:Msg)) .
-  eq toSMsgList$((-(M:Msg),L:SMsgList)) = toSMsgList$-(L:SMsgList,-(M:Msg)) .
+  eq toSMsgList$((+(M:IMsg),L:SMsgList)) = toSMsgList$+(L:SMsgList,+(M:IMsg)) .
+  eq toSMsgList$((-(M:IMsg),L:SMsgList)) = toSMsgList$-(L:SMsgList,-(M:IMsg)) .
   eq toSMsgList$((M:SMsgElem,L:SMsgList)) = M:SMsgElem,toSMsgList$(L:SMsgList) [owise] .
 
   eq toSMsgList$+(nil,MS:SMsgSet) = MS:SMsgSet .
-  eq toSMsgList$+((+(M:Msg),L:SMsgList),MS:SMsgSet)
-   = toSMsgList$+(L:SMsgList,(MS:SMsgSet ; +(M:Msg))) .
-  eq toSMsgList$+((-(M:Msg),L:SMsgList),MS:SMsgSet)
-   = (MS:SMsgSet , toSMsgList$-(L:SMsgList,-(M:Msg))) .
+  eq toSMsgList$+((+(M:IMsg),L:SMsgList),MS:SMsgSet)
+   = toSMsgList$+(L:SMsgList,(MS:SMsgSet ; +(M:IMsg))) .
+  eq toSMsgList$+((-(M:IMsg),L:SMsgList),MS:SMsgSet)
+   = (MS:SMsgSet , toSMsgList$-(L:SMsgList,-(M:IMsg))) .
   eq toSMsgList$+((M:SMsgElem,L:SMsgList),MS:SMsgSet)
    = (MS:SMsgSet , M:SMsgElem , toSMsgList$(L:SMsgList)) [owise] .
 
   eq toSMsgList$-(nil,MS:SMsgSet) = MS:SMsgSet .
-  eq toSMsgList$-((-(M:Msg),L:SMsgList),MS:SMsgSet)
-   = toSMsgList$-(L:SMsgList,(MS:SMsgSet ; -(M:Msg))) .
-  eq toSMsgList$-((+(M:Msg),L:SMsgList),MS:SMsgSet)
-   = (MS:SMsgSet , toSMsgList$+(L:SMsgList,+(M:Msg))) .
+  eq toSMsgList$-((-(M:IMsg),L:SMsgList),MS:SMsgSet)
+   = toSMsgList$-(L:SMsgList,(MS:SMsgSet ; -(M:IMsg))) .
+  eq toSMsgList$-((+(M:IMsg),L:SMsgList),MS:SMsgSet)
+   = (MS:SMsgSet , toSMsgList$+(L:SMsgList,+(M:IMsg))) .
   eq toSMsgList$-((M:SMsgElem,L:SMsgList),MS:SMsgSet)
    = (MS:SMsgSet , M:SMsgElem , toSMsgList$(L:SMsgList)) [owise] .
 
@@ -10886,29 +10886,29 @@ fmod DEFINITION-PROTOCOL-RULES-HANDLING is
 
   op makeInI : GhostList -> IntruderKnowledge .
   eq makeInI((nil).GhostList) = empty .
-  eq makeInI((ghost(M:Msg),GL:GhostList)) = M:Msg inI,makeInI(GL:GhostList) .
+  eq makeInI((ghost(M:IMsg),GL:GhostList)) = M:IMsg inI,makeInI(GL:GhostList) .
 
 --- End auxiliary
 
   op ghostTerms : GhostList -> TermList .
   eq ghostTerms(nil) = empty .
   eq ghostTerms(
-      ghost(M:Msg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
+      ghost(M:IMsg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
       G2:GhostList)
-   = (upTerm(M:Msg),ghostTerms(G2:GhostList)) .
+   = (upTerm(M:IMsg),ghostTerms(G2:GhostList)) .
 
   op noInI : IntruderKnowledge -> Bool .
-  eq noInI(M:Msg inI,K:IntruderKnowledge) = false .
+  eq noInI(M:IMsg inI,K:IntruderKnowledge) = false .
   eq noInI(K:IntruderKnowledge) = true [owise] .
 
   op only-Output : SMsgList -> SMsgList .
   eq only-Output(nil) = nil .
-  eq only-Output(+(X:Msg),L:SMsgList) = +(X:Msg),only-Output(L:SMsgList) .
+  eq only-Output(+(X:IMsg),L:SMsgList) = +(X:IMsg),only-Output(L:SMsgList) .
   eq only-Output(X:SMsgElem,L:SMsgList) = only-Output(L:SMsgList) [owise] .
 
   op only-Input : SMsgList -> SMsgList .
   eq only-Input(nil) = nil .
-  eq only-Input(-(X:Msg),L:SMsgList) = -(X:Msg),only-Input(L:SMsgList) .
+  eq only-Input(-(X:IMsg),L:SMsgList) = -(X:IMsg),only-Input(L:SMsgList) .
   eq only-Input(X:SMsgElem,L:SMsgList) = only-Input(L:SMsgList) [owise] .
 
   op only-Synchro : SMsgList -> SMsgList .
@@ -11150,8 +11150,8 @@ fmod DEFINITION-PROTOCOL-RULES-HANDLING is
    = only-CPSA(K:IntruderKnowledge) [owise] .
 
   op getIrrTerms : IntruderKnowledge -> TermList .
-  eq getIrrTerms(irr(M:Msg),K:IntruderKnowledge)
-   = (upTerm(M:Msg),getIrrTerms(K:IntruderKnowledge)) .
+  eq getIrrTerms(irr(M:IMsg),K:IntruderKnowledge)
+   = (upTerm(M:IMsg),getIrrTerms(K:IntruderKnowledge)) .
   eq getIrrTerms(K:IntruderKnowledge)
    = empty [owise] .
 
@@ -11252,13 +11252,13 @@ fmod DEFINITION-PROTOCOL-RULES-HANDLING is
   op downAttack : Term -> Attack .
   eq downAttack(T:Term) = downTerm(T:Term,(empty).SystemSet) .
 
-  op _<<_< : Msg UnificationPair -> UnificationPair .
-  eq M:Msg << X:UnificationPair <
-   = upTerm(M:Msg) << X:UnificationPair < .
+  op _<<_< : IMsg UnificationPair -> UnificationPair .
+  eq M:IMsg << X:UnificationPair <
+   = upTerm(M:IMsg) << X:UnificationPair < .
 
-  op _<<_ : Msg Substitution -> Msg .
-  eq M:Msg << X:Substitution
-   = downMsgSet(upTerm(M:Msg) << X:Substitution) .
+  op _<<_ : IMsg Substitution -> IMsg .
+  eq M:IMsg << X:Substitution
+   = downMsgSet(upTerm(M:IMsg) << X:Substitution) .
 
 endfm
 
@@ -11336,7 +11336,7 @@ fmod PA2NPA is
 
   var Ro : Role .
   var S : SMsgList .
-  vars X Y Z : Msg .
+  vars X Y Z : IMsg .
   var U V W : Process .
 ---  var L : ListProcess .
   var Ls : ProcessConf .
@@ -11520,10 +11520,10 @@ fmod PROTOCOL-EXAMPLE-GHOST is
   pr PROTOCOL-EXAMPLE-SYMBOLS .
   pr META-LEVEL-MNPA .
   *** ghost predicate ************************************************
-  op isGhostMsg : Msg -> Bool [memo] .
-  eq isGhostMsg(X:Msg)
-   = X:Msg :: Public
-     or-else (upTerm(X:Msg) :: Variable and-then not (X:Msg :: Private)) [owise] .
+  op isGhostMsg : IMsg -> Bool [memo] .
+  eq isGhostMsg(X:IMsg)
+   = X:IMsg :: Public
+     or-else (upTerm(X:IMsg) :: Variable and-then not (X:IMsg :: Private)) [owise] .
 endfm
 
 fmod NORMALIZE-MNPA is
@@ -11712,17 +11712,17 @@ fmod GENERATE-RULES is
    = EqS:EquationSet [owise] .
 
   *** Useful for the whole section ********************************
-  op fixIrrMsg : Msg -> VariantTripleSet .
-  eq fixIrrMsg(M:Msg)
-   = fixIrrMsg(M:Msg,highestVar(upTerm(M:Msg)) + 1) .
+  op fixIrrMsg : IMsg -> VariantTripleSet .
+  eq fixIrrMsg(M:IMsg)
+   = fixIrrMsg(M:IMsg,highestVar(upTerm(M:IMsg)) + 1) .
 
-  op fixIrrMsg : Msg Nat -> VariantTripleSet [memo] .
-  eq fixIrrMsg(M:Msg,N:Nat)
+  op fixIrrMsg : IMsg Nat -> VariantTripleSet [memo] .
+  eq fixIrrMsg(M:IMsg,N:Nat)
    = toVariantTripleSet(
       getVariantsOrConstructorVariants(
         clearAllFrozen(removeBoolEqs(
             checkXOR(upModule('PROTOCOL-EXAMPLE-ALGEBRAIC,true)))),
-        upTerm(M:Msg),
+        upTerm(M:IMsg),
         N:Nat,BuiltInUnify irreducible minimal-unifiers
       )
      ) .
@@ -11788,23 +11788,23 @@ fmod GENERATE-RULES is
 
   op fixIrrSystem* : OptionsFixIrr System TermList -> SystemSet [memo] .
  ceq fixIrrSystem*(OFI,S:System,TL:TermList)
-   = fixIrrSystemRT(OFI,S:System,M:Msg,TL:TermList,VTS)
-  if M:Msg,MS:MsgSet := getMsg(OFI,S:System,emptyMsgSet)
+   = fixIrrSystemRT(OFI,S:System,M:IMsg,TL:TermList,VTS)
+  if M:IMsg,MS:MsgSet := getMsg(OFI,S:System,emptyMsgSet)
   /\ SS:StrandSet || K:IntruderKnowledge || M:SMsgList || G:GhostList || PP:Properties
        := S:System
-  /\ not (upTerm(M:Msg) :: Variable or upTerm(M:Msg) :: Constant)
+  /\ not (upTerm(M:IMsg) :: Variable or upTerm(M:IMsg) :: Constant)
      and-then
-     not irr(M:Msg) in K:IntruderKnowledge
+     not irr(M:IMsg) in K:IntruderKnowledge
      and-then
-     not (M:Msg !inI) in K:IntruderKnowledge
+     not (M:IMsg !inI) in K:IntruderKnowledge
      and-then
-     M:Msg includeVars G:GhostList --- This may produce problems of instantions found by variant generation that resucitate a state
+     M:IMsg includeVars G:GhostList --- This may produce problems of instantions found by variant generation that resucitate a state
      and-then
-     not (all Vars(upTerm(M:Msg)) in Vars(getIrrTerms(K:IntruderKnowledge)))
-  /\ VTS := fixIrrMsg(M:Msg,highestVar((upTerm(M:Msg),TL:TermList)) + 1)
+     not (all Vars(upTerm(M:IMsg)) in Vars(getIrrTerms(K:IntruderKnowledge)))
+  /\ VTS := fixIrrMsg(M:IMsg,highestVar((upTerm(M:IMsg),TL:TermList)) + 1)
   /\ VTS :: VariantTripleSet
      and-then
-     downMsgSet(getTerms(VTS)) =/= M:Msg
+     downMsgSet(getTerms(VTS)) =/= M:IMsg
      and-then
      not onlyRenamingAll(upModule('PROTOCOL-EXAMPLE-ALGEBRAIC,true),getSubstitutions(VTS)) .
 
@@ -11813,47 +11813,47 @@ fmod GENERATE-RULES is
 
   op getMsg : OptionsFixIrr System MsgSet -> MsgSet .
  ceq getMsg(strands OFI,S:System,MS:MsgSet)
-   = getMsg(strands OFI,S:System,(M:Msg,MS:MsgSet))
+   = getMsg(strands OFI,S:System,(M:IMsg,MS:MsgSet))
   if :: rrL:FreshSet :: [L:SMsgList-L | L:SMsgList-R] & SS:StrandSet
      || K:IntruderKnowledge
      || M:SMsgList || G:GhostList || PP:Properties
        := S:System
-  /\ (L1:SMsgList,-(M:Msg),L2:SMsgList)
+  /\ (L1:SMsgList,-(M:IMsg),L2:SMsgList)
         := (toSMsgList(L:SMsgList-L),toSMsgList(L:SMsgList-R))
-  /\ not (M:Msg in MS:MsgSet) .
+  /\ not (M:IMsg in MS:MsgSet) .
  ceq getMsg(inI OFI,S:System,MS:MsgSet)
-   = getMsg(inI OFI,S:System,(M:Msg,MS:MsgSet))
-  if SS:StrandSet || M:Msg inI,K:IntruderKnowledge
+   = getMsg(inI OFI,S:System,(M:IMsg,MS:MsgSet))
+  if SS:StrandSet || M:IMsg inI,K:IntruderKnowledge
       || M:SMsgList || G:GhostList || PP:Properties
         := S:System
-  /\ not (M:Msg in MS:MsgSet) .
+  /\ not (M:IMsg in MS:MsgSet) .
  ceq getMsg(!= OFI,S:System,MS:MsgSet)
-   = getMsg(!= OFI,S:System,(M1:Msg,M2:Msg,MS:MsgSet))
-  if SS:StrandSet || (M1:Msg != M2:Msg),K:IntruderKnowledge
+   = getMsg(!= OFI,S:System,(M1:IMsg,M2:IMsg,MS:MsgSet))
+  if SS:StrandSet || (M1:IMsg != M2:IMsg),K:IntruderKnowledge
       || M:SMsgList || G:GhostList || PP:Properties
         := S:System
-  /\ not (M1:Msg in MS:MsgSet) and not (M2:Msg in MS:MsgSet) .
+  /\ not (M1:IMsg in MS:MsgSet) and not (M2:IMsg in MS:MsgSet) .
   eq getMsg(OFI,S:System,MS:MsgSet) = MS:MsgSet [owise] .
 
-  op fixIrrSystemRT : OptionsFixIrr System Msg TermList VariantTripleSet
+  op fixIrrSystemRT : OptionsFixIrr System IMsg TermList VariantTripleSet
                    -> SystemSet .
-  eq fixIrrSystemRT(OFI,S:System,M:Msg,TL:TermList,empty)
+  eq fixIrrSystemRT(OFI,S:System,M:IMsg,TL:TermList,empty)
    = empty .
-  eq fixIrrSystemRT(OFI,S:System,M:Msg,TL:TermList,
+  eq fixIrrSystemRT(OFI,S:System,M:IMsg,TL:TermList,
                     R:Variant | RT:VariantTripleSet)
-   = fixIrrSystemRTe(OFI,S:System,M:Msg,TL:TermList,R:Variant)
-     fixIrrSystemRT(OFI,S:System,M:Msg,TL:TermList,RT:VariantTripleSet) .
+   = fixIrrSystemRTe(OFI,S:System,M:IMsg,TL:TermList,R:Variant)
+     fixIrrSystemRT(OFI,S:System,M:IMsg,TL:TermList,RT:VariantTripleSet) .
 
-  op fixIrrSystemRTe : OptionsFixIrr System Msg TermList Variant
+  op fixIrrSystemRTe : OptionsFixIrr System IMsg TermList Variant
                     -> SystemSet .
-  eq fixIrrSystemRTe(OFI,S:System,M:Msg,TL:TermList,
+  eq fixIrrSystemRTe(OFI,S:System,M:IMsg,TL:TermList,
                      {T:Term,S:Substitution,NextVar:Nat,P:Parent,B:Bool})
    = if dom S:Substitution notIn TL:TermList
         --- check at least one variable not brought by a variant is instantiated
         and
         check-irr(
           downSystemSet(
-            (replaceTerm upTerm(M:Msg) by T:Term in upTerm(S:System))
+            (replaceTerm upTerm(M:IMsg) by T:Term in upTerm(S:System))
             << normalize(S:Substitution)
           )
         )
@@ -11865,7 +11865,7 @@ fmod GENERATE-RULES is
         addIrr(downMsgSet(T:Term),
           downSystemSet(
 	   normalize(
-            (replaceTerm upTerm(M:Msg) by T:Term in upTerm(S:System))
+            (replaceTerm upTerm(M:IMsg) by T:Term in upTerm(S:System))
             << normalize(S:Substitution)
 	   )
           )
@@ -11883,8 +11883,8 @@ fmod GENERATE-RULES is
    = check-irr(K:IntruderKnowledge) .
 
   op check-irr : IntruderKnowledge -> Bool .
-  eq check-irr(irr(M:Msg),K:IntruderKnowledge)
-   = (upTerm(M:Msg)
+  eq check-irr(irr(M:IMsg),K:IntruderKnowledge)
+   = (upTerm(M:IMsg)
       =[upModule('PROTOCOL-EXAMPLE-ALGEBRAIC,true)]=
        getTerm(
          metaReduce(
@@ -11893,7 +11893,7 @@ fmod GENERATE-RULES is
                upModule('PROTOCOL-EXAMPLE-ALGEBRAIC,true)
              )))
            )),
-           upTerm(M:Msg)
+           upTerm(M:IMsg)
          )
        )
      )
@@ -11904,14 +11904,14 @@ fmod GENERATE-RULES is
   op addIrr : MsgSet System -> System .
   eq addIrr(emptyMsgSet,X:System)
    = X:System .
-  eq addIrr((M:Msg,MS:MsgSet),
+  eq addIrr((M:IMsg,MS:MsgSet),
       SS:StrandSet || K:IntruderKnowledge
       || M:SMsgList || G:GhostList || PP:Properties)
    = addIrr(MS:MsgSet,
-       if not irr(M:Msg) in K:IntruderKnowledge
+       if not irr(M:IMsg) in K:IntruderKnowledge
        then
          SS:StrandSet
-         || irr(M:Msg),K:IntruderKnowledge
+         || irr(M:IMsg),K:IntruderKnowledge
          || M:SMsgList || G:GhostList || PP:Properties
        else
          SS:StrandSet || K:IntruderKnowledge
@@ -11928,7 +11928,7 @@ fmod GENERATE-RULES is
    = addInst(TL:TermList,
      if typeLeq(upModule('PROTOCOL-SPECIFICATION,true),
           leastSort(upModule('PROTOCOL-SPECIFICATION,true),T:Term),
-          'Msg)
+          'IMsg)
         and-then
         not inst(downMsgSet(T:Term)) in K:IntruderKnowledge
      then
@@ -11941,24 +11941,24 @@ fmod GENERATE-RULES is
      fi
      ) .
 
-  op _includeVars_ : Msg GhostList -> Bool .
-  eq M:Msg includeVars G:GhostList
-   = Vars(upTerm(M:Msg)) includeVars G:GhostList .
+  op _includeVars_ : IMsg GhostList -> Bool .
+  eq M:IMsg includeVars G:GhostList
+   = Vars(upTerm(M:IMsg)) includeVars G:GhostList .
 
   op _includeVars_ : TermList GhostList -> Bool .
   eq (TL:TermList includeVars
-        ghost(M2:Msg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
+        ghost(M2:IMsg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
         G:GhostList)
-   = (TL:TermList intersect Vars(upTerm(M2:Msg)) =/= empty
-      implies (Vars(upTerm(M2:Msg)) setMinus TL:TermList) == empty)
+   = (TL:TermList intersect Vars(upTerm(M2:IMsg)) =/= empty
+      implies (Vars(upTerm(M2:IMsg)) setMinus TL:TermList) == empty)
      and
      (TL:TermList includeVars G:GhostList) .
   eq (TL:TermList includeVars nil)
    = true .
 
-  op _inVars_ : Msg IntruderKnowledge -> Bool .
-  eq M:Msg inVars K:IntruderKnowledge
-   = Vars(upTerm(M:Msg)) inVars K:IntruderKnowledge .
+  op _inVars_ : IMsg IntruderKnowledge -> Bool .
+  eq M:IMsg inVars K:IntruderKnowledge
+   = Vars(upTerm(M:IMsg)) inVars K:IntruderKnowledge .
 
   op _inVars_ : Term IntruderKnowledge -> Bool .
   eq (TL:TermList inVars (X:IntruderKnowledgeElem,K:IntruderKnowledge))
@@ -12043,9 +12043,9 @@ fmod GENERATE-RULES is
    = genRules**(rrL:FreshSet, (L:SMsgList,M:Synchro), R:SMsgList) .
   eq genRules**(rrL:FreshSet, L:SMsgList, (M:StrandConstraint,R:SMsgList))
    = genRules**(rrL:FreshSet, (L:SMsgList,M:StrandConstraint), R:SMsgList) .
-  eq genRules**(rrL:FreshSet, L:SMsgList, (-(M:Msg),R:SMsgList))
-   = genRules**(rrL:FreshSet, (L:SMsgList,-(M:Msg)), R:SMsgList) .
-  eq genRules**(rrL:FreshSet, L:SMsgList, (+(M:Msg),R:SMsgList))
+  eq genRules**(rrL:FreshSet, L:SMsgList, (-(M:IMsg),R:SMsgList))
+   = genRules**(rrL:FreshSet, (L:SMsgList,-(M:IMsg)), R:SMsgList) .
+  eq genRules**(rrL:FreshSet, L:SMsgList, (+(M:IMsg),R:SMsgList))
    = if only-Synchro(R:SMsgList) == nil
      then
      *** general rule for the general case with id symbols
@@ -12056,18 +12056,18 @@ fmod GENERATE-RULES is
            '::_::`[_|_`][
              upTerm(rrL:FreshSet), --- Fresh variables
              upTerm(toSMsgList-L(L:SMsgList)),
-             upTerm(toSMsgList-R(+(M:Msg)))
+             upTerm(toSMsgList-R(+(M:IMsg)))
            ]
          ],
-         '_`,_['_!inI[upTerm(M:Msg)],'K:IntruderKnowledge],
-         '_`,_[upTerm(+(M:Msg)),'ML:SMsgList],
+         '_`,_['_!inI[upTerm(M:IMsg)],'K:IntruderKnowledge],
+         '_`,_[upTerm(+(M:IMsg)),'ML:SMsgList],
          'GL:GhostList,
          'PP:Properties
        ]
      =>
        '_||_||_||_||_[
          'SS:StrandSet,
-         '_`,_['_inI[upTerm(M:Msg)],'K:IntruderKnowledge],
+         '_`,_['_inI[upTerm(M:IMsg)],'K:IntruderKnowledge],
          'ML:SMsgList,
          'GL:GhostList,
          'PP:Properties
@@ -12076,7 +12076,7 @@ fmod GENERATE-RULES is
      else
      none
      fi
-     genRules**(rrL:FreshSet, (L:SMsgList,+(M:Msg)), R:SMsgList) .
+     genRules**(rrL:FreshSet, (L:SMsgList,+(M:IMsg)), R:SMsgList) .
 
   ----------------
   op genCompositionRules : StrandSet -> RuleSet .
@@ -12090,17 +12090,17 @@ fmod GENERATE-RULES is
 
   op genCompositionRules** : Strand -> RuleSet .
   eq genCompositionRules**(
-       :: rrL1:FreshSet :: [ L:SMsgList-L, {R1:Role -> RR2:RoleSet ;; X:How ;; M:Msg} | nil ]
+       :: rrL1:FreshSet :: [ L:SMsgList-L, {R1:Role -> RR2:RoleSet ;; X:How ;; M:IMsg} | nil ]
      )
    = genCompositionRules***(RR2:RoleSet,
-       :: rrL1:FreshSet :: [ L:SMsgList-L, {R1:Role -> RR2:RoleSet ;; X:How ;; M:Msg} | nil ]
+       :: rrL1:FreshSet :: [ L:SMsgList-L, {R1:Role -> RR2:RoleSet ;; X:How ;; M:IMsg} | nil ]
      ) .
   eq genCompositionRules**(S:Strand) = none [owise] .
 
   op genCompositionRules*** : RoleSet Strand -> RuleSet .
   eq genCompositionRules***(empty,S:Strand) = none .
   eq genCompositionRules***(R2:Role RR2:RoleSet,
-       :: rrL1:FreshSet :: [ L:SMsgList-L, {R1:Role -> R2:Role RR2':RoleSet ;; X:How ;; M:Msg} | nil ]
+       :: rrL1:FreshSet :: [ L:SMsgList-L, {R1:Role -> R2:Role RR2':RoleSet ;; X:How ;; M:IMsg} | nil ]
      )
    = *** general rule for the general case with id symbols
      (rl
@@ -12111,20 +12111,20 @@ fmod GENERATE-RULES is
            '::_::`[_|_`][
              upTerm(rrL1:FreshSet),
              upTerm(L:SMsgList-L),
-             '_`,_[upTerm({R1:Role -> R2:Role RR2':RoleSet ;; X:How ;; M:Msg}), 'nil.SMsgList-R]
+             '_`,_[upTerm({R1:Role -> R2:Role RR2':RoleSet ;; X:How ;; M:IMsg}), 'nil.SMsgList-R]
            ],
            '::_::`[_|_`][
              'rrL2:FreshSet,
              'nil.SMsgList-L,
              '_`,_[
-              '`{_->_;;_;;_`}['__['R:RoleSet,upTerm(R1:Role)],upTerm(R2:Role),upTerm(X:How),upTerm(M:Msg)],
+              '`{_->_;;_;;_`}['__['R:RoleSet,upTerm(R1:Role)],upTerm(R2:Role),upTerm(X:How),upTerm(M:IMsg)],
               'X:SMsgList-R]
            ]
            ]
          ],
          'K:IntruderKnowledge,
          '_`,_[
-	   '`{_->_;;_;;_`}[upTerm(R1:Role),upTerm(R2:Role),upTerm(X:How),upTerm(M:Msg)],
+	   '`{_->_;;_;;_`}[upTerm(R1:Role),upTerm(R2:Role),upTerm(X:How),upTerm(M:IMsg)],
 	   'ML:SMsgList
 	 ],
          'GL:GhostList,
@@ -12137,7 +12137,7 @@ fmod GENERATE-RULES is
            '::_::`[_|_`][
              'rrL2:FreshSet,
              '_`,_['nil.SMsgList-L,
-                '`{_->_;;_;;_`}['__['R:RoleSet,upTerm(R1:Role)],upTerm(R2:Role),upTerm(X:How),upTerm(M:Msg)]
+                '`{_->_;;_;;_`}['__['R:RoleSet,upTerm(R1:Role)],upTerm(R2:Role),upTerm(X:How),upTerm(M:IMsg)]
              ],
              'X:SMsgList-R
            ]
@@ -12149,7 +12149,7 @@ fmod GENERATE-RULES is
        ]
      [nonexec] .)
      genCompositionRules***(RR2:RoleSet,
-       :: rrL1:FreshSet :: [ L:SMsgList-L, {R1:Role -> R2:Role RR2':RoleSet ;; X:How ;; M:Msg} | nil ]
+       :: rrL1:FreshSet :: [ L:SMsgList-L, {R1:Role -> R2:Role RR2':RoleSet ;; X:How ;; M:IMsg} | nil ]
      )
      .
 
@@ -12183,13 +12183,13 @@ fmod GENERATE-RULES is
   op genGrammarRules** : SMsgList SMsgList -> RuleSet .
   eq genGrammarRules**(L:SMsgList, nil)
    = none .
-  eq genGrammarRules**(L:SMsgList, (-(M:Msg),R:SMsgList))
-   = genGrammarRules**((L:SMsgList,-(M:Msg)), R:SMsgList) .
-  eq genGrammarRules**(L:SMsgList, (+(M:Msg),R:SMsgList))
+  eq genGrammarRules**(L:SMsgList, (-(M:IMsg),R:SMsgList))
+   = genGrammarRules**((L:SMsgList,-(M:IMsg)), R:SMsgList) .
+  eq genGrammarRules**(L:SMsgList, (+(M:IMsg),R:SMsgList))
    = (rl
        upTerm(filterTimeMsg(toMsgSet(L:SMsgList)))
       =>
-       upTerm(filterTimeMsg(M:Msg))
+       upTerm(filterTimeMsg(M:IMsg))
      [nonexec] .)
      genGrammarRules**(L:SMsgList, R:SMsgList) .
 
@@ -12221,18 +12221,18 @@ fmod GENERATE-RULES is
   op genGhostEqs** : SMsgList SMsgList -> EquationSet .
   eq genGhostEqs**(L:SMsgList, nil)
    = none .
-  eq genGhostEqs**(L:SMsgList, (-(M:Msg),R:SMsgList))
-   = genGhostEqs**((L:SMsgList,-(M:Msg)), R:SMsgList) .
-  eq genGhostEqs**(L:SMsgList, (+(M:Msg),R:SMsgList))
-   = if Vars(upTerm(only-Input(L:SMsgList))) setMinus Vars(upTerm(M:Msg)) =/= empty
+  eq genGhostEqs**(L:SMsgList, (-(M:IMsg),R:SMsgList))
+   = genGhostEqs**((L:SMsgList,-(M:IMsg)), R:SMsgList) .
+  eq genGhostEqs**(L:SMsgList, (+(M:IMsg),R:SMsgList))
+   = if Vars(upTerm(only-Input(L:SMsgList))) setMinus Vars(upTerm(M:IMsg)) =/= empty
         or-else
-        (upTerm(M:Msg) :: Variable and-then only-Input(L:SMsgList) =/= nil)
+        (upTerm(M:IMsg) :: Variable and-then only-Input(L:SMsgList) =/= nil)
      then none
      else
-     if not (getIdSymbol(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE,upTerm(M:Msg)) :: Term)
-     then genGhostEqs**Free(upTerm(M:Msg),L:SMsgList)
-     else genGhostEqs**Id(upTerm(M:Msg),L:SMsgList,
-             getIdSymbol(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE,upTerm(M:Msg)))
+     if not (getIdSymbol(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE,upTerm(M:IMsg)) :: Term)
+     then genGhostEqs**Free(upTerm(M:IMsg),L:SMsgList)
+     else genGhostEqs**Id(upTerm(M:IMsg),L:SMsgList,
+             getIdSymbol(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE,upTerm(M:IMsg)))
      fi
      fi
      genGhostEqs**(L:SMsgList, R:SMsgList)
@@ -12254,25 +12254,25 @@ fmod GENERATE-RULES is
   op genGhostEqs*** : SMsgList -> Term .
   eq genGhostEqs***(nil)
    = 'true.Bool .
-  eq genGhostEqs***((-(M:Msg),L:SMsgList))
-   = '_and_['isGhostMsg[upTerm(M:Msg)],genGhostEqs***(L:SMsgList)] .
+  eq genGhostEqs***((-(M:IMsg),L:SMsgList))
+   = '_and_['isGhostMsg[upTerm(M:IMsg)],genGhostEqs***(L:SMsgList)] .
 
-  --- Special treatment for messages with symbols adding extra features to sort Msg
+  --- Special treatment for messages with symbols adding extra features to sort IMsg
   --- metadata grammar-arg-1 allows removing the extra arguments of special symbol
   --- and considering just the first argument as the actual messages for grammar generation
   op filterTimeMsg : MsgSet -> MsgSet .
   eq filterTimeMsg(emptyMsgSet) = emptyMsgSet .
-  eq filterTimeMsg(X:Msg,Y:MsgSet)
-   = filterTimeMsg$(X:Msg),filterTimeMsg(Y:MsgSet) .
+  eq filterTimeMsg(X:IMsg,Y:MsgSet)
+   = filterTimeMsg$(X:IMsg),filterTimeMsg(Y:MsgSet) .
 
-  op filterTimeMsg$ : Msg -> Msg .
- ceq filterTimeMsg$(X:Msg)
+  op filterTimeMsg$ : IMsg -> IMsg .
+ ceq filterTimeMsg$(X:IMsg)
    = downMsgSet(T:Term)
-  if F:Qid[T:Term,TL:TermList] := upTerm(X:Msg)
+  if F:Qid[T:Term,TL:TermList] := upTerm(X:IMsg)
   /\ M:Module := PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE
   /\ ((op F:Qid : TPL:TypeList -> TP:Type [metadata("grammar-arg-1") AtS:AttrSet] .) OPDS:OpDeclSet)
      := getOpsOfQid(M:Module,F:Qid,getTypes(M:Module, (T:Term,TL:TermList))) .
-  eq filterTimeMsg$(X:Msg) = X:Msg [owise] .
+  eq filterTimeMsg$(X:IMsg) = X:IMsg [owise] .
 
   op filterTimeMsg : IdSystemSet -> IdSystemSet .
   eq filterTimeMsg((empty).IdSystemSet) = empty .
@@ -12311,26 +12311,26 @@ fmod GENERATE-RULES is
   eq filterTimeMsgSMsgList(X:SMsgList) = X:SMsgList [owise] .
 
   op filterTimeMsgSMsgElem : SMsgElem -> SMsgElem .
-  eq filterTimeMsgSMsgElem(+(X:Msg)) = +(filterTimeMsg(X:Msg)) .
-  eq filterTimeMsgSMsgElem(-(X:Msg)) = -(filterTimeMsg(X:Msg)) .
-  eq filterTimeMsgSMsgElem(resuscitated(X:Msg)) = resuscitated(filterTimeMsg(X:Msg)) .
-  eq filterTimeMsgSMsgElem(generatedByIntruder(X:Msg)) = generatedByIntruder(filterTimeMsg(X:Msg)) .
-  eq filterTimeMsgSMsgElem(X:Msg eq Y:Msg) = filterTimeMsg(X:Msg) eq filterTimeMsg(Y:Msg) .
-  eq filterTimeMsgSMsgElem(X:Msg neq Y:Msg) = filterTimeMsg(X:Msg) neq filterTimeMsg(Y:Msg) .
-  eq filterTimeMsgSMsgElem(resuscitated(X:Msg)) = resuscitated(filterTimeMsg(X:Msg)) .
-  eq filterTimeMsgSMsgElem({ X:RoleSet -> Y:RoleSet ;; H:How ;; M:Msg}) = { X:RoleSet -> Y:RoleSet ;; H:How ;; filterTimeMsg(M:Msg)} .
+  eq filterTimeMsgSMsgElem(+(X:IMsg)) = +(filterTimeMsg(X:IMsg)) .
+  eq filterTimeMsgSMsgElem(-(X:IMsg)) = -(filterTimeMsg(X:IMsg)) .
+  eq filterTimeMsgSMsgElem(resuscitated(X:IMsg)) = resuscitated(filterTimeMsg(X:IMsg)) .
+  eq filterTimeMsgSMsgElem(generatedByIntruder(X:IMsg)) = generatedByIntruder(filterTimeMsg(X:IMsg)) .
+  eq filterTimeMsgSMsgElem(X:IMsg eq Y:IMsg) = filterTimeMsg(X:IMsg) eq filterTimeMsg(Y:IMsg) .
+  eq filterTimeMsgSMsgElem(X:IMsg neq Y:IMsg) = filterTimeMsg(X:IMsg) neq filterTimeMsg(Y:IMsg) .
+  eq filterTimeMsgSMsgElem(resuscitated(X:IMsg)) = resuscitated(filterTimeMsg(X:IMsg)) .
+  eq filterTimeMsgSMsgElem({ X:RoleSet -> Y:RoleSet ;; H:How ;; M:IMsg}) = { X:RoleSet -> Y:RoleSet ;; H:How ;; filterTimeMsg(M:IMsg)} .
   eq filterTimeMsgSMsgElem(X:SMsgElem) = X:SMsgElem [owise] .
 
   op filterTimeMsgIntruderKnowledge : IntruderKnowledge -> IntruderKnowledge .
- ceq filterTimeMsgIntruderKnowledge((X1:Msg !inI,X2:Msg inI,Y:IntruderKnowledge))
-   = filterTimeMsgIntruderKnowledge((X2:Msg inI,Y:IntruderKnowledge))
-  if X1:Msg =/= X2:Msg and-then filterTimeMsg$(X1:Msg) == filterTimeMsg$(X2:Msg) .
- ceq filterTimeMsgIntruderKnowledge((X1:Msg !inI,X2:Msg !inI,Y:IntruderKnowledge))
-   = filterTimeMsgIntruderKnowledge((X2:Msg !inI,Y:IntruderKnowledge))
-  if X1:Msg =/= X2:Msg and-then filterTimeMsg$(X1:Msg) == filterTimeMsg$(X2:Msg) .
- ceq filterTimeMsgIntruderKnowledge((X1:Msg inI,X2:Msg inI,Y:IntruderKnowledge))
-   = filterTimeMsgIntruderKnowledge((X2:Msg inI,Y:IntruderKnowledge))
-  if X1:Msg =/= X2:Msg and-then filterTimeMsg$(X1:Msg) == filterTimeMsg$(X2:Msg) .
+ ceq filterTimeMsgIntruderKnowledge((X1:IMsg !inI,X2:IMsg inI,Y:IntruderKnowledge))
+   = filterTimeMsgIntruderKnowledge((X2:IMsg inI,Y:IntruderKnowledge))
+  if X1:IMsg =/= X2:IMsg and-then filterTimeMsg$(X1:IMsg) == filterTimeMsg$(X2:IMsg) .
+ ceq filterTimeMsgIntruderKnowledge((X1:IMsg !inI,X2:IMsg !inI,Y:IntruderKnowledge))
+   = filterTimeMsgIntruderKnowledge((X2:IMsg !inI,Y:IntruderKnowledge))
+  if X1:IMsg =/= X2:IMsg and-then filterTimeMsg$(X1:IMsg) == filterTimeMsg$(X2:IMsg) .
+ ceq filterTimeMsgIntruderKnowledge((X1:IMsg inI,X2:IMsg inI,Y:IntruderKnowledge))
+   = filterTimeMsgIntruderKnowledge((X2:IMsg inI,Y:IntruderKnowledge))
+  if X1:IMsg =/= X2:IMsg and-then filterTimeMsg$(X1:IMsg) == filterTimeMsg$(X2:IMsg) .
   eq filterTimeMsgIntruderKnowledge(Y:IntruderKnowledge)
    = filterTimeMsgIntruderKnowledge@(Y:IntruderKnowledge) [owise] .
 
@@ -12341,12 +12341,12 @@ fmod GENERATE-RULES is
   eq filterTimeMsgIntruderKnowledge@(X:IntruderKnowledge) = X:IntruderKnowledge [owise] .
 
   op filterTimeMsgIntruderKnowledgeElem : IntruderKnowledgeElem -> IntruderKnowledgeElem .
-  eq filterTimeMsgIntruderKnowledgeElem(X:Msg !inI) = filterTimeMsg(X:Msg) !inI .
-  eq filterTimeMsgIntruderKnowledgeElem(X:Msg inI) = filterTimeMsg(X:Msg) inI .
-  eq filterTimeMsgIntruderKnowledgeElem(X:Msg != Y:Msg) = filterTimeMsg(X:Msg) != filterTimeMsg(Y:Msg) .
-  eq filterTimeMsgIntruderKnowledgeElem(irr(X:Msg)) = irr(filterTimeMsg(X:Msg)) .
-  eq filterTimeMsgIntruderKnowledgeElem(inst(X:Msg)) = inst(filterTimeMsg(X:Msg)) .
-  eq filterTimeMsgIntruderKnowledgeElem(secret(X:Msg)) = secret(filterTimeMsg(X:Msg)) .
+  eq filterTimeMsgIntruderKnowledgeElem(X:IMsg !inI) = filterTimeMsg(X:IMsg) !inI .
+  eq filterTimeMsgIntruderKnowledgeElem(X:IMsg inI) = filterTimeMsg(X:IMsg) inI .
+  eq filterTimeMsgIntruderKnowledgeElem(X:IMsg != Y:IMsg) = filterTimeMsg(X:IMsg) != filterTimeMsg(Y:IMsg) .
+  eq filterTimeMsgIntruderKnowledgeElem(irr(X:IMsg)) = irr(filterTimeMsg(X:IMsg)) .
+  eq filterTimeMsgIntruderKnowledgeElem(inst(X:IMsg)) = inst(filterTimeMsg(X:IMsg)) .
+  eq filterTimeMsgIntruderKnowledgeElem(secret(X:IMsg)) = secret(filterTimeMsg(X:IMsg)) .
   eq filterTimeMsgIntruderKnowledgeElem(X:IntruderKnowledgeElem) = X:IntruderKnowledgeElem [owise] .
 
   op filterTimeMsgGhostList : GhostList -> GhostList .
@@ -12356,12 +12356,12 @@ fmod GENERATE-RULES is
   eq filterTimeMsgGhostList(X:GhostList) = X:GhostList [owise] .
 
   op filterTimeMsgGhost : Ghost -> Ghost .
-  eq filterTimeMsgGhost(ghost(X:Msg,Y:StrandSet,I:IntruderKnowledge,M:SMsgList,P:Properties))
-   = ghost(filterTimeMsg(X:Msg),filterTimeMsgStrandSet(Y:StrandSet),filterTimeMsgIntruderKnowledge(I:IntruderKnowledge),filterTimeMsgSMsgList(M:SMsgList),filterTimeMsgProperties(P:Properties)) .
+  eq filterTimeMsgGhost(ghost(X:IMsg,Y:StrandSet,I:IntruderKnowledge,M:SMsgList,P:Properties))
+   = ghost(filterTimeMsg(X:IMsg),filterTimeMsgStrandSet(Y:StrandSet),filterTimeMsgIntruderKnowledge(I:IntruderKnowledge),filterTimeMsgSMsgList(M:SMsgList),filterTimeMsgProperties(P:Properties)) .
   eq filterTimeMsgGhost(X:Ghost) = X:Ghost [owise] .
 
   op filterTimeMsgShortGhost : ShortGhost -> ShortGhost .
-  eq filterTimeMsgShortGhost(ghost(X:Msg)) = ghost(filterTimeMsg(X:Msg)) .
+  eq filterTimeMsgShortGhost(ghost(X:IMsg)) = ghost(filterTimeMsg(X:IMsg)) .
   eq filterTimeMsgShortGhost(X:ShortGhost) = X:ShortGhost [owise] .
 
   op filterTimeMsgProperties : Properties -> Properties .
@@ -12563,8 +12563,8 @@ fmod MEMBERSHIP-GRAMMAR-LANGUAGE is
   eq empty <=1[TL] C:CtrSet
    = true .
 
-  eq (X:Msg inL, C:CtrSet) <=1[TL] (X:Msg inL, C':CtrSet)
-   = C:CtrSet <=1[TL] (X:Msg inL, C':CtrSet) .
+  eq (X:IMsg inL, C:CtrSet) <=1[TL] (X:IMsg inL, C':CtrSet)
+   = C:CtrSet <=1[TL] (X:IMsg inL, C':CtrSet) .
 
   eq C1:CtrSet <=1[TL] C2:CtrSet
    = C1:CtrSet <=2[TL] C2:CtrSet
@@ -12575,15 +12575,15 @@ fmod MEMBERSHIP-GRAMMAR-LANGUAGE is
   eq empty <=2[TL] C:CtrSet
    = true .
 
- ceq (pair(X:Msg,Z1:Msg) notInI, C:CtrSet) <=2[TL] (pair(Y:Msg,Z2:Msg) notInI, C':CtrSet)
-   = C:CtrSet <=2[TL] (pair(Y:Msg,Z2:Msg) notInI, C':CtrSet)
-  if upTerm(Z1:Msg) :: Variable and not upTerm(Z1:Msg) in TL
-  /\ (X:Msg notInI) <=2*[TL] (Y:Msg notInI) .
+ ceq (pair(X:IMsg,Z1:IMsg) notInI, C:CtrSet) <=2[TL] (pair(Y:IMsg,Z2:IMsg) notInI, C':CtrSet)
+   = C:CtrSet <=2[TL] (pair(Y:IMsg,Z2:IMsg) notInI, C':CtrSet)
+  if upTerm(Z1:IMsg) :: Variable and not upTerm(Z1:IMsg) in TL
+  /\ (X:IMsg notInI) <=2*[TL] (Y:IMsg notInI) .
 
- ceq (pair(Z1:Msg,X:Msg) notInI, C:CtrSet) <=2[TL] (pair(Z2:Msg,Y:Msg) notInI, C':CtrSet)
-   = C:CtrSet <=2[TL] (pair(Z2:Msg,Y:Msg) notInI, C':CtrSet)
-  if upTerm(Z1:Msg) :: Variable and not upTerm(Z1:Msg) in TL
-  /\ (X:Msg notInI) <=2*[TL] (Y:Msg notInI) .
+ ceq (pair(Z1:IMsg,X:IMsg) notInI, C:CtrSet) <=2[TL] (pair(Z2:IMsg,Y:IMsg) notInI, C':CtrSet)
+   = C:CtrSet <=2[TL] (pair(Z2:IMsg,Y:IMsg) notInI, C':CtrSet)
+  if upTerm(Z1:IMsg) :: Variable and not upTerm(Z1:IMsg) in TL
+  /\ (X:IMsg notInI) <=2*[TL] (Y:IMsg notInI) .
 
   eq C1:CtrSet <=2[TL] C2:CtrSet
    = C1:CtrSet <=2*[TL] C2:CtrSet
@@ -12591,15 +12591,15 @@ fmod MEMBERSHIP-GRAMMAR-LANGUAGE is
 
   op _<=2*[_]_ : CtrSet TermList CtrSet -> Bool .
 
-  ceq (X:Msg notInI, C:CtrSet) <=2*[TL] (Y:Msg notInI, C':CtrSet)
-   = C:CtrSet <=2[TL] (Y:Msg notInI, C':CtrSet)
+  ceq (X:IMsg notInI, C:CtrSet) <=2*[TL] (Y:IMsg notInI, C':CtrSet)
+   = C:CtrSet <=2[TL] (Y:IMsg notInI, C':CtrSet)
   if M:Module
      := upModule('PROTOCOL-EXAMPLE-SYMBOLS-WITH-CONSTRAINT-SYMBOLS,true)
-  /\ metaBuiltInEqual(M:Module,TL,upTerm(Y:Msg),upTerm(X:Msg))
+  /\ metaBuiltInEqual(M:Module,TL,upTerm(Y:IMsg),upTerm(X:IMsg))
      or-else
-     (not upTerm(X:Msg) :: Variable
+     (not upTerm(X:IMsg) :: Variable
       and-then
-      fresh[removeSame(metaBuiltInMatch(M:Module,upTerm(Y:Msg),upTerm(X:Msg)))] =/= empty ) . --- Yes extra var
+      fresh[removeSame(metaBuiltInMatch(M:Module,upTerm(Y:IMsg),upTerm(X:IMsg)))] =/= empty ) . --- Yes extra var
 
   eq C1:CtrSet <=2*[TL] C2:CtrSet
    = C1:CtrSet <=3[TL] C2:CtrSet
@@ -12610,10 +12610,10 @@ fmod MEMBERSHIP-GRAMMAR-LANGUAGE is
   eq empty <=3[TL] C:CtrSet
    = true .
 
- ceq (X:Msg notLeq Y:Msg), C:CtrSet <=3[TL] C':CtrSet
+ ceq (X:IMsg notLeq Y:IMsg), C:CtrSet <=3[TL] C':CtrSet
    = C:CtrSet <=3[TL] C':CtrSet
   if ***remove this single constraint if it is subsumed by any other constraint
-     (X:Msg notLeq Y:Msg) <=Any[TL] C':CtrSet .
+     (X:IMsg notLeq Y:IMsg) <=Any[TL] C':CtrSet .
 
   eq C1:CtrSet <=3[TL] C2:CtrSet
    = C1:CtrSet <=4[TL] C2:CtrSet
@@ -12621,25 +12621,25 @@ fmod MEMBERSHIP-GRAMMAR-LANGUAGE is
 
   op _<=4[_]_ : CtrSet TermList CtrSet -> Bool .
 
-  eq (X:Msg notLeq Y:Msg), C:CtrSet <=4[TL] C':CtrSet
-   = checkNotLeq(X:Msg,Y:Msg)
+  eq (X:IMsg notLeq Y:IMsg), C:CtrSet <=4[TL] C':CtrSet
+   = checkNotLeq(X:IMsg,Y:IMsg)
      and-then
      C:CtrSet <=3[TL] C':CtrSet .
 
-  op checkNotLeq : Msg Msg -> Bool [memo] .
-  eq checkNotLeq(X:Msg,Y:Msg)
+  op checkNotLeq : IMsg IMsg -> Bool [memo] .
+  eq checkNotLeq(X:IMsg,Y:IMsg)
    =  ***remove this single constraint
       *** if X and Y do not unify and X is not a variable
       *** and X is not  W1 * W2 being * ACU
-      (not (upTerm(X:Msg) :: Variable)
+      (not (upTerm(X:IMsg) :: Variable)
        and-then
-       not checkId(upTerm(X:Msg),upTerm(Y:Msg))
+       not checkId(upTerm(X:IMsg),upTerm(Y:IMsg))
        and-then
        not metaBuiltInUnify?(
          ---upModule('PROTOCOL-EXAMPLE-SYMBOLS-WITH-CONSTRAINT-SYMBOLS,true),
          upModule('PROTOCOL-EXAMPLE-ALGEBRAIC,true),
-                upTerm(X:Msg),
-		upTerm(Y:Msg) <<(upTerm(X:Msg))< ***This is not necessary
+                upTerm(X:IMsg),
+		upTerm(Y:IMsg) <<(upTerm(X:IMsg))< ***This is not necessary
        )
       ) .
 
@@ -12671,14 +12671,14 @@ fmod MEMBERSHIP-GRAMMAR-LANGUAGE is
 
   op _<=Any[_]_ : Constraint TermList CtrSet -> Bool .
 
-  ceq (X:Msg notLeq Y:Msg) <=Any[TL] ((X#:Msg notLeq Y#:Msg), C':CtrSet)
+  ceq (X:IMsg notLeq Y:IMsg) <=Any[TL] ((X#:IMsg notLeq Y#:IMsg), C':CtrSet)
    = true
   if M:Module
      := upModule('PROTOCOL-EXAMPLE-SYMBOLS-WITH-CONSTRAINT-SYMBOLS,true)
-  /\ metaBuiltInEqual(M:Module,TL,upTerm(X#:Msg),upTerm(X:Msg))
-  /\ metaBuiltInMatch?(M:Module,upTerm(Y#:Msg),upTerm(Y:Msg) <<(upTerm(Y#:Msg))<) .
+  /\ metaBuiltInEqual(M:Module,TL,upTerm(X#:IMsg),upTerm(X:IMsg))
+  /\ metaBuiltInMatch?(M:Module,upTerm(Y#:IMsg),upTerm(Y:IMsg) <<(upTerm(Y#:IMsg))<) .
 
-  eq (X:Msg notLeq Y:Msg) <=Any[TL] C':CtrSet
+  eq (X:IMsg notLeq Y:IMsg) <=Any[TL] C':CtrSet
    = false
      [owise] .
 
@@ -12724,15 +12724,15 @@ fmod GRAMMAR-RULE-EXPANDABLE-TEST is
      noNewPhantomVariablebyEquationalTHeory(Lhs:CtrSet,Rhs:LConstraint) .
 
   op noNewPhantomVariablebyEquationalTHeory : CtrSet LConstraint -> Bool .
- ceq noNewPhantomVariablebyEquationalTHeory(M1:Msg inL,M2:Msg inL)
+ ceq noNewPhantomVariablebyEquationalTHeory(M1:IMsg inL,M2:IMsg inL)
    = false
-  if upTerm(M1:Msg) :: Variable and upTerm(M1:Msg) intersect Vars(upTerm(M2:Msg)) == empty .
+  if upTerm(M1:IMsg) :: Variable and upTerm(M1:IMsg) intersect Vars(upTerm(M2:IMsg)) == empty .
   eq noNewPhantomVariablebyEquationalTHeory(Lhs:CtrSet,Rhs:LConstraint)
    = true [owise] .
 
   op noIntruderConstraintwithTermInRhs : CtrSet LConstraint -> Bool .
   eq noIntruderConstraintwithTermInRhs(
-        (T:Msg notInI,C:CtrSet), (T:Msg,M:MsgSet) inL
+        (T:IMsg notInI,C:CtrSet), (T:IMsg,M:MsgSet) inL
      )
    = false .
   eq noIntruderConstraintwithTermInRhs( C:CtrSet, M:MsgSet inL)
@@ -12740,32 +12740,32 @@ fmod GRAMMAR-RULE-EXPANDABLE-TEST is
 
   op doNotAvoidInfiniteBehavior : CtrSet LConstraint
                                   CtrSet LConstraint Substitution -> Bool .
-  eq doNotAvoidInfiniteBehavior(Lhs*:CtrSet,(T1:Msg,M1:MsgSet) inL,
-                                Lhs:CtrSet,(T2:Msg,M2:MsgSet) inL,S)
+  eq doNotAvoidInfiniteBehavior(Lhs*:CtrSet,(T1:IMsg,M1:MsgSet) inL,
+                                Lhs:CtrSet,(T2:IMsg,M2:MsgSet) inL,S)
    = --- New resultant T2 is an instance (or renaming) of T1 => discard
      not (
-        not (upTerm(T2:Msg) :: Variable)
+        not (upTerm(T2:IMsg) :: Variable)
         and-then
-        not (upTerm(T1:Msg) :: Variable)
+        not (upTerm(T1:IMsg) :: Variable)
         and-then
         (
           (noFreshinSubstitution(S)
            and-then
            metaBuiltInRenaming(
             PROTOCOL-EXAMPLE-RULES-WITH-CONSTRAINT-SYMBOLS,
-            upTerm(T1:Msg),
-            upTerm(T2:Msg) <<(upTerm(T1:Msg))<
+            upTerm(T1:IMsg),
+            upTerm(T2:IMsg) <<(upTerm(T1:IMsg))<
            ))
           or-else
           metaBuiltInRenaming(
             PROTOCOL-EXAMPLE-RULES-WITH-CONSTRAINT-SYMBOLS,
-            upTerm(T1:Msg) << S,
-            upTerm(T2:Msg) <<(upTerm(T1:Msg) << S)<
+            upTerm(T1:IMsg) << S,
+            upTerm(T2:IMsg) <<(upTerm(T1:IMsg) << S)<
           )
         )
      )
      and-then
-     doNotAvoidInfiniteBehavior(Lhs*:CtrSet,(T1:Msg,M1:MsgSet) inL,
+     doNotAvoidInfiniteBehavior(Lhs*:CtrSet,(T1:IMsg,M1:MsgSet) inL,
                                 Lhs:CtrSet,M2:MsgSet inL,S) .
   eq doNotAvoidInfiniteBehavior(Lhs*:CtrSet,Rhs*:LConstraint,
                                 Lhs:CtrSet,Rhs:LConstraint,S)
@@ -12793,32 +12793,32 @@ fmod GRAMMAR-RULE-EXPANDABLE-TEST is
   *** 1st case: the head of the grammar rule is instantiated
   *** with the same kind of symbol
   ceq noInfiniteACInstantiation(
-           C:CtrSet,C$:CtrSet,(T:Msg,M:MsgSet) inL,S)
+           C:CtrSet,C$:CtrSet,(T:IMsg,M:MsgSet) inL,S)
     = false
-   if F:Qid[X:Variable,Y:Variable] := upTerm(T:Msg)
+   if F:Qid[X:Variable,Y:Variable] := upTerm(T:IMsg)
    /\ (X:Variable <- F:Qid[X*:Variable,Y*:Variable] ; S') := S
    /\ getType(X:Variable) == getType(X*:Variable)
    or getType(X:Variable) == getType(Y*:Variable) .
   ceq noInfiniteACInstantiation(
-           C:CtrSet,C$:CtrSet,(T:Msg,M:MsgSet) inL,S)
+           C:CtrSet,C$:CtrSet,(T:IMsg,M:MsgSet) inL,S)
     = false
-   if F:Qid[X:Variable,Y:Variable] := upTerm(T:Msg)
+   if F:Qid[X:Variable,Y:Variable] := upTerm(T:IMsg)
    /\ (Y:Variable <- F:Qid[X*:Variable,Y*:Variable] ; S') := S
    /\ getType(Y:Variable) == getType(X*:Variable)
    or getType(Y:Variable) == getType(Y*:Variable) .
   *** 2nd case: the non-variable notInI constraint is instantiated
   *** with the same kind of symbol
   ceq noInfiniteACInstantiation(
-        (T*:Msg notInI,C:CtrSet),C$:CtrSet,(T:Msg,M:MsgSet) inL,S)
+        (T*:IMsg notInI,C:CtrSet),C$:CtrSet,(T:IMsg,M:MsgSet) inL,S)
     = false
-   if F:Qid[X:Variable,Y:Variable] := upTerm(T*:Msg)
+   if F:Qid[X:Variable,Y:Variable] := upTerm(T*:IMsg)
    /\ (X:Variable <- F:Qid[X*:Variable,Y*:Variable] ; S') := S
    /\ getType(X:Variable) == getType(X*:Variable)
    or getType(X:Variable) == getType(Y*:Variable) .
   ceq noInfiniteACInstantiation(
-        (T*:Msg notInI,C:CtrSet),C$:CtrSet,(T:Msg,M:MsgSet) inL,S)
+        (T*:IMsg notInI,C:CtrSet),C$:CtrSet,(T:IMsg,M:MsgSet) inL,S)
     = false
-   if F:Qid[X:Variable,Y:Variable] := upTerm(T*:Msg)
+   if F:Qid[X:Variable,Y:Variable] := upTerm(T*:IMsg)
    /\ (Y:Variable <- F:Qid[X*:Variable,Y*:Variable] ; S') := S
    /\ getType(Y:Variable) == getType(X*:Variable)
    or getType(Y:Variable) == getType(Y*:Variable) .
@@ -12833,24 +12833,24 @@ fmod GRAMMAR-RULE-EXPANDABLE-TEST is
      allDistinctConstraintsPossible*(C:CtrSet) .
 
   op allDistinctConstraintsPossible* : CtrSet -> Bool .
-  eq allDistinctConstraintsPossible*( ((U:Msg notLeq T:Msg), C:CtrSet),
+  eq allDistinctConstraintsPossible*( ((U:IMsg notLeq T:IMsg), C:CtrSet),
                                      Rhs:LConstraint)
    = (
-       upTerm(U:Msg) :: Variable
+       upTerm(U:IMsg) :: Variable
        or-else
        (
          not (
            metaCoreMatch?(
              PROTOCOL-EXAMPLE-RULES-WITH-CONSTRAINT-SYMBOLS,
-             upTerm(U:Msg),
-             upTerm(T:Msg) <<(upTerm(U:Msg))<
+             upTerm(U:IMsg),
+             upTerm(T:IMsg) <<(upTerm(U:IMsg))<
            )
          )
          and-then
          metaEBuiltInUnify?(
            PROTOCOL-EXAMPLE-RULES-WITH-CONSTRAINT-SYMBOLS,
-           upTerm(U:Msg),
-           upTerm(T:Msg) <<(upTerm(U:Msg))<
+           upTerm(U:IMsg),
+           upTerm(T:IMsg) <<(upTerm(U:IMsg))<
          )
        )
      )
@@ -12862,14 +12862,14 @@ fmod GRAMMAR-RULE-EXPANDABLE-TEST is
   op noTermInRhsIsInGS : CtrSet LConstraint GrammarList -> Bool .
   eq noTermInRhsIsInGS(Lhs:CtrSet,emptyMsgSet inL,GSS)
    = true .
-  eq noTermInRhsIsInGS(Lhs:CtrSet,(T:Msg,M:MsgSet) inL,GSS)
-   = if nonEmpty(GSS) =/= empty then not({GSS,Lhs:CtrSet} |- (T:Msg inL)) else true fi
+  eq noTermInRhsIsInGS(Lhs:CtrSet,(T:IMsg,M:MsgSet) inL,GSS)
+   = if nonEmpty(GSS) =/= empty then not({GSS,Lhs:CtrSet} |- (T:IMsg inL)) else true fi
      and-then
      noTermInRhsIsInGS(Lhs:CtrSet,M:MsgSet inL,GSS) .
 
   op everyLTermInLhsIsVariable : CtrSet Grammar -> Bool .
-  eq everyLTermInLhsIsVariable(((X:Msg inL), C:CtrSet),Gk)
-    = upTerm(X:Msg) :: Variable
+  eq everyLTermInLhsIsVariable(((X:IMsg inL), C:CtrSet),Gk)
+    = upTerm(X:IMsg) :: Variable
       and
       everyLTermInLhsIsVariable(C:CtrSet,Gk) .
   eq everyLTermInLhsIsVariable(C:CtrSet,GSS)
@@ -12877,31 +12877,31 @@ fmod GRAMMAR-RULE-EXPANDABLE-TEST is
 
   *********
   op noPublicDataInCtrSet : CtrSet -> Bool .
-  ceq noPublicDataInCtrSet(((X:Msg inL), C:CtrSet))
+  ceq noPublicDataInCtrSet(((X:IMsg inL), C:CtrSet))
     = false
    if typeLeq(PROTOCOL-EXAMPLE-RULES-WITH-CONSTRAINT-SYMBOLS,
       leastSort(PROTOCOL-EXAMPLE-RULES-WITH-CONSTRAINT-SYMBOLS,
-        upTerm(X:Msg)),
+        upTerm(X:IMsg)),
       'Public) .
-  ceq noPublicDataInCtrSet(((X:Msg notInI), C:CtrSet))
+  ceq noPublicDataInCtrSet(((X:IMsg notInI), C:CtrSet))
     = false
    if typeLeq(PROTOCOL-EXAMPLE-RULES-WITH-CONSTRAINT-SYMBOLS,
       leastSort(PROTOCOL-EXAMPLE-RULES-WITH-CONSTRAINT-SYMBOLS,
-        upTerm(X:Msg)),
+        upTerm(X:IMsg)),
       'Public) .
   eq noPublicDataInCtrSet(C:CtrSet)
    = true [owise] .
 
   *********
   op rhsIsNormalized : LConstraint Substitution -> Bool .
-  eq rhsIsNormalized((X:Msg inL),S:Substitution)
+  eq rhsIsNormalized((X:IMsg inL),S:Substitution)
    = --- Discard if any symbol with Id and instantiated by such Id
      not anyIdSymbolT&S(PROTOCOL-EXAMPLE-RULES-WITH-CONSTRAINT-SYMBOLS,
-           upTerm((X:Msg inL)),
+           upTerm((X:IMsg inL)),
            S:Substitution)
      and-then
      --- not Id Symbol and not reducible
-     rhsIsNormalized*((X:Msg inL) << S:Substitution) .
+     rhsIsNormalized*((X:IMsg inL) << S:Substitution) .
 
   op rhsIsNormalized* : LConstraint -> Bool .
   eq rhsIsNormalized*(Rhs:LConstraint)
@@ -13123,7 +13123,7 @@ fmod GRAMMAR-HEURISTICS is
   vars S S' S'' : Substitution .
 
   vars CS CS' CS1 CS2 : CtrSet .
-  vars M M' M1 M2 M3 M4 : Msg .
+  vars M M' M1 M2 M3 M4 : IMsg .
   vars MS MS' : MsgSet .
 
   vars T T' T'' : Term .
@@ -13234,7 +13234,7 @@ fmod GRAMMAR-HEURISTICS is
      (M1:Term,TL1:TermList) <<=* (M3:Term,TL2:TermList) .
 
   *** Test for one position of the term
-  op heuristic1Test : Grammar Msg CtrSet Term Context -> Constraints&Rules .
+  op heuristic1Test : Grammar IMsg CtrSet Term Context -> Constraints&Rules .
 
   ceq heuristic1Test(Gk,M1,CS,T,Ct)
     = {empty,
@@ -13249,8 +13249,8 @@ fmod GRAMMAR-HEURISTICS is
       ({Gk,CS} |- downMsgSet(T) inL and nonEmpty(Gk) =/= empty)
    /\ T:Type := leastSort(M:Module,T)
    /\ New:Variable
-       := if typeLeq(M:Module,leastSort(M:Module,Ct['New:Msg]),'Msg)
-          then 'New:Msg
+       := if typeLeq(M:Module,leastSort(M:Module,Ct['New:IMsg]),'IMsg)
+          then 'New:IMsg
           else addType T:Type ToVar 'New
           fi  <<(Ct[T],upTerm(CS))< .
 
@@ -13262,7 +13262,7 @@ fmod GRAMMAR-HEURISTICS is
      [owise] .
 
   *** Split of the term *** Recall there are other two split functions
-  op heuristic1Split : Grammar Msg CtrSet Qid TermList TermList Context
+  op heuristic1Split : Grammar IMsg CtrSet Qid TermList TermList Context
                     -> Constraints&Rules .
 
   eq heuristic1Split(Gk,M1,CS,F,TL,empty,Ct)
@@ -13273,7 +13273,7 @@ fmod GRAMMAR-HEURISTICS is
          leastSort(
 	   upModule('PROTOCOL-EXAMPLE-SYMBOLS-WITH-CONSTRAINT-SYMBOLS,true),
 	   F[TL,TL']),
-         'Msg)
+         'IMsg)
         and
         heuristic1Test(Gk,M1,CS,F[TL,TL'],Ct[F[T,[]]]) =/= {empty,empty}
      then heuristic1Test(Gk,M1,CS,F[TL,TL'],Ct[F[T,[]]])
@@ -13290,7 +13290,7 @@ fmod GRAMMAR-HEURISTICS is
          leastSort(
 	   upModule('PROTOCOL-EXAMPLE-SYMBOLS-WITH-CONSTRAINT-SYMBOLS,true),
 	   T),
-         'Msg)
+         'IMsg)
         and
         heuristic1Test(Gk,M1,CS,T,Ct[F[TL,[],TL']]) =/= {empty,empty}
      then heuristic1Test(Gk,M1,CS,T,Ct[F[TL,[],TL']])
@@ -13332,7 +13332,7 @@ fmod GRAMMAR-HEURISTICS is
   ceq heuristic2A(grl (M' inL) => MS' inL .,
                   S,
                   grl (M notInI,CS) => MS inL .)
-   = {downCtrSet('_notLeq_['New:Msg,
+   = {downCtrSet('_notLeq_['New:IMsg,
                            normalize(removeVariantLabel(clearNonExecEqs(
                               checkXOR(upModule('PROTOCOL-EXAMPLE-ALGEBRAIC,true)))),
                             upTerm(M))
@@ -13347,13 +13347,13 @@ fmod GRAMMAR-HEURISTICS is
       or-else
       Vars(rangeVars(S)) intersect Vars(upTerm(M)) =/= empty .
 
-  ceq heuristic2A(grl (M' inL) => M1:Msg inL .,
+  ceq heuristic2A(grl (M' inL) => M1:IMsg inL .,
                   S,
                   grl (M inL) => MS inL .)
-    = {downCtrSet('_notLeq_[upTerm(M1:Msg),
+    = {downCtrSet('_notLeq_[upTerm(M1:IMsg),
                             normalize(removeVariantLabel(clearNonExecEqs(checkXOR(upModule('PROTOCOL-EXAMPLE-ALGEBRAIC,true)))),
-                              (upTerm(M1:Msg) << S))
-                            <<(upTerm(M1:Msg))<]),
+                              (upTerm(M1:IMsg) << S))
+                            <<(upTerm(M1:IMsg))<]),
        empty}
    if dom S inVars upTerm(M') .
 
@@ -13394,11 +13394,11 @@ fmod GRAMMAR-HEURISTICS is
   op heuristic3Test : CtrSet Term Context -> Constraints&Rules .
 
   ceq heuristic3Test((M notInI,CS),T,Ct)
-    = if typeLeq(M:Module,T:Type,'Msg)
+    = if typeLeq(M:Module,T:Type,'IMsg)
          and
          M == downMsgSet(T)
          and
-         typeLeq(M:Module,leastSort(M:Module,Ct['New:Msg]),'Msg)
+         typeLeq(M:Module,leastSort(M:Module,Ct['New:IMsg]),'IMsg)
       then {empty,downGrammar(
                    'grl_=>_.['_notInI[New:Variable],'_inL[Ct[New:Variable]]])}
       else if heuristic3Split(M,T,Ct) =/= {empty,empty}
@@ -13411,8 +13411,8 @@ fmod GRAMMAR-HEURISTICS is
    /\ not typeLeq(M:Module,leastSort(M:Module,T),'Public)
    /\ T:Type := leastSort(M:Module,T)
    /\ New:Variable
-       := if typeLeq(M:Module,leastSort(M:Module,Ct['New:Msg]),'Msg)
-          then 'New:Msg
+       := if typeLeq(M:Module,leastSort(M:Module,Ct['New:IMsg]),'IMsg)
+          then 'New:IMsg
           else addType T:Type ToVar 'New
           fi  <<(Ct[T])< .
 
@@ -13421,12 +13421,12 @@ fmod GRAMMAR-HEURISTICS is
      [owise] .
 
   *** Split of the term *** Recall there are other two split functions
-  op heuristic3Split : Msg Term Context
+  op heuristic3Split : IMsg Term Context
                     -> Constraints&Rules .
   eq heuristic3Split(M,F[TL],Ct) = heuristic3Split(M,F,empty,TL,Ct) .
   eq heuristic3Split(M,T,Ct) = {empty,empty} [owise] .
 
-  op heuristic3Split : Msg Qid TermList TermList Context
+  op heuristic3Split : IMsg Qid TermList TermList Context
                     -> Constraints&Rules .
 
   eq heuristic3Split(M,F,TL,empty,Ct)
@@ -13437,7 +13437,7 @@ fmod GRAMMAR-HEURISTICS is
          leastSort(
 	   upModule('PROTOCOL-EXAMPLE-SYMBOLS-WITH-CONSTRAINT-SYMBOLS,true),
 	   F[TL,TL']),
-         'Msg)
+         'IMsg)
         and
         heuristic3Test(M notInI,F[TL,TL'],Ct[F[T,[]]]) =/= {empty,empty}
      then heuristic3Test(M notInI,F[TL,TL'],Ct[F[T,[]]])
@@ -13451,7 +13451,7 @@ fmod GRAMMAR-HEURISTICS is
          leastSort(
 	   upModule('PROTOCOL-EXAMPLE-SYMBOLS-WITH-CONSTRAINT-SYMBOLS,true),
 	   T),
-         'Msg)
+         'IMsg)
         and
         heuristic3Test(M notInI,T,Ct[F[TL,[],TL']]) =/= {empty,empty}
      then heuristic3Test(M notInI,T,Ct[F[TL,[],TL']])
@@ -13520,7 +13520,7 @@ fmod GENERATION-NEW-GRAMMAR is
   vars G G' : Grammar .
   vars C C' CS : CtrSet .
   vars H GS : GrammarRuleSet .
-  var M M' MV : Msg .
+  var M M' MV : IMsg .
   var MS : MsgSet .
   var TL : TermList .
   var V : Variable .
@@ -13612,10 +13612,10 @@ fmod GENERATION-NEW-GRAMMAR is
   *** It should be all those constraints that match the term MV,
   *** but since we have used the same term MV for creating the constraint
   *** we just look for MV
-  op adapt : CtrSet Msg TermList ~> CtrSet .
+  op adapt : CtrSet IMsg TermList ~> CtrSet .
   eq adapt(C,MV,TL) = adapt*(C,MV,TL,empty) .
 
-  op adapt* : CtrSet Msg TermList CtrSet ~> CtrSet [memo] .
+  op adapt* : CtrSet IMsg TermList CtrSet ~> CtrSet [memo] .
              ---3rd argument is varialbes of 2nd argument relevant
              ---for introducing the exceptions
 
@@ -13665,7 +13665,7 @@ fmod GENERATION-NEW-GRAMMAR is
        and-then
        upTerm(M) :: Variable
        and-then
-       (upTerm(M') :: Variable and getType(upTerm(M')) =/= 'Msg)
+       (upTerm(M') :: Variable and getType(upTerm(M')) =/= 'IMsg)
        and-then
        metaBuiltInMatch?(
         upModule('PROTOCOL-EXAMPLE-SYMBOLS-WITH-CONSTRAINT-SYMBOLS,true),
@@ -13708,8 +13708,8 @@ fmod GENERATION-NEW-GRAMMAR is
      [owise] .
 
   ***
-  op Vars : Msg -> TermList .
-  eq Vars(M:Msg) = Vars(upTerm(M:Msg)) .
+  op Vars : IMsg -> TermList .
+  eq Vars(M:IMsg) = Vars(upTerm(M:IMsg)) .
 
   op unwrapExceptions : Grammar CtrSet -> CtrSet .
   eq unwrapExceptions(G,C)
@@ -13730,7 +13730,7 @@ fmod GENERATION-NEW-GRAMMAR is
 
   op unwrapExceptions$ : TermSet -> CtrSet .
   eq unwrapExceptions$(('_inL[Y:Term]) | TS:TermSet)
-   = downCtrSet('_notLeq_['New:Msg,Y:Term]),
+   = downCtrSet('_notLeq_['New:IMsg,Y:Term]),
      unwrapExceptions$(TS:TermSet) .
   eq unwrapExceptions$(TS:TermSet)
    = empty [owise] .
@@ -13746,7 +13746,7 @@ fmod OPTIMIZE-NEW-GRAMMAR is
   pr RENAMING .
 
   var CS CS' : CtrSet .
-  vars M M' M'' : Msg .
+  vars M M' M'' : IMsg .
   var GS : GrammarRuleSet .
   var N : Nat .
 
@@ -13885,11 +13885,11 @@ fmod OPTIMIZE-NEW-GRAMMAR is
   op maximal<=IteOne : Constraint CtrSet -> CtrSet .
  ceq maximal<=IteOne( C:Constraint, (C':Constraint,CS:CtrSet) )
    = empty --- C:Constraint is a variable with instances in the set of constraints, so remove it
-  if M1:Msg notLeq M2:Msg := C:Constraint
-  /\ M1:Msg notLeq M3:Msg := C':Constraint
-  /\ upTerm(M1:Msg) :: Variable
-  /\ upTerm(M2:Msg) :: Variable
-  /\ not upTerm(M3:Msg) :: Variable
+  if M1:IMsg notLeq M2:IMsg := C:Constraint
+  /\ M1:IMsg notLeq M3:IMsg := C':Constraint
+  /\ upTerm(M1:IMsg) :: Variable
+  /\ upTerm(M2:IMsg) :: Variable
+  /\ not upTerm(M3:IMsg) :: Variable
   /\ C:Constraint <=[Vars(upTerm(C:Constraint))] C':Constraint .
   eq maximal<=IteOne( C:Constraint, CS:CtrSet )
    = maximal<=IteOne*( C:Constraint, CS:CtrSet ) [owise] .
@@ -14299,26 +14299,26 @@ fmod BACK-NARROWING is
 
   op addIrr# : SMsgList -> SMsgList . --- All output messages and all input before last output
   eq addIrr#(nil) = nil .
-  eq addIrr#((+(X:Msg),L:SMsgList)) = addIrr##((+(X:Msg),L:SMsgList)) .
-  eq addIrr#((-(X:Msg),L:SMsgList)) = addIrr#(L:SMsgList) .
+  eq addIrr#((+(X:IMsg),L:SMsgList)) = addIrr##((+(X:IMsg),L:SMsgList)) .
+  eq addIrr#((-(X:IMsg),L:SMsgList)) = addIrr#(L:SMsgList) .
   eq addIrr#((X:SMsgElem,L:SMsgList)) = addIrr#(L:SMsgList) [owise] .
 
   op addIrr## : SMsgList -> SMsgList .
   eq addIrr##(nil) = nil .
-  eq addIrr##((+(X:Msg),L:SMsgList)) = +(X:Msg),addIrr##(L:SMsgList) .
-  eq addIrr##((-(X:Msg),L:SMsgList)) = -(X:Msg),addIrr##(L:SMsgList) .
+  eq addIrr##((+(X:IMsg),L:SMsgList)) = +(X:IMsg),addIrr##(L:SMsgList) .
+  eq addIrr##((-(X:IMsg),L:SMsgList)) = -(X:IMsg),addIrr##(L:SMsgList) .
   eq addIrr##((X:SMsgElem,L:SMsgList)) = addIrr##(L:SMsgList) [owise] .
 
   op addIrr** : MsgSet System -> System .
   eq addIrr**(emptyMsgSet,X:System)
    = X:System .
-  eq addIrr**((M:Msg,MS:MsgSet),
+  eq addIrr**((M:IMsg,MS:MsgSet),
       SS:StrandSet || K:IntruderKnowledge
       || M:SMsgList || G:GhostList || PP:Properties)
-   = if not irr(M:Msg) in K:IntruderKnowledge
+   = if not irr(M:IMsg) in K:IntruderKnowledge
      then
        addIrr**(MS:MsgSet,
-        addIrr***(M:Msg,
+        addIrr***(M:IMsg,
          SS:StrandSet
          || K:IntruderKnowledge
          || M:SMsgList || G:GhostList || PP:Properties
@@ -14330,73 +14330,73 @@ fmod BACK-NARROWING is
        )
      fi .
 
-  op addIrr*** : Msg System -> System .
+  op addIrr*** : IMsg System -> System .
 
- ceq addIrr***(M':Msg,
-      SS:StrandSet || M:Msg inI,K:IntruderKnowledge
-      || M1:SMsgList,-(M':Msg),M2:SMsgList
+ ceq addIrr***(M':IMsg,
+      SS:StrandSet || M:IMsg inI,K:IntruderKnowledge
+      || M1:SMsgList,-(M':IMsg),M2:SMsgList
       || G:GhostList || PP:Properties)
-   = addIrr***(M':Msg,
-      SS:StrandSet || M:Msg inI,irr(M:Msg),K:IntruderKnowledge
-      || M1:SMsgList,-(M:Msg),M2:SMsgList
+   = addIrr***(M':IMsg,
+      SS:StrandSet || M:IMsg inI,irr(M:IMsg),K:IntruderKnowledge
+      || M1:SMsgList,-(M:IMsg),M2:SMsgList
       || G:GhostList || PP:Properties )
-  if M:Msg =/= M':Msg
+  if M:IMsg =/= M':IMsg
      and-then
-     M:Msg !in G:GhostList
+     M:IMsg !in G:GhostList
      and-then
-     M':Msg !in G:GhostList
+     M':IMsg !in G:GhostList
      and-then
-     not generatedByIntruder(M':Msg) in M1:SMsgList,M2:SMsgList
+     not generatedByIntruder(M':IMsg) in M1:SMsgList,M2:SMsgList
      and-then
-     not generatedByIntruder(M:Msg) in M1:SMsgList,M2:SMsgList
-  /\ M:Msg
+     not generatedByIntruder(M:IMsg) in M1:SMsgList,M2:SMsgList
+  /\ M:IMsg
       := downMsgSet(getTerm(
            metaReduce(
                removeVariantLabel(clearNonExecEqs(eraseRls(onlyEqsNoBuiltInUnify(flipRls(STRAND-EXAMPLE-RULES))))),
-             upTerm(M':Msg)
+             upTerm(M':IMsg)
            ))) .
 
- ceq addIrr***(M:Msg,
+ ceq addIrr***(M:IMsg,
       SS:StrandSet || K:IntruderKnowledge
-      || M1:SMsgList,+(M:Msg),M2:SMsgList,-(M':Msg),M3:SMsgList
+      || M1:SMsgList,+(M:IMsg),M2:SMsgList,-(M':IMsg),M3:SMsgList
       || G:GhostList || PP:Properties)
-   = addIrr***(M:Msg,
-      SS:StrandSet || irr(M:Msg),K:IntruderKnowledge
-      || M1:SMsgList,+(M:Msg),M2:SMsgList,-(M:Msg),M3:SMsgList
+   = addIrr***(M:IMsg,
+      SS:StrandSet || irr(M:IMsg),K:IntruderKnowledge
+      || M1:SMsgList,+(M:IMsg),M2:SMsgList,-(M:IMsg),M3:SMsgList
       || G:GhostList || PP:Properties )
-  if M:Msg =/= M':Msg
+  if M:IMsg =/= M':IMsg
      and-then
-     M:Msg !in G:GhostList
+     M:IMsg !in G:GhostList
      and-then
-     M':Msg !in G:GhostList
+     M':IMsg !in G:GhostList
      and-then
-     not generatedByIntruder(M':Msg) in M1:SMsgList,M2:SMsgList,M3:SMsgList
+     not generatedByIntruder(M':IMsg) in M1:SMsgList,M2:SMsgList,M3:SMsgList
      and-then
-     not generatedByIntruder(M:Msg) in M1:SMsgList,M2:SMsgList,M3:SMsgList
-  /\ M:Msg
+     not generatedByIntruder(M:IMsg) in M1:SMsgList,M2:SMsgList,M3:SMsgList
+  /\ M:IMsg
       := downMsgSet(getTerm(
            metaReduce(
                removeVariantLabel(clearNonExecEqs(eraseRls(onlyEqsNoBuiltInUnify(flipRls(STRAND-EXAMPLE-RULES))))),
-             upTerm(M':Msg)
+             upTerm(M':IMsg)
            ))) .
 
-  eq addIrr***(M:Msg,X:System) = addIrr****(M:Msg,X:System) [owise] .
+  eq addIrr***(M:IMsg,X:System) = addIrr****(M:IMsg,X:System) [owise] .
 
-  op addIrr**** : Msg System -> System .
- ceq addIrr****(M:Msg,
+  op addIrr**** : IMsg System -> System .
+ ceq addIrr****(M:IMsg,
       SS:StrandSet || K:IntruderKnowledge || M:SMsgList || G:GhostList || PP:Properties)
-   =  SS:StrandSet || irr(M:Msg),K:IntruderKnowledge || M:SMsgList || G:GhostList || PP:Properties
-  if not generatedByIntruder(M:Msg) in M:SMsgList
+   =  SS:StrandSet || irr(M:IMsg),K:IntruderKnowledge || M:SMsgList || G:GhostList || PP:Properties
+  if not generatedByIntruder(M:IMsg) in M:SMsgList
      and-then
-     M:Msg !in G:GhostList
-  /\ M:Msg
+     M:IMsg !in G:GhostList
+  /\ M:IMsg
        := downMsgSet(getTerm(
            metaReduce(
                removeVariantLabel(clearNonExecEqs(eraseRls(onlyEqsNoBuiltInUnify(flipRls(STRAND-EXAMPLE-RULES))))),
-             upTerm(M:Msg)
+             upTerm(M:IMsg)
            ))) .
 
-  eq addIrr****(M:Msg,X:System) = X:System [owise] .
+  eq addIrr****(M:IMsg,X:System) = X:System [owise] .
 
   op nextBackNarrow*SimpleSet : Module GrammarList Filters IdSystemSet
                              -> IdSystemSet .
@@ -14471,7 +14471,7 @@ fmod BACK-NARROWING is
   op move*InputAll : IdSystem -> IdSystem [memo] .
  ceq move*InputAll(
        < I:Id >
-        :: RL:FreshSet :: [ L:SMsgList-L, -(M:Msg) | L':SMsgList-R ]
+        :: RL:FreshSet :: [ L:SMsgList-L, -(M:IMsg) | L':SMsgList-R ]
         & SS:StrandSet
         || K:IntruderKnowledge
         || ML:SMsgList
@@ -14480,20 +14480,20 @@ fmod BACK-NARROWING is
      )
    = move*InputAll(
         < I:Id >
-        :: RL:FreshSet :: [ L:SMsgList-L | -(MN:Msg), L':SMsgList-R ]
+        :: RL:FreshSet :: [ L:SMsgList-L | -(MN:IMsg), L':SMsgList-R ]
         & SS:StrandSet
-        || if MN:Msg :: Public or MN:Msg inI in K:IntruderKnowledge
+        || if MN:IMsg :: Public or MN:IMsg inI in K:IntruderKnowledge
            then K:IntruderKnowledge
-           else (MN:Msg inI, K:IntruderKnowledge)
+           else (MN:IMsg inI, K:IntruderKnowledge)
            fi
-        || (-(MN:Msg), ML:SMsgList)
+        || (-(MN:IMsg), ML:SMsgList)
         || GL:GhostList
         || PP:Properties
      )
-  if MN:Msg := downMsgSet(normalize(upTerm(M:Msg))) .
+  if MN:IMsg := downMsgSet(normalize(upTerm(M:IMsg))) .
   eq move*InputAll(
        < I:Id >
-        :: RL:FreshSet :: [ L:SMsgList-L, (M:Msg eq M:Msg) | L':SMsgList-R ]
+        :: RL:FreshSet :: [ L:SMsgList-L, (M:IMsg eq M:IMsg) | L':SMsgList-R ]
         & SS:StrandSet
         || K:IntruderKnowledge
         || ML:SMsgList
@@ -14502,7 +14502,7 @@ fmod BACK-NARROWING is
      )
    = move*InputAll(
         < I:Id >
-        :: RL:FreshSet :: [ L:SMsgList-L | (M:Msg eq M:Msg), L':SMsgList-R ]
+        :: RL:FreshSet :: [ L:SMsgList-L | (M:IMsg eq M:IMsg), L':SMsgList-R ]
         & SS:StrandSet
         || K:IntruderKnowledge
         || ML:SMsgList
@@ -14511,7 +14511,7 @@ fmod BACK-NARROWING is
      ) .
  ceq move*InputAll(
        < I:Id >
-        :: RL:FreshSet :: [ L:SMsgList-L, (M1:Msg neq M2:Msg) | L':SMsgList-R ]
+        :: RL:FreshSet :: [ L:SMsgList-L, (M1:IMsg neq M2:IMsg) | L':SMsgList-R ]
         & SS:StrandSet
         || K:IntruderKnowledge
         || ML:SMsgList
@@ -14520,15 +14520,15 @@ fmod BACK-NARROWING is
      )
    = move*InputAll(
        < I:Id >
-        :: RL:FreshSet :: [ L:SMsgList-L | (MN1:Msg neq MN2:Msg), L':SMsgList-R ]
+        :: RL:FreshSet :: [ L:SMsgList-L | (MN1:IMsg neq MN2:IMsg), L':SMsgList-R ]
         & SS:StrandSet
-        || K:IntruderKnowledge, MN1:Msg != MN2:Msg
+        || K:IntruderKnowledge, MN1:IMsg != MN2:IMsg
         || ML:SMsgList
         || GL:GhostList
         || PP:Properties
      )
-  if MN1:Msg := downMsgSet(normalize(upTerm(M1:Msg)))
-  /\ MN2:Msg := downMsgSet(normalize(upTerm(M2:Msg))) .
+  if MN1:IMsg := downMsgSet(normalize(upTerm(M1:IMsg)))
+  /\ MN2:IMsg := downMsgSet(normalize(upTerm(M2:IMsg))) .
   eq move*InputAll(S:IdSystem)
    = S:IdSystem [owise] .
 
@@ -14660,7 +14660,7 @@ fmod BACK-NARROWING is
      ) .
 
   *** createGhost ************************************************
-  *** Replace current state with a ghost with M:Msg as the control
+  *** Replace current state with a ghost with M:IMsg as the control
   *** variable
 
   op createGhost : Module Filters IdSystemSet -> IdSystemSet .
@@ -14692,19 +14692,19 @@ fmod BACK-NARROWING is
   eq createGhostSI(M,
        < I:Id >
        (SS:StrandSet
-        || (M:Msg inI, K:IntruderKnowledge)
+        || (M:IMsg inI, K:IntruderKnowledge)
         || ML:SMsgList || GL:GhostList || PP:Properties),
-       (M:Msg inI, K':IntruderKnowledge))
-   = if M:Msg !in GL:GhostList
+       (M:IMsg inI, K':IntruderKnowledge))
+   = if M:IMsg !in GL:GhostList
         and-then
-        testisGhostMsg(M:Msg)
-     then *** Create ghost for M:Msg and continue inspecting
+        testisGhostMsg(M:IMsg)
+     then *** Create ghost for M:IMsg and continue inspecting
           createGhostSI(M,
             < I:Id >
             (SS:StrandSet
-             || removeIrr(M:Msg,K:IntruderKnowledge) || ML:SMsgList
-	     || (ghost(M:Msg,SS:StrandSet,
-                       removeIrr(M:Msg,K:IntruderKnowledge),ML:SMsgList,PP:Properties),
+             || removeIrr(M:IMsg,K:IntruderKnowledge) || ML:SMsgList
+	     || (ghost(M:IMsg,SS:StrandSet,
+                       removeIrr(M:IMsg,K:IntruderKnowledge),ML:SMsgList,PP:Properties),
                  GL:GhostList)
              || PP:Properties
             ),
@@ -14714,7 +14714,7 @@ fmod BACK-NARROWING is
           createGhostSI(M,
              < I:Id >
              (SS:StrandSet
-              || (M:Msg inI, K:IntruderKnowledge)
+              || (M:IMsg inI, K:IntruderKnowledge)
               || ML:SMsgList || GL:GhostList || PP:Properties),
              K':IntruderKnowledge
           )
@@ -14722,19 +14722,19 @@ fmod BACK-NARROWING is
   eq createGhostSI(M,IS:IdSystem,K':IntruderKnowledge)
    = IS:IdSystem [owise] .
 
-  op removeIrr : Msg IntruderKnowledge -> IntruderKnowledge .
-  eq removeIrr(M:Msg, (irr(M:Msg),K:IntruderKnowledge))
+  op removeIrr : IMsg IntruderKnowledge -> IntruderKnowledge .
+  eq removeIrr(M:IMsg, (irr(M:IMsg),K:IntruderKnowledge))
    = K:IntruderKnowledge .
-  eq removeIrr(M:Msg, K:IntruderKnowledge)
+  eq removeIrr(M:IMsg, K:IntruderKnowledge)
    = K:IntruderKnowledge [owise] .
 
-  op _!in_ : Msg GhostList -> Bool .
-  eq M:Msg !in
+  op _!in_ : IMsg GhostList -> Bool .
+  eq M:IMsg !in
           (G:GhostList,
-           ghost(M:Msg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
+           ghost(M:IMsg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
            G':GhostList)
    = false .
-  eq M:Msg !in G:GhostList
+  eq M:IMsg !in G:GhostList
    = true [owise] .
 
   *** reactivateGhost ************************************************
@@ -14766,19 +14766,19 @@ fmod BACK-NARROWING is
   op reactivateGhost$ML : IdSystemSet -> IdSystemSet .
  ceq reactivateGhost$ML(
        < I:Id >
-       (SS:StrandSet || (X:Msg !inI,K:IntruderKnowledge)
-          || ML1:SMsgList,generatedByIntruder(X:Msg),ML2:SMsgList
+       (SS:StrandSet || (X:IMsg !inI,K:IntruderKnowledge)
+          || ML1:SMsgList,generatedByIntruder(X:IMsg),ML2:SMsgList
 	  || GL:GhostList || PP:Properties) )
    = reactivateGhost$ML(
-       reactivateFrozenGhost(X:Msg,SS:StrandSet,
+       reactivateFrozenGhost(X:IMsg,SS:StrandSet,
               < I:Id >
               SS:StrandSet || K:IntruderKnowledge
 	      || ML1:SMsgList,ML2:SMsgList
-              || ghost(X:Msg,SS:StrandSet,K:IntruderKnowledge,ML2:SMsgList,PP:Properties)
+              || ghost(X:IMsg,SS:StrandSet,K:IntruderKnowledge,ML2:SMsgList,PP:Properties)
               || PP:Properties
        )
      )
-  if not testisGhostMsg(X:Msg) .
+  if not testisGhostMsg(X:IMsg) .
   eq reactivateGhost$ML(X:IdSystemSet) = X:IdSystemSet [owise] .
 
   op reactivateGhost$G : StrandSet IdSystem GhostList -> IdSystemSet .
@@ -14788,24 +14788,24 @@ fmod BACK-NARROWING is
        < I:Id >
        SS1:StrandSet || K1:IntruderKnowledge || ML1:SMsgList
        || (G:GhostList,
-           ghost(M2:Msg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
+           ghost(M2:IMsg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
            G':GhostList)
        || PP:Properties,
-       (ghost(M2:Msg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
+       (ghost(M2:IMsg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
         G':GhostList)   )
-   = if not testisGhostMsg(M2:Msg)
+   = if not testisGhostMsg(M2:IMsg)
      then
-       if isAnyVarInstantiable(Vars(upTerm(M2:Msg)),K1:IntruderKnowledge)
+       if isAnyVarInstantiable(Vars(upTerm(M2:IMsg)),K1:IntruderKnowledge)
           or-else
-          isAnyVarInstantiable(Vars(upTerm(M2:Msg)),SS1:StrandSet)
+          isAnyVarInstantiable(Vars(upTerm(M2:IMsg)),SS1:StrandSet)
        then *** Reactivate the frozen ghost
           reactivateGhost$G(SSOrig:StrandSet,
-            reactivateFrozenGhost(M2:Msg,SSOrig:StrandSet,
+            reactivateFrozenGhost(M2:IMsg,SSOrig:StrandSet,
               < I:Id >
               SS1:StrandSet || K1:IntruderKnowledge || ML1:SMsgList
               ||
               (G:GhostList,
-               ghost(M2:Msg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
+               ghost(M2:IMsg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
                G':GhostList)
               || PP:Properties
             ),G':GhostList
@@ -14819,7 +14819,7 @@ fmod BACK-NARROWING is
             SS1:StrandSet || K1:IntruderKnowledge || ML1:SMsgList
             ||
             (G:GhostList,
-             ghost(M2:Msg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
+             ghost(M2:IMsg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
              G':GhostList)
             || PP:Properties,
             G':GhostList
@@ -14828,48 +14828,48 @@ fmod BACK-NARROWING is
 
   --- Use all current strands but put them at final state
   --- and introduce reactivated frozen message
-  op reactivateFrozenGhost : Msg StrandSet IdSystem -> IdSystem .
+  op reactivateFrozenGhost : IMsg StrandSet IdSystem -> IdSystem .
 
- ceq reactivateFrozenGhost(M2:Msg,SSOrig:StrandSet,
+ ceq reactivateFrozenGhost(M2:IMsg,SSOrig:StrandSet,
        < I:Id >
        SS1:StrandSet || K1:IntruderKnowledge || ML1:SMsgList
        || (G:GhostList,
-           ghost(M2:Msg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
+           ghost(M2:IMsg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
            G':GhostList)
        || PP:Properties )
    = < I:Id .. 0 >
      fixStrandSet SS2:StrandSet
      with FreshSet(Vars(SS2:StrandSet))
      using SSOrig:StrandSet
-     || (M2:Msg inI,K2:IntruderKnowledge)
-     || (resuscitated(M2:Msg), ML2:SMsgList)
+     || (M2:IMsg inI,K2:IntruderKnowledge)
+     || (resuscitated(M2:IMsg), ML2:SMsgList)
      || G':GhostList
      || PP2:Properties
   if SSOrig:StrandSet =/= SS2:StrandSet .
 
- ceq reactivateFrozenGhost(M2:Msg,SSOrig:StrandSet, --- Ghost term instantiated by unification of knowledge
+ ceq reactivateFrozenGhost(M2:IMsg,SSOrig:StrandSet, --- Ghost term instantiated by unification of knowledge
        < I:Id >
        SS1:StrandSet || K1:IntruderKnowledge || ML1:SMsgList
        || (G:GhostList,
-           ghost(M2:Msg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
+           ghost(M2:IMsg,SS2:StrandSet,K2:IntruderKnowledge,ML2:SMsgList,PP2:Properties),
            G':GhostList)
        || PP:Properties )
    =   < I:Id >
-       SS2:StrandSet || M2:Msg inI,K2:IntruderKnowledge || ML2:SMsgList
+       SS2:StrandSet || M2:IMsg inI,K2:IntruderKnowledge || ML2:SMsgList
        || (G:GhostList,
            G':GhostList)
        || PP:Properties
   if SSOrig:StrandSet == SS2:StrandSet .
 
   *** testisGhostMsg ********************************************
-  op testisGhostMsg : Msg -> Bool [memo] .
-  eq testisGhostMsg(M:Msg)
-   = not anyFreshVar(Vars(upTerm(M:Msg)))
+  op testisGhostMsg : IMsg -> Bool [memo] .
+  eq testisGhostMsg(M:IMsg)
+   = not anyFreshVar(Vars(upTerm(M:IMsg)))
      and-then
      'true.Bool == getTerm(
        metaReduce(
           removeVariantLabel(PROTOCOL-EXAMPLE-GHOST),
-          'isGhostMsg[upTerm(M:Msg)]
+          'isGhostMsg[upTerm(M:IMsg)]
        )
       ) .
 
@@ -14981,48 +14981,48 @@ fmod BACK-NARROWING is
   op tryUnificationofKnowledgeE** : Module SystemSet IntruderKnowledge
                                  -> SystemSet .
   eq tryUnificationofKnowledgeE**(M,ST,
-           (X:Msg inI, Y:Msg inI, K:IntruderKnowledge))
+           (X:IMsg inI, Y:IMsg inI, K:IntruderKnowledge))
    = tryUnificationofKnowledgeE***(M,
         empty,ST,
-        X:Msg, Y:Msg,
-        K:IntruderKnowledge, (Y:Msg inI, K:IntruderKnowledge)) .
+        X:IMsg, Y:IMsg,
+        K:IntruderKnowledge, (Y:IMsg inI, K:IntruderKnowledge)) .
   eq tryUnificationofKnowledgeE**(M,ST,K:IntruderKnowledge)
    = ST
   [owise] .
 
   op tryUnificationofKnowledgeE*** : Module SystemSet SystemSet
-                                     Msg Msg
+                                     IMsg IMsg
                                      IntruderKnowledge IntruderKnowledge
                                   -> SystemSet .
   eq tryUnificationofKnowledgeE***(M,
         ST',empty,
-        X:Msg, Y:Msg, empty, K$:IntruderKnowledge)
+        X:IMsg, Y:IMsg, empty, K$:IntruderKnowledge)
    = *** try a new pair and traverse the whole set ST'
      tryUnificationofKnowledgeE**(M,ST',K$:IntruderKnowledge) .
 
   eq tryUnificationofKnowledgeE***(M,
         ST',empty,
-        X:Msg, Y:Msg, (Z:Msg inI,K:IntruderKnowledge), K$:IntruderKnowledge)
+        X:IMsg, Y:IMsg, (Z:IMsg inI,K:IntruderKnowledge), K$:IntruderKnowledge)
    = *** Take another Y and traverse ST' with X and Y for replication
      tryUnificationofKnowledgeE***(M,
         empty,ST',
-        X:Msg, Z:Msg, K:IntruderKnowledge, K$:IntruderKnowledge) .
+        X:IMsg, Z:IMsg, K:IntruderKnowledge, K$:IntruderKnowledge) .
 
   eq tryUnificationofKnowledgeE***(M,
        ST',
        ST
        SS:StrandSet || K:IntruderKnowledge
           || ML:SMsgList || G:GhostList || PP:Properties,
-     X:Msg, Y:Msg,
+     X:IMsg, Y:IMsg,
      K*:IntruderKnowledge,
      K$:IntruderKnowledge)
-   = if not (X:Msg inI in K:IntruderKnowledge)
+   = if not (X:IMsg inI in K:IntruderKnowledge)
         or-else
-        not (Y:Msg inI in K:IntruderKnowledge)
+        not (Y:IMsg inI in K:IntruderKnowledge)
         or-else
-        (X:Msg != Y:Msg) in K:IntruderKnowledge
+        (X:IMsg != Y:IMsg) in K:IntruderKnowledge
         or-else
-	tryUnificationofKnowledgeE***Unify(M,X:Msg,Y:Msg,upTerm(only-irr(K:IntruderKnowledge))) == empty
+	tryUnificationofKnowledgeE***Unify(M,X:IMsg,Y:IMsg,upTerm(only-irr(K:IntruderKnowledge))) == empty
      then
      *** skip
      tryUnificationofKnowledgeE***(M,
@@ -15030,7 +15030,7 @@ fmod BACK-NARROWING is
         SS:StrandSet || K:IntruderKnowledge
           || ML:SMsgList || G:GhostList || PP:Properties,
         ST,
-        X:Msg, Y:Msg,
+        X:IMsg, Y:IMsg,
         K*:IntruderKnowledge,
         K$:IntruderKnowledge)
      else
@@ -15040,65 +15040,65 @@ fmod BACK-NARROWING is
         replicate(M,
           SS:StrandSet || K:IntruderKnowledge
              || ML:SMsgList || G:GhostList || PP:Properties,
-          X:Msg,Y:Msg,
-          tryUnificationofKnowledgeE***Unify(M,X:Msg,Y:Msg,upTerm(only-irr(K:IntruderKnowledge)))
-           |> (upTerm(X:Msg),upTerm(Y:Msg)),
+          X:IMsg,Y:IMsg,
+          tryUnificationofKnowledgeE***Unify(M,X:IMsg,Y:IMsg,upTerm(only-irr(K:IntruderKnowledge)))
+           |> (upTerm(X:IMsg),upTerm(Y:IMsg)),
           empty
         ),
         ST,
-        X:Msg, Y:Msg,
+        X:IMsg, Y:IMsg,
         K*:IntruderKnowledge,
         K$:IntruderKnowledge)
      fi .
 
   op tryUnificationofKnowledgeE***Unify : Module
-                                          Msg Msg
+                                          IMsg IMsg
                                           TermList
                                        -> SubstitutionSet [memo] .
-  eq tryUnificationofKnowledgeE***Unify(M,X:Msg,Y:Msg,TL:TermList)
-   = fresh[metaEBuiltInUnify(M,upTerm(X:Msg),upTerm(Y:Msg),TL:TermList)] .
+  eq tryUnificationofKnowledgeE***Unify(M,X:IMsg,Y:IMsg,TL:TermList)
+   = fresh[metaEBuiltInUnify(M,upTerm(X:IMsg),upTerm(Y:IMsg),TL:TermList)] .
 
   *** try to unify and replicate
-  op replicate : Module System Msg Msg SubstitutionSet
+  op replicate : Module System IMsg IMsg SubstitutionSet
                  SystemSet -> SystemSet .
   eq replicate(M,
        (SS:StrandSet
-	|| (X:Msg inI, Y:Msg inI, K:IntruderKnowledge)
+	|| (X:IMsg inI, Y:IMsg inI, K:IntruderKnowledge)
 	|| ML:SMsgList
 	|| G:GhostList
         || PP:Properties),
-       X:Msg,Y:Msg,
+       X:IMsg,Y:IMsg,
        empty,
        ST)
    = *** Recursive Call
      ST
      (SS:StrandSet
-	|| (X:Msg inI, Y:Msg inI, (X:Msg != Y:Msg), K:IntruderKnowledge)
+	|| (X:IMsg inI, Y:IMsg inI, (X:IMsg != Y:IMsg), K:IntruderKnowledge)
 	|| ML:SMsgList
 	|| G:GhostList
         || PP:Properties) .
 
   eq replicate(M,
        (SS:StrandSet
-	|| (X:Msg inI, Y:Msg inI, K:IntruderKnowledge)
+	|| (X:IMsg inI, Y:IMsg inI, K:IntruderKnowledge)
 	|| ML:SMsgList
 	|| G:GhostList
         || PP:Properties),
-       X:Msg,Y:Msg,
+       X:IMsg,Y:IMsg,
        S:Substitution | SS:SubstitutionSet,
        ST)
    = replicate(M,
        (SS:StrandSet
-	|| (X:Msg inI, Y:Msg inI, K:IntruderKnowledge)
+	|| (X:IMsg inI, Y:IMsg inI, K:IntruderKnowledge)
 	|| ML:SMsgList
 	|| G:GhostList
         || PP:Properties),
-       X:Msg,Y:Msg,
+       X:IMsg,Y:IMsg,
        SS:SubstitutionSet,
        ST
        downSystemSet(
 	   upTerm(SS:StrandSet
-		  || (X:Msg inI, K:IntruderKnowledge)
+		  || (X:IMsg inI, K:IntruderKnowledge)
 		  || ML:SMsgList
 		  || G:GhostList
                   || PP:Properties)
@@ -15324,9 +15324,9 @@ fmod BACK-NARROWING is
   eq simplifyGhostE(
        < I:Id >
        SS:StrandSet
-       || (M:Msg inI,K:IntruderKnowledge) || ML:SMsgList ||
+       || (M:IMsg inI,K:IntruderKnowledge) || ML:SMsgList ||
        (G1':GhostList,
-        ghost(M:Msg,SS1':StrandSet,K1':IntruderKnowledge,ML1':SMsgList,PP1:Properties),
+        ghost(M:IMsg,SS1':StrandSet,K1':IntruderKnowledge,ML1':SMsgList,PP1:Properties),
         G2':GhostList)
        || PP:Properties
      )
@@ -15335,7 +15335,7 @@ fmod BACK-NARROWING is
        SS:StrandSet
        || K:IntruderKnowledge || ML:SMsgList ||
        (G1':GhostList,
-        ghost(M:Msg,SS1':StrandSet,K1':IntruderKnowledge,ML1':SMsgList,PP1:Properties),
+        ghost(M:IMsg,SS1':StrandSet,K1':IntruderKnowledge,ML1':SMsgList,PP1:Properties),
         G2':GhostList)
        || PP:Properties
      ) .
@@ -15344,9 +15344,9 @@ fmod BACK-NARROWING is
        SS:StrandSet
        || K:IntruderKnowledge || ML:SMsgList ||
        (G1':GhostList,
-        ghost(M:Msg,SS1':StrandSet,K1':IntruderKnowledge,ML1':SMsgList,PP1:Properties),
+        ghost(M:IMsg,SS1':StrandSet,K1':IntruderKnowledge,ML1':SMsgList,PP1:Properties),
         G2':GhostList,
-        ghost(M:Msg,SS2':StrandSet,K2':IntruderKnowledge,ML2':SMsgList,PP2:Properties),
+        ghost(M:IMsg,SS2':StrandSet,K2':IntruderKnowledge,ML2':SMsgList,PP2:Properties),
         G3':GhostList)
        || PP:Properties
      )
@@ -15355,7 +15355,7 @@ fmod BACK-NARROWING is
        SS:StrandSet
        || K:IntruderKnowledge || ML:SMsgList ||
        (G1':GhostList,
-        ghost(M:Msg,SS1':StrandSet,K1':IntruderKnowledge,ML1':SMsgList,PP1:Properties),
+        ghost(M:IMsg,SS1':StrandSet,K1':IntruderKnowledge,ML1':SMsgList,PP1:Properties),
         G2':GhostList,
         G3':GhostList)
        || PP:Properties
@@ -15383,50 +15383,50 @@ fmod BACK-NARROWING is
        < I:Id >
        (SS:StrandSet || K:IntruderKnowledge
            || ML:SMsgList || G:GhostList || PP:Properties),
-       (ghost(M:Msg,SS':StrandSet,K':IntruderKnowledge,ML':SMsgList,PP':Properties),
+       (ghost(M:IMsg,SS':StrandSet,K':IntruderKnowledge,ML':SMsgList,PP':Properties),
         G':GhostList)
       )
    = simplifyGhostE**(
        < I:Id >
        (SS:StrandSet
-       || if not testisGhostMsg(M:Msg)
+       || if not testisGhostMsg(M:IMsg)
              or-else
-             isAnyVarInstantiable(Vars(upTerm(M:Msg)),K:IntruderKnowledge)
+             isAnyVarInstantiable(Vars(upTerm(M:IMsg)),K:IntruderKnowledge)
              or-else
-             isAnyVarInstantiable(Vars(upTerm(M:Msg)),SS:StrandSet)
+             isAnyVarInstantiable(Vars(upTerm(M:IMsg)),SS:StrandSet)
 	     or-else
-	     anyFreshVar(Vars(upTerm(M:Msg)))
+	     anyFreshVar(Vars(upTerm(M:IMsg)))
           then K:IntruderKnowledge
-          else (M:Msg !inI,K:IntruderKnowledge)
+          else (M:IMsg !inI,K:IntruderKnowledge)
           fi
-       || if not testisGhostMsg(M:Msg)
+       || if not testisGhostMsg(M:IMsg)
              or-else
-             isAnyVarInstantiable(Vars(upTerm(M:Msg)),K:IntruderKnowledge)
+             isAnyVarInstantiable(Vars(upTerm(M:IMsg)),K:IntruderKnowledge)
              or-else
-             isAnyVarInstantiable(Vars(upTerm(M:Msg)),SS:StrandSet)
+             isAnyVarInstantiable(Vars(upTerm(M:IMsg)),SS:StrandSet)
 	     or-else
-	     anyFreshVar(Vars(upTerm(M:Msg)))
+	     anyFreshVar(Vars(upTerm(M:IMsg)))
           then ML:SMsgList
-          else (generatedByIntruder(M:Msg),ML:SMsgList)
+          else (generatedByIntruder(M:IMsg),ML:SMsgList)
           fi
-       || if not testisGhostMsg(M:Msg)
+       || if not testisGhostMsg(M:IMsg)
              or-else
-             isAnyVarInstantiable(Vars(upTerm(M:Msg)),K:IntruderKnowledge)
+             isAnyVarInstantiable(Vars(upTerm(M:IMsg)),K:IntruderKnowledge)
              or-else
-             isAnyVarInstantiable(Vars(upTerm(M:Msg)),SS:StrandSet)
+             isAnyVarInstantiable(Vars(upTerm(M:IMsg)),SS:StrandSet)
 	     or-else
-	     anyFreshVar(Vars(upTerm(M:Msg)))
+	     anyFreshVar(Vars(upTerm(M:IMsg)))
           then G:GhostList
-          else simplifyGhostM(M:Msg,G:GhostList)
+          else simplifyGhostM(M:IMsg,G:GhostList)
           fi
        || PP:Properties
        ),
        G':GhostList) .
 
-  op simplifyGhostM : Msg GhostList -> GhostList .
-  eq simplifyGhostM(M:Msg,
+  op simplifyGhostM : IMsg GhostList -> GhostList .
+  eq simplifyGhostM(M:IMsg,
        (G:GhostList,
-        ghost(M:Msg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
+        ghost(M:IMsg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
         G':GhostList)  )
    = (G:GhostList,G':GhostList) .
 
@@ -15444,15 +15444,15 @@ fmod BACK-NARROWING is
         K1:IntruderKnowledge ||
         ML1:SMsgList ||
         (G11:GhostList,
-         ghost(M:Msg,SS':StrandSet,K':IntruderKnowledge,ML':SMsgList,PP':Properties),
+         ghost(M:IMsg,SS':StrandSet,K':IntruderKnowledge,ML':SMsgList,PP':Properties),
          G12:GhostList) ||
         PP:Properties),
        < I:Id >
        (SS:StrandSet ||
-        M:Msg !inI, K2:IntruderKnowledge ||
-        ML21:SMsgList,generatedByIntruder(M:Msg),ML22:SMsgList ||
+        M:IMsg !inI, K2:IntruderKnowledge ||
+        ML21:SMsgList,generatedByIntruder(M:IMsg),ML22:SMsgList ||
         (G21:GhostList,
-         ghost(M':Msg,SS'':StrandSet,K'':IntruderKnowledge,ML'':SMsgList,PP'':Properties),
+         ghost(M':IMsg,SS'':StrandSet,K'':IntruderKnowledge,ML'':SMsgList,PP'':Properties),
          G22:GhostList) ||
         PP:Properties)
      )
@@ -15462,7 +15462,7 @@ fmod BACK-NARROWING is
         K1:IntruderKnowledge ||
         ML1:SMsgList ||
         (G11:GhostList,
-         ghost(M:Msg,SS':StrandSet,K':IntruderKnowledge,ML':SMsgList,PP':Properties),
+         ghost(M:IMsg,SS':StrandSet,K':IntruderKnowledge,ML':SMsgList,PP':Properties),
          G12:GhostList) ||
         PP:Properties),
        < I:Id >
@@ -15470,12 +15470,12 @@ fmod BACK-NARROWING is
         K2:IntruderKnowledge ||
         ML21:SMsgList,ML22:SMsgList ||
         (G21:GhostList,
-         ghost(M:Msg,SS':StrandSet,K':IntruderKnowledge,ML':SMsgList,PP':Properties),
-         ghost(M':Msg,SS'':StrandSet,K'':IntruderKnowledge,ML'':SMsgList,PP'':Properties),
+         ghost(M:IMsg,SS':StrandSet,K':IntruderKnowledge,ML':SMsgList,PP':Properties),
+         ghost(M':IMsg,SS'':StrandSet,K'':IntruderKnowledge,ML'':SMsgList,PP'':Properties),
          G22:GhostList) ||
         PP:Properties)
      )
-  if any Vars(upTerm(M:Msg)) in Vars(upTerm(M':Msg)) .
+  if any Vars(upTerm(M:IMsg)) in Vars(upTerm(M':IMsg)) .
   eq simplifyGhostE*Fix*(Original:IdSystem,New:IdSystem)
    = New:IdSystem [owise] .
 
@@ -15491,10 +15491,10 @@ fmod BACK-NARROWING is
   op isAnyVarInstantiable* : Term IntruderKnowledge -> Bool .
   eq isAnyVarInstantiable*(T:Term,(empty).IntruderKnowledge-empty)
    = false .
-  eq isAnyVarInstantiable*(T:Term,(M':Msg inI,K:IntruderKnowledge))
-   = (is T:Term subTermOf upTerm(M':Msg)
+  eq isAnyVarInstantiable*(T:Term,(M':IMsg inI,K:IntruderKnowledge))
+   = (is T:Term subTermOf upTerm(M':IMsg)
       and-then
-      not testisGhostMsg(M':Msg) )
+      not testisGhostMsg(M':IMsg) )
      or-else
      isAnyVarInstantiable*(T:Term,K:IntruderKnowledge) .
   eq isAnyVarInstantiable*(T:Term,
@@ -15529,33 +15529,33 @@ fmod BACK-NARROWING is
   op isAnyVarInstantiable*ML : Term SMsgList -> Bool .
   eq isAnyVarInstantiable*ML(T:Term,nil)
    = false .
-  eq isAnyVarInstantiable*ML(T:Term,({X:RoleSet -> Y:RoleSet ;; Z:How ;; M:Msg},L:SMsgList))
-   = (is T:Term subTermOf upTerm(M:Msg)
+  eq isAnyVarInstantiable*ML(T:Term,({X:RoleSet -> Y:RoleSet ;; Z:How ;; M:IMsg},L:SMsgList))
+   = (is T:Term subTermOf upTerm(M:IMsg)
       and-then
-      not testisGhostMsg(M:Msg) )
+      not testisGhostMsg(M:IMsg) )
      or-else
-     isAnyVarInstantiable*ML*Fresh(T:Term,M:Msg)
+     isAnyVarInstantiable*ML*Fresh(T:Term,M:IMsg)
      or-else
      isAnyVarInstantiable*ML(T:Term,L:SMsgList) .
   eq isAnyVarInstantiable*ML(T:Term,(M':StrandConstraint,L:SMsgList))
    = isAnyVarInstantiable*ML(T:Term,L:SMsgList) .
-  eq isAnyVarInstantiable*ML(T:Term,(+(M':Msg),L:SMsgList))
-   = isAnyVarInstantiable*ML*Fresh(T:Term,M':Msg)
+  eq isAnyVarInstantiable*ML(T:Term,(+(M':IMsg),L:SMsgList))
+   = isAnyVarInstantiable*ML*Fresh(T:Term,M':IMsg)
      or-else
      isAnyVarInstantiable*ML(T:Term,L:SMsgList) .
-  eq isAnyVarInstantiable*ML(T:Term,(-(M':Msg),L:SMsgList))
-   = (is T:Term subTermOf upTerm(M':Msg)
+  eq isAnyVarInstantiable*ML(T:Term,(-(M':IMsg),L:SMsgList))
+   = (is T:Term subTermOf upTerm(M':IMsg)
       and-then
-      not testisGhostMsg(M':Msg) )
+      not testisGhostMsg(M':IMsg) )
      or-else
      isAnyVarInstantiable*ML(T:Term,L:SMsgList) .
 
-  op isAnyVarInstantiable*ML*Fresh : Term Msg -> Bool .
-  eq isAnyVarInstantiable*ML*Fresh(V:Variable,M:Msg)
+  op isAnyVarInstantiable*ML*Fresh : Term IMsg -> Bool .
+  eq isAnyVarInstantiable*ML*Fresh(V:Variable,M:IMsg)
    = getType(V:Variable) == 'Fresh
      and
-     is V:Variable subTermOf upTerm(M:Msg) .
-  eq isAnyVarInstantiable*ML*Fresh(T:Term,M:Msg)
+     is V:Variable subTermOf upTerm(M:IMsg) .
+  eq isAnyVarInstantiable*ML*Fresh(T:Term,M:IMsg)
    = false [owise] .
 
   *** filters *******************************************************
@@ -15565,9 +15565,9 @@ fmod BACK-NARROWING is
       downSystemSet(
         getTerm(
            metaReduce(
----	     putStrat(0,'-`(_`),'Msg,
----	     putStrat(0,'_inI,'Msg,
-	     putStrat(0,'irr`(_`),'Msg,
+---	     putStrat(0,'-`(_`),'IMsg,
+---	     putStrat(0,'_inI,'IMsg,
+	     putStrat(0,'irr`(_`),'IMsg,
                removeVariantLabel(clearNonExecEqs(eraseRls(onlyEqsNoBuiltInUnify(M))))
 ---          ))
 	     ),
@@ -15581,29 +15581,29 @@ fmod BACK-NARROWING is
   eq simplifyNotInIConstraints(
         < I:Id >
         (SS:StrandSet
-         || (X:Msg !inI,X:Msg !inI,K:IntruderKnowledge)
-	 || ML1:SMsgList,generatedByIntruder(X:Msg),ML2:SMsgList,generatedByIntruder(X:Msg),ML3:SMsgList
+         || (X:IMsg !inI,X:IMsg !inI,K:IntruderKnowledge)
+	 || ML1:SMsgList,generatedByIntruder(X:IMsg),ML2:SMsgList,generatedByIntruder(X:IMsg),ML3:SMsgList
 	 || G:GhostList
          || PP:Properties) )
    = simplifyNotInIConstraints(
         < I:Id >
         (SS:StrandSet
-         || (X:Msg !inI,K:IntruderKnowledge)
-	 || ML1:SMsgList,generatedByIntruder(X:Msg),ML2:SMsgList,ML3:SMsgList
+         || (X:IMsg !inI,K:IntruderKnowledge)
+	 || ML1:SMsgList,generatedByIntruder(X:IMsg),ML2:SMsgList,ML3:SMsgList
 	 || G:GhostList
          || PP:Properties) ) .
   eq simplifyNotInIConstraints(
         < I:Id >
         (SS:StrandSet
-         || (X:Msg !inI,X:Msg inI,K:IntruderKnowledge)
-	 || ML1:SMsgList,generatedByIntruder(X:Msg),ML2:SMsgList
+         || (X:IMsg !inI,X:IMsg inI,K:IntruderKnowledge)
+	 || ML1:SMsgList,generatedByIntruder(X:IMsg),ML2:SMsgList
 	 || G:GhostList
          || PP:Properties) )
    = simplifyNotInIConstraints(
         < I:Id >
         (SS:StrandSet
-         || (X:Msg !inI,K:IntruderKnowledge)
-	 || ML1:SMsgList,generatedByIntruder(X:Msg),ML2:SMsgList
+         || (X:IMsg !inI,K:IntruderKnowledge)
+	 || ML1:SMsgList,generatedByIntruder(X:IMsg),ML2:SMsgList
 	 || G:GhostList
          || PP:Properties) ) .
 
@@ -15615,14 +15615,14 @@ fmod BACK-NARROWING is
   eq simplifyInIConstraints(
         < I:Id >
         (SS:StrandSet
-         || (X:Msg inI,X:Msg inI,K:IntruderKnowledge)
+         || (X:IMsg inI,X:IMsg inI,K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties) )
    = simplifyInIConstraints(
         < I:Id >
         (SS:StrandSet
-         || (X:Msg inI,K:IntruderKnowledge)
+         || (X:IMsg inI,K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties) ) .
@@ -15648,8 +15648,8 @@ fmod BACK-NARROWING is
          || PP:Properties) ) .
 
   op simplifyInstConstraints* : IntruderKnowledge -> IntruderKnowledge .
-  eq simplifyInstConstraints*((inst(X:Msg),K:IntruderKnowledge))
-   = simplifyInstConstraints**(upTerm(X:Msg)),
+  eq simplifyInstConstraints*((inst(X:IMsg),K:IntruderKnowledge))
+   = simplifyInstConstraints**(upTerm(X:IMsg)),
      simplifyInstConstraints*(K:IntruderKnowledge) .
   eq simplifyInstConstraints*(K:IntruderKnowledge)
    = K:IntruderKnowledge [owise] .
@@ -15657,10 +15657,10 @@ fmod BACK-NARROWING is
   op simplifyInstConstraints** : Term -> IntruderKnowledge-inst .
   eq simplifyInstConstraints**(C:Constant) = empty .
   eq simplifyInstConstraints**(V:Variable)
-   = if ---downMsgSet(V:Variable) :: Msg
+   = if ---downMsgSet(V:Variable) :: IMsg
         typeLeq(upModule('PROTOCOL-SPECIFICATION,true),
           getType(V:Variable),
-          'Msg)
+          'IMsg)
      then inst(downMsgSet(V:Variable))
      else empty
      fi .
@@ -15678,14 +15678,14 @@ fmod BACK-NARROWING is
   eq simplifyInstConstraintsDup(
         < I:Id >
         (SS:StrandSet
-         || (inst(X:Msg),inst(X:Msg),K:IntruderKnowledge)
+         || (inst(X:IMsg),inst(X:IMsg),K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties) )
    = simplifyInstConstraintsDup(
         < I:Id >
         (SS:StrandSet
-         || (inst(X:Msg),K:IntruderKnowledge)
+         || (inst(X:IMsg),K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties) ) .
@@ -15697,7 +15697,7 @@ fmod BACK-NARROWING is
  ceq simplifyInstConstraintsNonUsed(
         < I:Id >
         (SS:StrandSet
-         || (inst(X:Msg),K:IntruderKnowledge)
+         || (inst(X:IMsg),K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties) )
@@ -15708,7 +15708,7 @@ fmod BACK-NARROWING is
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties) )
-  if not (allVars upTerm(X:Msg) inVars upTerm(K:IntruderKnowledge)) .
+  if not (allVars upTerm(X:IMsg) inVars upTerm(K:IntruderKnowledge)) .
 
   eq simplifyInstConstraintsNonUsed(IS)
    = IS [owise] .
@@ -15718,14 +15718,14 @@ fmod BACK-NARROWING is
   eq simplifyIrrConstraints(
         < I:Id >
         (SS:StrandSet
-         || (irr(X:Msg),irr(X:Msg),K:IntruderKnowledge)
+         || (irr(X:IMsg),irr(X:IMsg),K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties) )
    = simplifyIrrConstraints(
         < I:Id >
         (SS:StrandSet
-         || (irr(X:Msg),K:IntruderKnowledge)
+         || (irr(X:IMsg),K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties) ) .
@@ -15733,14 +15733,14 @@ fmod BACK-NARROWING is
   eq simplifyIrrConstraints(
         < I:Id >
         (SS:StrandSet
-         || (inst(X:Msg),irr(X:Msg),K:IntruderKnowledge)
+         || (inst(X:IMsg),irr(X:IMsg),K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties) )
    = simplifyIrrConstraints(
         < I:Id >
         (SS:StrandSet
-         || (irr(X:Msg),K:IntruderKnowledge)
+         || (irr(X:IMsg),K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties) ) .
@@ -15810,13 +15810,13 @@ fmod BACK-NARROWING is
   op gen : IntruderKnowledge-!= IntruderKnowledge-irr -> FourDiffConstraint .
   eq gen(empty,KK:IntruderKnowledge-irr)
    = {{{empty,empty,nil,true}}} .
-  eq gen(((M1:Msg != M2:Msg),X:IntruderKnowledge-!=),KK:IntruderKnowledge-irr)
-   = {{{ (upTerm(M1:Msg),1st(gen(X:IntruderKnowledge-!=,KK:IntruderKnowledge-irr))),
-         (upTerm(M2:Msg),2nd(gen(X:IntruderKnowledge-!=,KK:IntruderKnowledge-irr))),
-         ('Msg 3rd(gen(X:IntruderKnowledge-!=,KK:IntruderKnowledge-irr))),
-         ((irr(M1:Msg) in KK:IntruderKnowledge-irr)
+  eq gen(((M1:IMsg != M2:IMsg),X:IntruderKnowledge-!=),KK:IntruderKnowledge-irr)
+   = {{{ (upTerm(M1:IMsg),1st(gen(X:IntruderKnowledge-!=,KK:IntruderKnowledge-irr))),
+         (upTerm(M2:IMsg),2nd(gen(X:IntruderKnowledge-!=,KK:IntruderKnowledge-irr))),
+         ('IMsg 3rd(gen(X:IntruderKnowledge-!=,KK:IntruderKnowledge-irr))),
+         ((irr(M1:IMsg) in KK:IntruderKnowledge-irr)
            and
-          (irr(M2:Msg) in KK:IntruderKnowledge-irr)
+          (irr(M2:IMsg) in KK:IntruderKnowledge-irr)
            and
           (4th(gen(X:IntruderKnowledge-!=,KK:IntruderKnowledge-irr))))            }}} .
 
@@ -15902,7 +15902,7 @@ fmod BACK-NARROWING is
 
   op addDiffConstraints : IntruderKnowledge-!= SubstitutionSet -> IntruderKnowledge-!= .
   eq addDiffConstraints(K:IntruderKnowledge-!=,(V:Variable <- T:Term ; S:Substitution) | SS:SubstitutionSet)
-   = if typeLeq(upModule('PROTOCOL-SPECIFICATION,true), getType(V:Variable), 'Msg)
+   = if typeLeq(upModule('PROTOCOL-SPECIFICATION,true), getType(V:Variable), 'IMsg)
      then addDiffConstraints( ((downMsgSet(V:Variable) != downMsgSet(T:Term)),K:IntruderKnowledge-!=),
                               S:Substitution | SS:SubstitutionSet)
      else addDiffConstraints(K:IntruderKnowledge-!=,S:Substitution | SS:SubstitutionSet)
@@ -15987,26 +15987,26 @@ fmod BACK-NARROWING is
   op bogusOneInIAllGhostTermsNotResuscitated : IdSystem -> Bool . --- remove???
   eq bogusOneInIAllGhostTermsNotResuscitated
      ( < I1:Id >
-       SS1:StrandSet || (M:Msg inI,K:IntruderKnowledge)
+       SS1:StrandSet || (M:IMsg inI,K:IntruderKnowledge)
        || ML1:SMsgList || G1:GhostList || PP1:Properties)
-   = (all Vars(upTerm(M:Msg)) in ghostTerms(G1:GhostList)
+   = (all Vars(upTerm(M:IMsg)) in ghostTerms(G1:GhostList)
       or
-      (upTerm(M:Msg) :: Variable and G1:GhostList == nil))
+      (upTerm(M:IMsg) :: Variable and G1:GhostList == nil))
      and-then
      noInI(K:IntruderKnowledge)
      and-then
-     noResuscitatedSubterm(M:Msg,ML1:SMsgList) .
+     noResuscitatedSubterm(M:IMsg,ML1:SMsgList) .
   eq bogusOneInIAllGhostTermsNotResuscitated(I:IdSystem) = false [owise] .
 
-  op noResuscitatedSubterm : Msg SMsgList -> Bool .
-  eq noResuscitatedSubterm(M:Msg,nil)
+  op noResuscitatedSubterm : IMsg SMsgList -> Bool .
+  eq noResuscitatedSubterm(M:IMsg,nil)
    = true .
-  eq noResuscitatedSubterm(M:Msg,(resuscitated(M2:Msg),ML:SMsgList))
-   = not is upTerm(M2:Msg) subTermOf upTerm(M:Msg)
+  eq noResuscitatedSubterm(M:IMsg,(resuscitated(M2:IMsg),ML:SMsgList))
+   = not is upTerm(M2:IMsg) subTermOf upTerm(M:IMsg)
      and-then
-     noResuscitatedSubterm(M:Msg,ML:SMsgList) .
-  eq noResuscitatedSubterm(M:Msg,(X:SMsgElem,ML:SMsgList))
-   = noResuscitatedSubterm(M:Msg,ML:SMsgList) [owise] .
+     noResuscitatedSubterm(M:IMsg,ML:SMsgList) .
+  eq noResuscitatedSubterm(M:IMsg,(X:SMsgElem,ML:SMsgList))
+   = noResuscitatedSubterm(M:IMsg,ML:SMsgList) [owise] .
 
   ******************
 
@@ -16156,14 +16156,14 @@ fmod BACK-NARROWING is
   op resuscitatedInI : GhostList Substitution SMsgList -> Bool .
  ceq resuscitatedInI(
      (G1:GhostList,
-      ghost(M1:Msg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
+      ghost(M1:IMsg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
       G2:GhostList),
       S:Substitution,
-      (M1:SMsgList,resuscitated(M2:Msg),M2:SMsgList))
+      (M1:SMsgList,resuscitated(M2:IMsg),M2:SMsgList))
    = true
-  if (M1:Msg inI) << S:Substitution =/= (M1:Msg inI)
+  if (M1:IMsg inI) << S:Substitution =/= (M1:IMsg inI)
      and-then
-     is upTerm(M1:Msg) subTermOf upTerm(M2:Msg) .
+     is upTerm(M1:IMsg) subTermOf upTerm(M2:IMsg) .
   eq resuscitatedInI(G:GhostList,S:Substitution,ML:SMsgList)
    = false [owise] .
 
@@ -16173,29 +16173,29 @@ fmod BACK-NARROWING is
   eq included(empty,S:Substitution,K2:IntruderKnowledge)
    = true .
   eq included(
-        (X:Msg inI,K1:IntruderKnowledge),
+        (X:IMsg inI,K1:IntruderKnowledge),
 	S:Substitution,
 	K2:IntruderKnowledge)
-   = ( (X:Msg inI) << S:Substitution == (X:Msg inI)
+   = ( (X:IMsg inI) << S:Substitution == (X:IMsg inI)
        or-else
-       (X:Msg inI << S:Substitution) in K2:IntruderKnowledge
+       (X:IMsg inI << S:Substitution) in K2:IntruderKnowledge
        or-else
-       (X:Msg inI << S:Substitution)
+       (X:IMsg inI << S:Substitution)
          matchingIn K2:IntruderKnowledge rangeVars empty )
      and-then
      included(K1:IntruderKnowledge,S:Substitution,K2:IntruderKnowledge) .
   eq included(
-        ((X11:Msg != X12:Msg),K1:IntruderKnowledge),
+        ((X11:IMsg != X12:IMsg),K1:IntruderKnowledge),
 	S:Substitution,
 	K2:IntruderKnowledge)
-   = ( ( (X11:Msg inI) << S:Substitution == (X11:Msg inI)
+   = ( ( (X11:IMsg inI) << S:Substitution == (X11:IMsg inI)
          and
-         (X12:Msg inI) << S:Substitution == (X12:Msg inI) ) --- discarded
+         (X12:IMsg inI) << S:Substitution == (X12:IMsg inI) ) --- discarded
        or-else
-       ( ((X11:Msg << S:Substitution) != (X12:Msg << S:Substitution))
+       ( ((X11:IMsg << S:Substitution) != (X12:IMsg << S:Substitution))
          in K2:IntruderKnowledge )
        or-else
-       ( ((X11:Msg << S:Substitution) != (X12:Msg << S:Substitution))
+       ( ((X11:IMsg << S:Substitution) != (X12:IMsg << S:Substitution))
            matchingIn K2:IntruderKnowledge rangeVars rangeOnlyVars(S:Substitution) ) )
      and-then
      included(K1:IntruderKnowledge,S:Substitution,K2:IntruderKnowledge)	.
@@ -16206,30 +16206,30 @@ fmod BACK-NARROWING is
 
   *** matchingIn ******************
   op _matchingIn_rangeVars_ : Knowledge IntruderKnowledge TermList -> Bool .
- ceq X:Msg inI matchingIn (Y:Msg inI,IK:IntruderKnowledge) rangeVars TL:TermList
+ ceq X:IMsg inI matchingIn (Y:IMsg inI,IK:IntruderKnowledge) rangeVars TL:TermList
    = SS:SubstitutionSet =/= empty
      or-else
-     X:Msg inI matchingIn IK:IntruderKnowledge rangeVars TL:TermList
+     X:IMsg inI matchingIn IK:IntruderKnowledge rangeVars TL:TermList
   if M:Module
        := clearAllFrozen(checkXOR(removeBoolEqs(
            upModule('PROTOCOL-EXAMPLE-ALGEBRAIC,true))))
   /\ {Mx:Module, (TX:Term, TY:Term)}
        := rigidifeList(M:Module,'included,
-             (upTerm(X:Msg),upTerm(Y:Msg)),
-	     (TL:TermList,Vars(upTerm(X:Msg)) intersect Vars(upTerm(Y:Msg))))
+             (upTerm(X:IMsg),upTerm(Y:IMsg)),
+	     (TL:TermList,Vars(upTerm(X:IMsg)) intersect Vars(upTerm(Y:IMsg))))
   /\ SS:SubstitutionSet
        := metaBuiltInMatch(Mx:Module,TY:Term,TX:Term) . --- TY is instance of TX
- ceq (X11:Msg != X12:Msg) matchingIn ((X21:Msg != X22:Msg),IK:IntruderKnowledge) rangeVars TL:TermList
+ ceq (X11:IMsg != X12:IMsg) matchingIn ((X21:IMsg != X22:IMsg),IK:IntruderKnowledge) rangeVars TL:TermList
    = SS:SubstitutionSet =/= empty
      or-else
-     (X11:Msg != X12:Msg) matchingIn IK:IntruderKnowledge rangeVars TL:TermList
+     (X11:IMsg != X12:IMsg) matchingIn IK:IntruderKnowledge rangeVars TL:TermList
   if M:Module
        := clearAllFrozen(checkXOR(removeBoolEqs(
            upModule('PROTOCOL-EXAMPLE-ALGEBRAIC,true))))
   /\ {Mx:Module, (TX:Term, TY:Term)}
        := rigidifeList(M:Module,'included,
-             ('_!=_[upTerm(X11:Msg),upTerm(X12:Msg)],'_!=_[upTerm(X21:Msg),upTerm(X22:Msg)]),
-	     (TL:TermList,Vars((upTerm(X11:Msg),upTerm(X12:Msg))) intersect Vars((upTerm(X21:Msg),upTerm(X22:Msg)))))
+             ('_!=_[upTerm(X11:IMsg),upTerm(X12:IMsg)],'_!=_[upTerm(X21:IMsg),upTerm(X22:IMsg)]),
+	     (TL:TermList,Vars((upTerm(X11:IMsg),upTerm(X12:IMsg))) intersect Vars((upTerm(X21:IMsg),upTerm(X22:IMsg)))))
   /\ SS:SubstitutionSet
        := metaBuiltInMatch(Mx:Module,TY:Term,TX:Term) .  --- TY is instance of TX
   eq X:Knowledge matchingIn IK:IntruderKnowledge rangeVars TL:TermList
@@ -16239,12 +16239,12 @@ fmod BACK-NARROWING is
   op __&_noParentGhost__ : Id GhostList SMsgList Id SMsgList -> Bool .
  ceq I1:Id
      (G1:GhostList,
-      ghost(M:Msg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
+      ghost(M:IMsg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
       G2:GhostList) &
-     (M1:SMsgList,-(M:Msg),M2:SMsgList)
+     (M1:SMsgList,-(M:IMsg),M2:SMsgList)
      noParentGhost
      I2:Id
-     (M1:SMsgList,resuscitated(M:Msg),-(M:Msg),M2:SMsgList)
+     (M1:SMsgList,resuscitated(M:IMsg),-(M:IMsg),M2:SMsgList)
    = false
   if I1:Id <<< I2:Id .
   eq I1:Id G1:GhostList & ML1:SMsgList noParentGhost I2:Id ML2:SMsgList
@@ -16254,15 +16254,15 @@ fmod BACK-NARROWING is
   op __&_noParentGhost#__ : Id GhostList SMsgList Id SMsgList -> Bool .
  ceq I1:Id
      (G1:GhostList,
-      ghost(M:Msg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
+      ghost(M:IMsg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
       G2:GhostList) &
      (M1:SMsgList,M2:SMsgList,
-      -(M:Msg),M3:SMsgList)
+      -(M:IMsg),M3:SMsgList)
      noParentGhost#
      I2:Id
-     (M1*:SMsgList,+(M:Msg),M2:SMsgList,
-      resuscitated(M:Msg),
-      -(M:Msg),M3:SMsgList)
+     (M1*:SMsgList,+(M:IMsg),M2:SMsgList,
+      resuscitated(M:IMsg),
+      -(M:IMsg),M3:SMsgList)
    = false
   if I1:Id <<< I2:Id
   /\ (G1:GhostList == nil
@@ -16280,11 +16280,11 @@ fmod BACK-NARROWING is
      (G1:GhostList,
       G2:GhostList) &
      (M1:SMsgList,M2:SMsgList,
-      -(M:Msg),M3:SMsgList)
+      -(M:IMsg),M3:SMsgList)
      noParentGhost
      I2:Id
      (M1*:SMsgList,M2:SMsgList,
-      -(M:Msg),M3:SMsgList)    ) .
+      -(M:IMsg),M3:SMsgList)    ) .
   eq I1:Id G1:GhostList & ML1:SMsgList noParentGhost# I2:Id ML2:SMsgList
    = I1:Id G1:GhostList & ML1:SMsgList noParentGhost## I2:Id ML2:SMsgList
   [owise] .
@@ -16292,34 +16292,34 @@ fmod BACK-NARROWING is
   op __&_noParentGhost##__ : Id GhostList SMsgList Id SMsgList -> Bool .
  ceq I1:Id
      (G1:GhostList,
-      ghost(M:Msg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
+      ghost(M:IMsg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
       G2:GhostList) &
-     (M1:SMsgList,M2:SMsgList,-(M:Msg),M3:SMsgList)
+     (M1:SMsgList,M2:SMsgList,-(M:IMsg),M3:SMsgList)
      noParentGhost##
      I2:Id
-     (M1#:SMsgList,resuscitated(M#:Msg),M2#:SMsgList,-(M#:Msg),M3#:SMsgList)
+     (M1#:SMsgList,resuscitated(M#:IMsg),M2#:SMsgList,-(M#:IMsg),M3#:SMsgList)
    = false
   if I1:Id <<< I2:Id
   /\ Subst | SSubst :=
      metaBuiltInMatch(
            clearAllFrozen(checkXOR(removeBoolEqs(
                 upModule('PROTOCOL-EXAMPLE-ALGEBRAIC,true)))),
-        upTerm((M1#:SMsgList,M2#:SMsgList,-(M#:Msg),M3#:SMsgList)),
-        upTerm((M1:SMsgList, M2:SMsgList, -(M:Msg), M3:SMsgList))
+        upTerm((M1#:SMsgList,M2#:SMsgList,-(M#:IMsg),M3#:SMsgList)),
+        upTerm((M1:SMsgList, M2:SMsgList, -(M:IMsg), M3:SMsgList))
      ) .
   eq I1:Id G1:GhostList & ML1:SMsgList noParentGhost## I2:Id ML2:SMsgList
    = true
   [owise] .
 
-  op eachSMsgIn_hasSubterm_ : SMsgList Msg -> Bool .
-  eq eachSMsgIn nil hasSubterm M:Msg = true .
-  eq eachSMsgIn (M1:SMsg,ML:SMsgList) hasSubterm M:Msg
-   = is upTerm(M:Msg) subTermOf upTerm(M1:SMsg)
+  op eachSMsgIn_hasSubterm_ : SMsgList IMsg -> Bool .
+  eq eachSMsgIn nil hasSubterm M:IMsg = true .
+  eq eachSMsgIn (M1:SMsg,ML:SMsgList) hasSubterm M:IMsg
+   = is upTerm(M:IMsg) subTermOf upTerm(M1:SMsg)
      and-then
-     eachSMsgIn ML:SMsgList hasSubterm M:Msg .
+     eachSMsgIn ML:SMsgList hasSubterm M:IMsg .
 
   op resuscitated? : SMsgList -> Bool .
-  eq resuscitated?((M1:SMsgList,resuscitated(M:Msg),M2:SMsgList)) = true .
+  eq resuscitated?((M1:SMsgList,resuscitated(M:IMsg),M2:SMsgList)) = true .
   eq resuscitated?(M1:SMsgList) = false [owise] .
 
   op _subsequenceOf_ : SMsgList SMsgList -> Bool .
@@ -16391,9 +16391,9 @@ fmod BACK-NARROWING is
   eq SS:System << S:Substitution
    = downSystemSet(upTerm(SS:System) << S:Substitution) .
 
-  op _<<_ : Msg Substitution -> Msg .
-  eq M:Msg << S:Substitution
-   = downMsgSet(upTerm(M:Msg) << S:Substitution) .
+  op _<<_ : IMsg Substitution -> IMsg .
+  eq M:IMsg << S:Substitution
+   = downMsgSet(upTerm(M:IMsg) << S:Substitution) .
 
   op _<<`(_`)< : System System -> System .
   eq S:System <<( S':System )<
@@ -16446,51 +16446,51 @@ fmod BACK-NARROWING is
 
   --- There is at least one substitution with shared vars => FALSE
   ceq (SS1:StrandSet &
-       :: nil :: [ L11:SMsgList-L | +(M1:Msg), L12:SMsgList-R ]
-      || (M2$:Msg inI,M1:Msg !inI,K1:IntruderKnowledge)
-      || (+(M1:Msg),ML1:SMsgList)
+       :: nil :: [ L11:SMsgList-L | +(M1:IMsg), L12:SMsgList-R ]
+      || (M2$:IMsg inI,M1:IMsg !inI,K1:IntruderKnowledge)
+      || (+(M1:IMsg),ML1:SMsgList)
       || G1:GhostList
       || PP1:Properties
      )
      *independent*
      (SS2:StrandSet &
-       :: nil :: [ L21:SMsgList-L | +(M2:Msg), L22:SMsgList-R ]
-      || (M1$:Msg inI,M2:Msg !inI,K2:IntruderKnowledge)
-      || (+(M2:Msg),ML2:SMsgList)
+       :: nil :: [ L21:SMsgList-L | +(M2:IMsg), L22:SMsgList-R ]
+      || (M1$:IMsg inI,M2:IMsg !inI,K2:IntruderKnowledge)
+      || (+(M2:IMsg),ML2:SMsgList)
       || G2:GhostList
       || PP2:Properties
      )
    = false
   if S:Substitution | SS:SubstitutionSet
      := metaBuiltInMatch(STRAND-EXAMPLE-RULES-WITH-ALL,
-               '_`,_['+`(_`)[upTerm(M1$:Msg)],'+`(_`)[upTerm(M2:Msg)]],
-               '_`,_['+`(_`)[upTerm(M1:Msg)],'+`(_`)[upTerm(M2$:Msg)]]
+               '_`,_['+`(_`)[upTerm(M1$:IMsg)],'+`(_`)[upTerm(M2:IMsg)]],
+               '_`,_['+`(_`)[upTerm(M1:IMsg)],'+`(_`)[upTerm(M2$:IMsg)]]
         )
-  /\ Vars(upTerm(M1:Msg) << S:Substitution)
+  /\ Vars(upTerm(M1:IMsg) << S:Substitution)
      intersect
-     Vars(upTerm(M2:Msg))
+     Vars(upTerm(M2:IMsg))
      =/= empty .
 
   --- There is no substitution with shared vars (previous ceq does not apply)
   ceq (SS1:StrandSet &
-       :: nil :: [ L11:SMsgList-L | +(M1:Msg), L12:SMsgList-R ]
-      || (M2$:Msg inI,M1:Msg !inI,K1:IntruderKnowledge)
-      || (+(M1:Msg),ML1:SMsgList)
+       :: nil :: [ L11:SMsgList-L | +(M1:IMsg), L12:SMsgList-R ]
+      || (M2$:IMsg inI,M1:IMsg !inI,K1:IntruderKnowledge)
+      || (+(M1:IMsg),ML1:SMsgList)
       || G1:GhostList
       || PP1:Properties
      )
      *independent*
      (SS2:StrandSet &
-       :: nil :: [ L21:SMsgList-L | +(M2:Msg), L22:SMsgList-R ]
-      || (M1$:Msg inI,M2:Msg !inI,K2:IntruderKnowledge)
-      || (+(M2:Msg),ML2:SMsgList)
+       :: nil :: [ L21:SMsgList-L | +(M2:IMsg), L22:SMsgList-R ]
+      || (M1$:IMsg inI,M2:IMsg !inI,K2:IntruderKnowledge)
+      || (+(M2:IMsg),ML2:SMsgList)
       || G2:GhostList
       || PP2:Properties
      )
    = true
   if metaBuiltInMatch?(STRAND-EXAMPLE-RULES-WITH-ALL,
-               '_`,_['+`(_`)[upTerm(M1$:Msg)],'+`(_`)[upTerm(M2:Msg)]],
-               '_`,_['+`(_`)[upTerm(M1:Msg)],'+`(_`)[upTerm(M2$:Msg)]]
+               '_`,_['+`(_`)[upTerm(M1$:IMsg)],'+`(_`)[upTerm(M2:IMsg)]],
+               '_`,_['+`(_`)[upTerm(M1:IMsg)],'+`(_`)[upTerm(M2$:IMsg)]]
      )
   [owise] .
 
@@ -16516,7 +16516,7 @@ fmod BACK-NARROWING is
    = false [owise] .
 
   op testInIinGhost : IntruderKnowledge IntruderKnowledge -> Bool .
-  eq testInIinGhost((X:Msg inI,K1:IntruderKnowledge),(X:Msg inI,K2:IntruderKnowledge))
+  eq testInIinGhost((X:IMsg inI,K1:IntruderKnowledge),(X:IMsg inI,K2:IntruderKnowledge))
    = true .
   eq testInIinGhost(K1:IntruderKnowledge,K2:IntruderKnowledge)
    = false [owise] .
@@ -16530,14 +16530,14 @@ op testInconsistentKnowledge : IntruderKnowledge -> Bool .
 
   *** If knowledge "X in I" and knowledge "X !in I" appears at the
   *** same time, then error and remove such State
-  eq testInconsistentKnowledge(B:Bool, (X:Msg inI,X:Msg !inI,K:IntruderKnowledge) )
+  eq testInconsistentKnowledge(B:Bool, (X:IMsg inI,X:IMsg !inI,K:IntruderKnowledge) )
    = true .
   *** If some knowledge appears more than once,
   *** then error and remove such State
-  eq testInconsistentKnowledge(B:Bool, (X:Msg !inI,X:Msg !inI,K:IntruderKnowledge) )
+  eq testInconsistentKnowledge(B:Bool, (X:IMsg !inI,X:IMsg !inI,K:IntruderKnowledge) )
    = true .
   *** If some T != T knowledge appears, then error
-  eq testInconsistentKnowledge(false, ((X:Msg != X:Msg),K:IntruderKnowledge) )
+  eq testInconsistentKnowledge(false, ((X:IMsg != X:IMsg),K:IntruderKnowledge) )
    = true .
   *** Otherwise
   eq testInconsistentKnowledge(B:Bool, K:IntruderKnowledge)
@@ -16560,10 +16560,10 @@ op testInconsistentKnowledge : IntruderKnowledge -> Bool .
   op testInconsistentStrandsK : StrandSet IntruderKnowledge -> Bool .
  ceq testInconsistentStrandsK(
       :: RL:FreshSet :: [ L1:SMsgList-L | L2:SMsgList-R ] & SS:StrandSet,
-      (X:Msg !inI,K:IntruderKnowledge)
+      (X:IMsg !inI,K:IntruderKnowledge)
      )
    = true
-  if L1:SMsgList, -(X:Msg), L1':SMsgList := toSMsgList(L1:SMsgList-L) .
+  if L1:SMsgList, -(X:IMsg), L1':SMsgList := toSMsgList(L1:SMsgList-L) .
   eq testInconsistentStrandsK(SS:StrandSet,K:IntruderKnowledge)
    = false [owise] .
 
@@ -16573,29 +16573,29 @@ op testInconsistentKnowledge : IntruderKnowledge -> Bool .
   op testBadSecretData : System -> Bool .
   eq testBadSecretData(
          SS:StrandSet
-         || (secret(X:Msg), X:Msg !inI, K:IntruderKnowledge)
+         || (secret(X:IMsg), X:IMsg !inI, K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties )
    = true .
   eq testBadSecretData(
          SS:StrandSet
-         || (secret(X:Msg), K:IntruderKnowledge)
+         || (secret(X:IMsg), K:IntruderKnowledge)
 	 || ML:SMsgList
-	 || (ghost(X:Msg,SS1:StrandSet,K1:IntruderKnowledge,ML1:SMsgList,PP1:Properties),
+	 || (ghost(X:IMsg,SS1:StrandSet,K1:IntruderKnowledge,ML1:SMsgList,PP1:Properties),
                  GL:GhostList)
          || PP:Properties )
    = true .
   eq testBadSecretData(
          SS:StrandSet
-         || (secret(X:Msg), K:IntruderKnowledge)
-	 || (ML1:SMsgList,generatedByIntruder(X:Msg),ML2:SMsgList)
+         || (secret(X:IMsg), K:IntruderKnowledge)
+	 || (ML1:SMsgList,generatedByIntruder(X:IMsg),ML2:SMsgList)
 	 || G:GhostList
          || PP:Properties )
    = true .
   eq testBadSecretData(
          SS:StrandSet
-         || (secret(X:Msg), X:Msg inI, K:IntruderKnowledge)
+         || (secret(X:IMsg), X:IMsg inI, K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties)
@@ -16603,12 +16603,12 @@ op testInconsistentKnowledge : IntruderKnowledge -> Bool .
   ceq testBadSecretData(
          :: RL:FreshSet :: [ L:SMsgList-L | L':SMsgList-R]
           & SS:StrandSet
-         || (secret(X:Msg), K:IntruderKnowledge)
+         || (secret(X:IMsg), K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP2:Properties)
    = true
-  if L1:SMsgList, -(X:Msg), L2:SMsgList := toSMsgList(L:SMsgList-L) .
+  if L1:SMsgList, -(X:IMsg), L2:SMsgList := toSMsgList(L:SMsgList-L) .
 
   eq testBadSecretData(S:System) = false [owise] .
 
@@ -16646,10 +16646,10 @@ op testInconsistentKnowledge : IntruderKnowledge -> Bool .
        )
      )
    = true
-   if L1:SMsgList$,-(X':Msg),L2:SMsgList$,+(X:Msg),L3:SMsgList$ := (toSMsgList(L:SMsgList-L),toSMsgList(L':SMsgList-R))
-   /\ is upTerm(r:Fresh) subTermOf upTerm(X:Msg)
+   if L1:SMsgList$,-(X':IMsg),L2:SMsgList$,+(X:IMsg),L3:SMsgList$ := (toSMsgList(L:SMsgList-L),toSMsgList(L':SMsgList-R))
+   /\ is upTerm(r:Fresh) subTermOf upTerm(X:IMsg)
       and-then
-      is upTerm(r:Fresh) subTermOf upTerm(X':Msg)
+      is upTerm(r:Fresh) subTermOf upTerm(X':IMsg)
       and-then
       (nil).SMsgList == only-Output(L1:SMsgList$) .
 
@@ -16657,14 +16657,14 @@ op testInconsistentKnowledge : IntruderKnowledge -> Bool .
        ( :: RL:FreshSet, r:Fresh, RL':FreshSet ::
          [ L:SMsgList-L | L':SMsgList-R ] & SS:StrandSet
          ||
-	 (X:Msg inI, K:IntruderKnowledge)
+	 (X:IMsg inI, K:IntruderKnowledge)
 	 || ML:SMsgList
 	 || G:GhostList
          || PP:Properties
        )
      )
    = true
-   if (is upTerm(r:Fresh) subTermOf upTerm(X:Msg))
+   if (is upTerm(r:Fresh) subTermOf upTerm(X:IMsg))
       and-then
       not (is upTerm(r:Fresh)
            subTermOf upTerm(only-Output(toSMsgList(L:SMsgList-L)),only-Synchro(toSMsgList(L:SMsgList-L)))) .
@@ -16684,8 +16684,8 @@ op testInconsistentKnowledge : IntruderKnowledge -> Bool .
        )
      )
    = true
-   if (L1:SMsgList, -(X:Msg), L2:SMsgList) := toSMsgList(L:SMsgList-L)
-   /\ (is upTerm(r:Fresh) subTermOf upTerm(X:Msg))
+   if (L1:SMsgList, -(X:IMsg), L2:SMsgList) := toSMsgList(L:SMsgList-L)
+   /\ (is upTerm(r:Fresh) subTermOf upTerm(X:IMsg))
       and-then
       not (is upTerm(r:Fresh)
            subTermOf
@@ -16703,8 +16703,8 @@ op testInconsistentKnowledge : IntruderKnowledge -> Bool .
          metaReduce(
            removeVariantLabel(
            onlyEqsNoBuiltInUnify(
-           putStrat(0,'+`(_`),'Msg,
-           putStrat(0,'_!inI,'Msg,
+           putStrat(0,'+`(_`),'IMsg,
+           putStrat(0,'_!inI,'IMsg,
              clearNonExecEqs(eraseRls(checkXOR(M)))
            )))),
            upTerm(S)
@@ -16724,14 +16724,14 @@ op testInconsistentKnowledge : IntruderKnowledge -> Bool .
      testEachStrand(GS,filterNotInI(K:IntruderKnowledge),SS:StrandSet) .
 
   op filterNotInI : IntruderKnowledge -> CtrSet .
-  eq filterNotInI((M:Msg !inI,K:IntruderKnowledge))
-   = (M:Msg notInI, filterNotInI(K:IntruderKnowledge)) .
+  eq filterNotInI((M:IMsg !inI,K:IntruderKnowledge))
+   = (M:IMsg notInI, filterNotInI(K:IntruderKnowledge)) .
   eq filterNotInI(K:IntruderKnowledge)
    = empty [owise] .
 
   op testIKnowledge : GrammarList CtrSet IntruderKnowledge -> Bool .
-  eq testIKnowledge(GS,Ctr:CtrSet,(M:Msg inI,K:IntruderKnowledge))
-   = {GS,Ctr:CtrSet} |- M:Msg inL *** Removed by inclusion in one grammar
+  eq testIKnowledge(GS,Ctr:CtrSet,(M:IMsg inI,K:IntruderKnowledge))
+   = {GS,Ctr:CtrSet} |- M:IMsg inL *** Removed by inclusion in one grammar
      or-else
      testIKnowledge(GS,Ctr:CtrSet,K:IntruderKnowledge) .
   eq testIKnowledge(GS,Ctr:CtrSet,K:IntruderKnowledge)
@@ -16753,11 +16753,11 @@ op testInconsistentKnowledge : IntruderKnowledge -> Bool .
   op testNegMsg : GrammarList CtrSet SMsgList -> Bool .
   eq testNegMsg(GS,Ctr:CtrSet,nil)
    = false .
-  eq testNegMsg(GS,Ctr:CtrSet,(-(M:Msg),SM:SMsgList))
-   = {GS,Ctr:CtrSet} |- M:Msg inL *** Removed by inclusion in one grammar
+  eq testNegMsg(GS,Ctr:CtrSet,(-(M:IMsg),SM:SMsgList))
+   = {GS,Ctr:CtrSet} |- M:IMsg inL *** Removed by inclusion in one grammar
      or-else
      testNegMsg(GS,Ctr:CtrSet,SM:SMsgList) .
-  eq testNegMsg(GS,Ctr:CtrSet,(+(M:Msg),SM:SMsgList))
+  eq testNegMsg(GS,Ctr:CtrSet,(+(M:IMsg),SM:SMsgList))
    = testNegMsg(GS,Ctr:CtrSet,SM:SMsgList) .
   eq testNegMsg(GS,Ctr:CtrSet,(M:Synchro,SM:SMsgList))
    = testNegMsg(GS,Ctr:CtrSet,SM:SMsgList) .
@@ -16806,7 +16806,7 @@ op testInconsistentKnowledge : IntruderKnowledge -> Bool .
    = false [owise] .
 
   op isInitial : IntruderKnowledge -> Bool .
-  eq isInitial((X:Msg inI,K:IntruderKnowledge))
+  eq isInitial((X:IMsg inI,K:IntruderKnowledge))
    = false .
   eq isInitial(K:IntruderKnowledge)
    = true [owise] .
@@ -17674,9 +17674,9 @@ fmod GENERIC-TOOLS is
 
   op changeShortSystem* : GhostList -> GhostList .
   eq changeShortSystem*(
-       ghost(M:Msg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
+       ghost(M:IMsg,SS:StrandSet,K:IntruderKnowledge,ML:SMsgList,PP:Properties),
        GL:GhostList)
-   = (ghost(M:Msg),
+   = (ghost(M:IMsg),
        changeShortSystem*(GL:GhostList)) .
   eq changeShortSystem*(nil) = nil .
 
@@ -17815,7 +17815,7 @@ fmod GENERIC-TOOLS is
   eq genAllGrammars*(none)
    = none .
   eq genAllGrammars*(((op F : TPL -> TP [AtS] .) OPDS))
-   = if typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'Msg)
+   = if typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'IMsg)
         and-then
         not typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'Public)
         and-then
@@ -17855,7 +17855,7 @@ fmod GENERIC-TOOLS is
   eq genAllGrammarsF**(F,TPL,nil)
    = none .
   eq genAllGrammarsF**(F,TPL',TP TPL)
-   = if typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'Msg)
+   = if typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'IMsg)
         and-then
         not typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'Public)
      then --- Grammar for avoiding nested intruder searchs
@@ -17869,9 +17869,9 @@ fmod GENERIC-TOOLS is
 
   op genAllGrammarsC** : Qid TypeList -> Grammar&StrategyList .
   eq genAllGrammarsC**(F,TP TP')
-   = if typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'Msg)
+   = if typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'IMsg)
         and-then
-        typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP', 'Msg)
+        typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP', 'IMsg)
         and-then
         not typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'Public)
         and-then
@@ -17895,7 +17895,7 @@ fmod GENERIC-TOOLS is
             ]
            )
           ! S1)
-   if typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'Msg)
+   if typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'IMsg)
       and-then
       not typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'Public) .
 
@@ -17909,9 +17909,9 @@ fmod GENERIC-TOOLS is
             ]
            )
           ! S1)
-   if typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'Msg)
+   if typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'IMsg)
       and-then
-      typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP', 'Msg)
+      typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP', 'IMsg)
       and-then
       not typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'Public)
       and-then
@@ -17929,9 +17929,9 @@ fmod GENERIC-TOOLS is
             ]
            )
           ! S1)
-   if typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'Msg)
+   if typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'IMsg)
       and-then
-      typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP', 'Msg)
+      typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP', 'IMsg)
       and-then
       not typeLeq(PROTOCOL-SPECIFICATION-FIX-IRREDUCIBLE, TP, 'Public)
       and-then
