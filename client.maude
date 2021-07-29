@@ -64,37 +64,50 @@ mod PARALLEL-MAUDE-NPA is
         history : HistoryIST,
         A >
         Received(O, CLIENT, DATA)
-    => if State == errIdSystemSetTuple then
-        < O : Client |
-            status : stopping,
-            m : M,
-            gs: GS,
-            filter : F,
-            nodes : Nodes,
-            sess : Sess,
-            rem : Rem?,
-            history : HistoryIST,
-            A >
-        CloseSocket(CLIENT, O)
-    else
-        < O : Client |
-            status : suspending,
-            m : M,
-            gs: GS,
-            filter : F,
-            nodes : Nodes,
-            sess : Sess,
-            rem : Rem?,
-            history : (HistoryIST' IST'), --- update history if any
-            A >
-            Send(CLIENT, O, state2string(< empty, IST', empty >))
-        --- handleJob(O, CLIENT, M, GS, F, step(State), if step(State) == 1 then Nodes else unbounded fi, Sess, Rem?, HistoryIST', IST)
-    fi
+    =>  < O : Client |
+        status : suspending,
+        m : M,
+        gs: GS,
+        filter : F,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        history : (HistoryIST' IST'), --- update history if any
+        A >
+        Send(CLIENT, O, state2string(< empty, IST', empty >))
+    --- handleJob(O, CLIENT, M, GS, F, step(State), if step(State) == 1 then Nodes else unbounded fi, Sess, Rem?, HistoryIST', IST)
     if State := string2state(DATA)
+    /\ State =/= errIdSystemSetTuple
     /\ IST := jobs(State)
     /\ HistoryIST' := (HistoryIST IST)
     /\ IST' := filterStateWithHistory(M, HistoryIST, nextBackNarrowParallel(M, GS, F, Nodes, IST))
     [print "[Received] & [HandleJob]"] .
+
+    crl [ReceivedError] : < O : Client |
+        status : waiting,
+        m : M,
+        gs: GS,
+        filter : F,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        history : HistoryIST,
+        A >
+        Received(O, CLIENT, DATA)
+    => < O : Client |
+        status : stopping,
+        m : M,
+        gs: GS,
+        filter : F,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        history : HistoryIST,
+        A >
+        CloseSocket(CLIENT, O)
+    if State := string2state(DATA)
+    /\ State == errIdSystemSetTuple
+    [print "[ReceivedError] errIdSystemSetTuple"] .
 
     --- op handleJob : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
     ---                 IdSystemSet IdSystemSet -> Configuration .

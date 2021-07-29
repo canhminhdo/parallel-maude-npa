@@ -153,6 +153,7 @@ mod PARALLEL-CONFIG is
     op socket :_ : Oid -> Attribute .
     op waitingWorkers :_ : Queue{Worker} -> Attribute [ctor format(! o o o)] .
     op workers :_ : Set{Worker} -> Attribute [ctor format(! o o o)] .
+    op #workers :_ : Nat -> Attribute .
     op attack :_ : Nat -> Attribute .
 
     op StopWorking : Oid Oid -> Msg [ctor msg format (b o)] .

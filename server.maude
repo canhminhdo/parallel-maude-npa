@@ -30,7 +30,7 @@ mod PARALLEL-MAUDE-NPA is
         A >
         CreatedSocket(O, socketManager, LISTENER)
     => < O : Server |
-        status : initialized,
+        status : initializing,
         attack : N,
         bStep : BStep,
         listener : LISTENER,
@@ -42,12 +42,14 @@ mod PARALLEL-MAUDE-NPA is
         [print "[CreatedSocket]"] .
 
     crl [Initialize] : < O : Server |
-        status : initialized,
+        status : initializing,
+        bStep : BStep,
         step : Step,
         A >
         Initialize(O, O', M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST)
     => < O : Server |
-        status : working,
+        status : initialized,
+        bStep : BStep,
         step : Step,
         m : M,
         gs: GS,
@@ -61,7 +63,8 @@ mod PARALLEL-MAUDE-NPA is
         init : empty,
         depth : 0,
         A >
-    if IST' := nextBackNarrowParallel(M, GS, F, Nodes, IST) --- run fist job in master
+    if BStep =/= 0
+    /\ IST' := nextBackNarrowParallel(M, GS, F, Nodes, IST) --- run fist job in master
     [print "[Initialize]"] .
 
     rl [AcceptedClient] : < O : Server |
@@ -74,6 +77,19 @@ mod PARALLEL-MAUDE-NPA is
         Receive(CLIENT, O)
         AcceptClient(LISTENER, O) [print "[AcceptedClient]"] .
 
+    crl [Ready] : < O : Server |
+        status : initialized,
+        workers : SW,
+        #workers : N,
+        A >
+    => < O : Server |
+        status : working,
+        workers : SW,
+        #workers : N,
+        A >
+    if | SW | == N
+    [print "[Ready]"] .
+
     crl [GetJob] : < O : Server |
         waitingWorkers : W,
         A >
@@ -84,6 +100,7 @@ mod PARALLEL-MAUDE-NPA is
     if DATA == getJob [print "[GetJob]"] .
 
     rl [SendJob] : < O : Server |
+        status : working,
         jobs : (IS IST),
         waitingWorkers : (CLIENT | W),
         bStep : BStep,
@@ -92,12 +109,13 @@ mod PARALLEL-MAUDE-NPA is
         history : HistoryIST,
         A >
     => < O : Server |
+        status : working,
         jobs : IST,
         waitingWorkers : W,
         bStep : BStep,
         step : Step,
         depth : D,
-        history : (HistoryIST IS),
+        history : HistoryIST,
         A >
         Send(CLIENT, O, state2string(< empty, IS, empty, Step >))
         [print "[SendJob]"] .
@@ -146,7 +164,7 @@ mod PARALLEL-MAUDE-NPA is
         jobs : IST'',
         next : empty,
         init : (INIT INIT'),
-        history : HistoryIST,
+        history : (HistoryIST IST''),
         depth : D',
         A >
     if qsize(W) == | SW |
@@ -258,5 +276,5 @@ endm
 load examples/Needham_Schroeder.maude
 select PARALLEL-MAUDE-NPA .
 load debug.maude
-erew <> < aServer : Server | status : idle, attack : 0, bStep : unbounded, step : 1 >
+erew <> < aServer : Server | status : idle, attack : 0, bStep : unbounded, step : 1, #workers : 1 >
         CreateServerTcpSocket(socketManager, aServer, 9000, 10) .
