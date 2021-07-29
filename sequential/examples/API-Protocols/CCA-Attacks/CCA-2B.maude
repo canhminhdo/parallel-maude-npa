@@ -1,0 +1,236 @@
+***(
+The last big modification into the specification of the protocol is that we fixed the mistake with message encryption. The right definition is that the term {|m}| k represents the message m encrypted with the key k, not vice versa as we understood the first time when we did the specification.
+
+We did a complete redefinition of the sorts and operators in this new version. See the section related for see it in details.
+
+
+CCA-2B
+IBM 4758 CCA API
+
+We use Alice as a Host and Bob as a HSM
+
+And exclusive or has the following algebraic properties:
+
+  X * X = 0 .
+  X * X * Y = Y .
+  X * 0 = X .
+)***
+
+fmod PROTOCOL-EXAMPLE-SYMBOLS is
+  --- Importing sorts Msg, Fresh, Public, and GhostData
+  protecting DEFINITION-PROTOCOL-RULES .
+  
+  ----------------------------------------------------------
+  --- Overwrite this module with the syntax of your protocol
+  --- Notes:
+  --- * Sort Msg and Fresh are special and imported
+  --- * Every sort must be a subsort of Msg
+  --- * No sort can be a supersort of Msg
+  ----------------------------------------------------------
+
+  --- Sort Information 
+
+sorts Name Nonce Key Null Tipo KPdk KData KPin KExp KImp KKek KMaster KKP EKey .
+  subsort Name Nonce Key  < Msg .
+  subsort KData KPin KExp KImp  < Tipo .
+  subsort KMaster Tipo KKek KKP KPdk < EKey < Key .
+  subsort Null < KData .
+  subsort Name < Public .
+  subsort Null Tipo < Public .
+  subsort Null < Key . 
+
+
+***((CCA) API supports various key types: (tacas07, page 3)
+	- data keys, 
+	- key encryption keys, 
+	- import keys and 
+	- export keys. 
+
+So, if they are a different key types, we separately defined.
+
+KM denotes a constant (the key master stored in the cryptographic coprocessor) (JAR2011, page 19). So, if it's a constant, we declare it as an operator
+
+KP is a type (a constant) which stands for “key part”. Also we have KP12 and KP3 as a partial keys
+
+We know that Kek = Km1*Km2*Km3 (JAR2011, page 19)
+ 
+Also we know that Data keys can be used to encrypt arbitrary messages, so-called ‘PIN Derivation Keys’ PDKs. (tacas07, page 3)
+
+A customer’s PIN is just his account number encrypted under a PIN derivation key. (tacas07, page 3)
+
+We define as a different type also because for in Bond’s attack, the intruder uses API commands to change the type of a key, exploiting the algebraic properties of XOR. This allows a PIN derivation key to be converted into a data key, which can then be used to encrypt data. Hence the attack allows a criminal to generate a PIN for any account number. So if the intruder may change the key type, then they should exist different key types.(tacas07, page 3).
+
+PAN is a customer’s account number PAN. So, this number is a constant, we declare it as an operator
+
+)***
+
+  op DATA : -> KData .
+  op PIN  : -> KPin .
+  op EXP  : -> KExp .
+  op IMP  : -> KImp .
+  op KP   : -> KKP .
+---  op  KEK : -> KKek . 
+  ops  Km1 Km2 Km3 : -> KKek . 
+  ops Pdk1 Pdk2 Pdk3 : -> KPdk .
+  op PDK : -> KPdk .
+  op KM : -> KMaster .
+  op PAN : -> Msg .
+
+---encrypt
+  op e : Key Msg -> Msg [frozen] .
+  op d : Key Msg -> Msg [frozen] .
+
+
+  --- Encoding operators for public/private encryption
+  --- op pk : Name Msg -> Msg [frozen] .
+  --- op sk : Name Msg -> Msg [frozen] .
+
+  --- Encoding operator for encryption
+  --- op pkey : Msg -> Key [frozen] .
+
+  --- Concatenation operator
+  --- op _;_ : Msg Msg -> Msg [gather (e E) frozen] .
+
+  --- Nonce operator
+  op n : Name Fresh -> Nonce [frozen] .
+  
+  --- Principals
+  op a : -> Name . --- Alice
+  op b : -> Name . --- Bob
+  op i : -> Name . --- Intruder
+
+  
+ --- Exclusive or. We need two XOR operators.
+  op _*_ : Msg Msg -> Msg [assoc comm frozen] .
+  op _*_ : Key Key -> Key [ditto] .
+  op null : -> Null . 
+
+***(
+  subsort Name Nonce Key  < Msg .
+  subsort KData KPin KExp KImp  < Tipo .
+  subsort KMaster Tipo KKek KKP KPdk < EKey < Key .
+)***
+
+
+endfm
+
+fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  
+  ----------------------------------------------------------
+  --- Overwrite this module with the algebraic properties 
+  --- of your protocol
+  ----------------------------------------------------------
+
+ vars XN YN : Msg .
+  
+   eq d(K:Key, e(K:Key, Z:Msg)) = Z:Msg [variant] .
+   eq e(K:Key, d(K:Key, Z:Msg)) = Z:Msg [variant] .
+  
+
+    *** Exclusive or properties
+  eq null * XN = XN [variant] .
+  eq XN * XN = null [variant] .
+  eq XN * XN * YN = YN [variant] .
+
+  eq DATA * XN = XN [variant] .
+  eq DATA = null [variant] .
+
+
+endfm
+
+fmod PROTOCOL-SPECIFICATION is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  protecting DEFINITION-PROTOCOL-RULES .
+  protecting DEFINITION-CONSTRAINTS-INPUT .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the strands 
+  --- of your protocol
+  ----------------------------------------------------------
+***(
+ T denotes the type of the key, modeled as a constant. 
+)***
+  vars X Y Z : Msg .
+  vars r r' : Fresh .
+  vars A B C : Name .
+  vars XN YN : Msg .
+  var K : Key .
+  var T : Tipo .
+  var kek : Key .
+  var ekek eK : EKey . 
+  var  km1 km2 km3 : Key . --- KEK = Km1 * Km2 * Km3 (se genera en las tres fases Key Part Import
+
+  eq STRANDS-DOLEVYAO
+   = :: nil :: [ nil | -(XN), -(YN), +(XN * YN), nil ] &
+     :: nil :: [ nil | -(X), -(K), +(e(K,X)), nil ] & 
+     :: nil :: [ nil | -(X), -(K), +(d(K,X)), nil ] & 
+     :: nil :: [nil, +(Km3) | nil]   &
+     :: nil :: [nil, +(PIN) | nil] &
+     :: nil :: [nil, +(IMP) | nil] &
+     :: nil :: [nil, +(EXP) | nil] &
+     :: nil :: [nil, +(null) | nil] &
+     :: nil :: [nil, +(e(KM * KP * IMP, Km1 * Km2)) | nil] &
+     :: nil :: [nil, +(e(Km1 * Km2 * Km3 * PIN, PDK)) | nil] 
+---     :: nil :: [nil, +(e(IMP * KM, PIN * Km1 * Km2 * Km3))| nil] & --- Pequeña "ayuda" para ver si encuentra la solución
+---     :: nil :: [nil, +(e(IMP * KM, PIN * EXP * Km1 * Km2 * Km3)) | nil] --- Pequeña "ayuda" para ver si encuentra la solución
+  [nonexec] .
+
+  eq STRANDS-PROTOCOL
+***Strands for the transaction 
+  = :: nil :: ***Encryption with data key
+    [nil | -(X) , 
+           -(e(KM * DATA, eK)), 
+           +(e(eK, X)), nil]
+    &
+   :: nil :: ***Decryption with data key
+    [nil |  -(e(eK, X)),
+	        -(e(KM * DATA, eK)), 
+	        +(X), nil]
+    &
+   :: nil :: ***Key Import
+    [nil | -(e(kek * T, eK)), 
+	       -(T),
+	       -(e(KM * IMP, kek)), 
+           +(e(KM * T, eK)), nil] 
+    &
+    :: nil :: ***Key Export 
+    [nil |  -(e(KM * T, eK)),
+            -(T),
+	        -(e(KM * EXP, ekek)),  
+	        +(e(ekek * T, eK)), nil] 
+    &
+        :: nil :: ***Key Part Import First 
+   				 [nil | -(km1),
+					    -(T),
+					    +(e(KM * KP * T, km1)), nil] 
+    [nonexec] .
+
+
+
+
+
+eq ATTACK-STATE(0)
+   = empty
+     || e(PDK, PDK) inI
+     || nil
+     || nil
+     || never(
+     (#0:StrandSet || #1:IntruderKnowledge, PDK inI)
+	 (#0:StrandSet || #1:IntruderKnowledge, e(#2:Key, KM * #3:Msg) inI)
+	 (#0:StrandSet || #1:IntruderKnowledge, e(IMP * KM, #4:Tipo * #5:EKey) inI) 
+	 (#0:StrandSet || #1:IntruderKnowledge, (Km1 * #3:Msg) inI)
+	 (#0:StrandSet || #1:IntruderKnowledge, (Km2 * #3:Msg) inI) 
+	 (#0:StrandSet || #1:IntruderKnowledge, (PDK * #3:Msg) inI)
+ 	 (#0:StrandSet || #1:IntruderKnowledge, (KM * #3:Msg) inI)
+	 (#0:StrandSet || #1:IntruderKnowledge, (#6:Msg * e(#2:Key, #3:Msg)) inI)
+)
+
+[nonexec] .
+
+
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .
+

@@ -1,0 +1,250 @@
+fmod PROTOCOL-EXAMPLE-SYMBOLS is
+
+protecting DEFINITION-PROTOCOL-RULES .
+  
+ 
+  --- Sort Information 
+  sorts  Name Key   Nonce   Handle     Skey  PubKey PrivKey Akey .
+  subsort Name  Key Nonce Handle      < Msg . 
+  subsort Name < Public .
+  subsort Skey Akey < Key .
+  subsort PubKey PrivKey  < Akey .
+  
+  
+  --- Handle operator
+  op h(_,_) : Nonce Key -> Handle [frozen] .
+
+  --- Symmetric Encoding
+  op senc : Skey Skey -> Msg [frozen] .
+  
+  --- Nonce operator
+  op n : Name Fresh -> Nonce [frozen] .
+  
+  --- Concatenation operator
+  op _;_ : Msg  Msg  -> Msg [ assoc comm frozen ] .  
+
+  --- Symmetric Key operator
+  op sKey :  Name Fresh -> Skey [frozen] .
+   
+
+
+ --- Principals
+  op i : -> Name . --- Intruder
+  op a : -> Name .
+  
+ endfm
+
+fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  
+  ----------------------------------------------------------
+  --- Overwrite this module with the algebraic properties 
+  --- of your protocol
+  ----------------------------------------------------------
+  
+ 
+  
+endfm 
+
+
+
+fmod PROTOCOL-SPECIFICATION is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  protecting DEFINITION-PROTOCOL-RULES .
+  protecting DEFINITION-CONSTRAINTS-INPUT .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the strands 
+  --- of your protocol
+  ----------------------------------------------------------
+  
+  vars r r' r'' r# r1 r1' r2 r2' r3 r4 r6 : Fresh .
+  vars A B C A1 A2 S1 : Name .
+  vars NA NB N N' N'' : Nonce .
+  vars X Y H M M1 M2 M3 M4 : Msg .
+  vars P Q : Name .
+  vars SK SK' : Skey .
+  vars K1 K2 K3 K4 K5 K6 K7 K8 SK1 SK2 SK3 SK4  : Skey .  
+  var  N1 N2 N3 N4 N5 : Nonce .
+  vars Ro Ro' Ro1 Ro1' Ro2 Ro2'  : Role .
+  var Val : Bool .
+  
+  --- TO SOLVE: include or remove concatenation strands? 
+  eq STRANDS-DOLEVYAO
+   = :: nil :: [ nil | +(A) , nil ] & 
+     :: r :: [ nil | +(n(i,r)), nil ]  &
+     :: nil :: [ nil | -(SK1), -(SK2), +(senc(SK1,SK2)), nil ] &    
+	 :: nil :: [ nil | -(senc(SK1,SK2)), -(SK2), +(SK1), nil ] &     
+     :: r :: [ nil | +(sKey(i,r)), nil ]  
+  [nonexec] . 
+  
+  
+  eq STRANDS-PROTOCOL
+   =  
+	    :: r1, r1', r2, r2' :: --- Initial operator 
+        [ nil | +(h(n(A,r1), sKey(A,r1'))), 
+	           +(h(n(A,r2), sKey(A,r2'))), nil] &
+	   
+	    :: nil ::  --- Wrap (sym/sym)  + setWrap
+        [nil | -(h(N, SK)), -(h(N', SK')), 
+			   +(senc(SK', SK)), nil]  &
+ 	    :: nil ::  --- SDecrypt + setDecrypt
+        [ nil | -(h(N,SK')), -(senc(SK,SK')), +(SK), nil] &
+				
+		:: r :: --- Unwrap (sym/sym) + setUnwrap
+        [nil | -(h(N,SK)), -(senc(SK',SK)), +(h(n(A,r),SK')), nil] &
+					   
+        :: nil :: --- Sencrypt + setEncrypt
+        [ nil |  -(h(N,SK)), -(SK'),  +(senc(SK',SK)), nil]  
+[nonexec] . 
+ 
+ 
+	 
+	 
+	 eq ATTACK-STATE(0)
+     =   :: r1, r1', r2, r2' :: --- Initial operator 
+       [ nil , +(h(n(A,r1), sKey(A,r1'))), 
+	           +(h(n(A,r2), sKey(A,r2'))) | nil]  
+     || sKey(a,r1') inI 
+     || nil
+     || nil
+     || never(
+	    ( SS1:StrandSet &
+		:: R1:FreshSet :: --- Initial operator 
+        [ nil | +(H1a:Handle), +(H1b:Handle), nil] &
+		:: R1':FreshSet :: --- Initial operator 
+        [ nil | +(H1a':Handle), +(H1b':Handle), nil]
+		|| IK1:IntruderKnowledge
+		)
+		
+		( SS2:StrandSet &
+		:: R2:FreshSet :: --- Initial operator 
+        [ nil | +(H2a:Handle), +(H2b:Handle), nil] &
+		:: R12':FreshSet :: --- Initial operator 
+        [ nil | +(H2a':Handle), nil]
+		|| IK2:IntruderKnowledge
+		)
+	  ) 
+	 [nonexec] .
+	 
+	 
+*************** RESULTS	 ***************
+**** 2 initial states in Level 5 with MAUDE-NPA July 21st
+***(
+ reduce in MAUDE-NPA : summary(0, 5) .
+rewrites: 515390685 in 361358ms cpu (361356ms real) (1426258 rewrites/second)
+result Summary: States>> 116 Solutions>> 2
+==========================================
+reduce in MAUDE-NPA : initials(0,5) .
+rewrites: 1295 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 1 . 3{1} . 1{1} . 2 > (
+:: nil ::
+[ nil | 
+   -(h(n(a, #0:Fresh),sKey(a, #3:Fresh))), 
+   -(h(n(a, #0:Fresh),sKey(a, #3:Fresh))), 
+   +(senc(sKey(a, #3:Fresh), sKey(a, #3:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(n(a, #0:Fresh),sKey(a, #3:Fresh))), 
+   -(senc(sKey(a, #3:Fresh), sKey(a, #3:Fresh))), 
+   +(sKey(a, #3:Fresh)), nil]  & 
+:: #1:Fresh,#2:Fresh,#3:Fresh,#0:Fresh ::
+[ nil | 
+   +(h(n(a, #0:Fresh),sKey(a, #3:Fresh))), 
+   +(h(n(a, #1:Fresh),sKey(a, #2:Fresh))), nil] )
+|| 
+h(n(a, #0:Fresh),sKey(a, #3:Fresh)) !inI,
+senc(sKey(a, #3:Fresh), sKey(a, #3:Fresh)) !inI,
+sKey(a, #3:Fresh) !inI
+|| 
++(h(n(a, #0:Fresh),sKey(a, #3:Fresh))), 
++(h(n(a, #1:Fresh),sKey(a, #2:Fresh))), 
+-(h(n(a, #0:Fresh),sKey(a, #3:Fresh))), 
+-(h(n(a, #0:Fresh),sKey(a, #3:Fresh))), 
++(senc(sKey(a, #3:Fresh), sKey(a, #3:Fresh))), 
+-(h(n(a, #0:Fresh),sKey(a, #3:Fresh))), 
+-(senc(sKey(a, #3:Fresh), sKey(a, #3:Fresh))), 
++(sKey(a, #3:Fresh))
+|| 
+nil
+|| never(((#4:StrandSet & 
+:: #5:FreshSet ::
+[ nil | 
+   +(#6:Handle), 
+   +(#7:Handle), nil]  & 
+:: #8:FreshSet ::
+[ nil | 
+   +(#9:Handle), nil] ) || #10:IntruderKnowledge)
+(#11:StrandSet & 
+:: #12:FreshSet ::
+[ nil | 
+   +(#13:Handle), 
+   +(#14:Handle), nil]  & 
+:: #15:FreshSet ::
+[ nil | 
+   +(#16:Handle), 
+   +(#17:Handle), nil] ) || #18:IntruderKnowledge))
+< 1 . 1 . 3{3} . 2 . 1 > (
+:: nil ::
+[ nil | 
+   -(h(n(a, #1:Fresh),sKey(a, #2:Fresh))), 
+   -(h(n(a, #0:Fresh),sKey(a, #3:Fresh))), 
+   +(senc(sKey(a, #3:Fresh), sKey(a, #2:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(n(a, #1:Fresh),sKey(a, #2:Fresh))), 
+   -(senc(sKey(a, #3:Fresh), sKey(a, #2:Fresh))), 
+   +(sKey(a, #3:Fresh)), nil]  & 
+:: #1:Fresh,#2:Fresh,#3:Fresh,#0:Fresh ::
+[ nil | 
+   +(h(n(a, #0:Fresh),sKey(a, #3:Fresh))), 
+   +(h(n(a, #1:Fresh),sKey(a, #2:Fresh))), nil] )
+|| 
+h(n(a, #1:Fresh),sKey(a, #2:Fresh)) !inI,
+h(n(a, #0:Fresh),sKey(a, #3:Fresh)) !inI,
+senc(sKey(a, #3:Fresh), sKey(a, #2:Fresh)) !inI,
+sKey(a, #3:Fresh) !inI,
+h(n(a, #1:Fresh),sKey(a, #2:Fresh)) != h(n(a, #0:Fresh),sKey(a, #3:Fresh))
+|| 
++(h(n(a, #0:Fresh),sKey(a, #3:Fresh))), 
++(h(n(a, #1:Fresh),sKey(a, #2:Fresh))), 
+-(h(n(a, #1:Fresh),sKey(a, #2:Fresh))), 
+-(h(n(a, #0:Fresh),sKey(a, #3:Fresh))), 
++(senc(sKey(a, #3:Fresh), sKey(a, #2:Fresh))), 
+-(h(n(a, #1:Fresh),sKey(a, #2:Fresh))), 
+-(senc(sKey(a, #3:Fresh), sKey(a, #2:Fresh))), 
++(sKey(a, #3:Fresh))
+|| 
+nil
+|| never(((#4:StrandSet & 
+:: #5:FreshSet ::
+[ nil | 
+   +(#6:Handle), 
+   +(#7:Handle), nil]  & 
+:: #8:FreshSet ::
+[ nil | 
+   +(#9:Handle), nil] ) || #10:IntruderKnowledge)
+(#11:StrandSet & 
+:: #12:FreshSet ::
+[ nil | 
+   +(#13:Handle), 
+   +(#14:Handle), nil]  & 
+:: #15:FreshSet ::
+[ nil | 
+   +(#16:Handle), 
+   +(#17:Handle), nil] ) || #18:IntruderKnowledge)
+ 
+)
+	 
+	 
+ 
+	 
+	 
+	 
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA . 
+   
+  
+  

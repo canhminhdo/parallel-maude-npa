@@ -1,0 +1,262 @@
+***(
+Famous Rock-paper-scissors game
+* Rock beats scissors
+* Scissors beats paper
+* Paper beats rock
+
+1. A->B: pk(B,sign(A,commit(NA,XA)))
+2. B->A: pk(A,sign(B,commitp(NB,XB)))
+3. A->B: pk(B,sign(A,NA))
+4. B->A: pk(A,sign(B,NB))
+5. if (XA beats XB) then R=Win
+   else if (XB beats XA) then R=Lose
+        else if (XB = XA) then R=Tie else nilP
+6. A->B: pk(B,sign(A,NA;NB;R))
+7. if (R = Win & XA beats XB)
+   or (R = Lose & XB beats XA)
+   or (R = Tie & XA = XB)
+   then B->A: pk(A,sign(B,NA;NB; finished))
+   else B->A: pk(A,sign(B,NA;NB; cheater))
+)***
+
+fmod PROTOCOL-EXAMPLE-SYMBOLS is
+  protecting DEFINITION-PROTOCOL-RULES . --- Importing sort IMsg, Fresh, Public
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the syntax of your protocol
+  --- Notes:
+  --- * Sort IMsg and Fresh are special and imported
+  --- * Every sort must be a subsort of IMsg
+  --- * No sort can be a supersort of IMsg
+  ----------------------------------------------------------
+
+  --- Sort Information
+  sorts Name Nonce Item Result OK ComMsg Status .
+  subsorts Name Nonce Result OK ComMsg Item < IMsg .
+  subsorts Name Result Item Status < Public .
+
+
+  ops finished cheater :-> Status .
+  ops rock scissors paper : -> Item .
+  ops win lose tie : -> Result .
+
+
+  op ok : -> OK .
+
+  op _beats_ : IMsg IMsg -> OK   [frozen] .
+  op _beats_ : Item Item -> OK [frozen] .
+
+--- Names known by intruder
+  op a : -> Name . --- Name for the Initiator
+  op b : -> Name . --- Name for the Responder
+  op i : -> Name . --- Name for the Intruder
+
+  --- Nonce operator
+  op n : Name Fresh -> Nonce [frozen] .
+
+  --- Associativity operator
+  op _;_ : IMsg  IMsg  -> IMsg [gather (e E) frozen] .
+
+  --- Encryption
+  op sk : Name IMsg -> IMsg [frozen] .
+  op pk : Name IMsg -> IMsg [frozen] .
+
+  op com :  Nonce  Item   -> ComMsg            [frozen] .
+  op open : Nonce ComMsg  -> IMsg               [frozen] .
+
+  op sig : Name IMsg -> IMsg      [frozen] .
+
+  op item?_ :  IMsg -> OK [frozen].
+
+endfm
+
+fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the algebraic properties
+  --- of your protocol
+  ----------------------------------------------------------
+
+  var Z : IMsg .
+  var A : Name .
+  var N : Nonce .
+  var H : Item .
+
+  *** Encryption/Decryption Cancellation
+  eq pk(A,sk(A,Z)) = Z [variant] .
+  eq sk(A,pk(A,Z)) = Z [variant] .
+
+  eq open(N, com(N,H)) = H      [variant] .
+
+  eq item? H = ok [variant] .
+
+  *** Beats
+  eq rock beats scissors = ok  [variant] .
+  eq scissors beats paper = ok [variant] .
+  eq paper beats rock = ok     [variant] .
+
+endfm
+
+fmod PROTOCOL-SPECIFICATION is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  protecting DEFINITION-PROTOCOL-RULES .
+  protecting DEFINITION-CONSTRAINTS-INPUT .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the strands
+  --- of your protocol
+  ----------------------------------------------------------
+
+  vars X Y Z : IMsg .
+  var r r' : Fresh .
+  vars NA NB N : Nonce .
+  vars XA XB : Item .
+  var ComXA ComXB : ComMsg  .
+  var A B : Name .
+  var R R' R1 R2 : Result .
+  var S : Status .
+
+  eq STRANDS-DOLEVYAO
+   =
+     :: nil :: [ nil | -(X), -(Y), +(X ; Y), nil ] &
+     :: nil :: [ nil | -(X ; Y), +(X), nil ]      &
+     :: nil :: [ nil | -(X ; Y), +(Y), nil ]      &
+     :: nil :: [ nil | -(X), +(sig(i, X)), nil] &
+     :: nil :: [ nil | -(X), +(sk(i,X)), nil ]      &
+     :: nil :: [ nil | -(X), +(pk(A,X)), nil ]      &
+     :: nil :: [ nil | -(N), -(ComXA), +(open(N, ComXA)), nil] &
+     :: nil :: [ nil | -(N), -(XA), +(com(N, XA)), nil] &
+     :: r   :: [ nil | +(n(i, r)), nil] &
+     :: nil :: [ nil | +(A), nil] &
+     :: nil :: [ nil | +(R), nil] &
+     :: nil :: [ nil | +(XA), nil]
+     [nonexec] .
+
+  eq PROCESSES-PROTOCOL =
+  (
+   +(pk(B:Name, sig(A:Name, com(n(A:Name, r:Fresh), XA:Item)))) .
+   -(pk(A:Name, sig(B:Name, ComXB:ComMsg))) .
+   +(pk(B:Name, sig(A:Name, n(A:Name, r:Fresh)))) .
+   -(pk(A:Name, sig(B:Name, NB:Nonce))) .
+   (if ((item? open(NB:Nonce, ComXB:ComMsg)) eq ok)
+    then if ((XA:Item beats open(NB:Nonce, ComXB:ComMsg)) eq ok)
+         then (R eq win)
+         else if (((open(NB:Nonce, ComXB:ComMsg)) beats Xa:Item) eq ok)
+              then (R eq lose)
+              else if (XA:Item eq open(NB:Nonce, ComXB:ComMsg))
+                   then (R eq tie)
+                   else nilP
+    else nilP) .
+    +(pk(B:Name, sig(A:Name, n(A:Name, r:Fresh) ; NB:Nonce ; R))) .
+    -(pk(A:Name, sig(B:Name, n(A:Name, r:Fresh) ; NB:Nonce ; R')))
+   )
+   &
+  (
+   -(pk(B:Name, sig(A:Name, ComXA:ComMsg))) .
+   +(pk(A:Name, sig(B:Name, com(n(B:Name, r:Fresh), XB:Item)))) .
+   -(pk(A:Name, sig(B:Name, NA:Nonce))) .
+   +(pk(B:Name, sig(A:Name, n(B:Name, r:Fresh)))) .
+   -(pk(B:Name, sig(A:Name, NA:Nonce ; n(B:Name, r:Fresh) ; R))) .
+   (if (R eq win)
+    then (if ((open(NA:Nonce, ComXA:ComMsg) beats XB:Item) eq ok)
+          then (R' eq finished)
+          else (R' eq cheater))
+    else if (R eq lose)
+         then (if ((XB:Item beats open(NA:Nonce, ComXA:ComMsg)) eq ok)
+               then (R' eq finished)
+               else (R' eq cheater))
+         else if (R eq tie)
+               then (if (XB:Item eq open(NA:Nonce, ComXA:ComMsg))
+                     then (R' eq finished)
+                     else (R' eq cheater))
+               else nilP ) .
+    +(pk(A:Name, sig(B:Name, NA:Nonce ; n(B:Name, r:Fresh) ;  R')))
+    )
+     [nonexec] .
+
+
+---Regular Execution.
+
+eq ATTACK-PROCESS(0) =
+  (
+   +(pk(b, sig(a, com(n(a, r:Fresh), XA:Item)))) .
+   -(pk(a, sig(b, com(n(b, r':Fresh), XB:Item)))) .
+   +(pk(b, sig(a, n(a, r:Fresh)))) .
+   -(pk(a, sig(b, n(b, r':Fresh)))) .
+   ((XA:Item beats XB:Item) eq ok) .
+    +(pk(b, sig(a, n(a, r:Fresh) ; n(b, r':Fresh) ; win))) .
+    -(pk(a, sig(b, n(a, r:Fresh) ; n(b, r:Fresh) ; finished)))
+   )
+   &
+  (
+   -(pk(b, sig(a, com(n(a, r:Fresh), XA:Item)))) .
+   +(pk(a, sig(b, com(n(b, r':Fresh), XB:Item)))) .
+   -(pk(a, sig(b, n(a, r:Fresh)))) .
+   +(pk(b, sig(a, n(b, r':Fresh)))) .
+   -(pk(b, sig(a, n(a, r:Fresh) ; n(b, r':Fresh) ; win))) .
+   ((XA:Item beats XB:Item) eq ok) .
+    +(pk(a, sig(b, n(a, r:Fresh) ; n(b, r':Fresh) ;  finished)))
+    )
+   || empty
+   || nil
+[nonexec] .
+
+eq ATTACK-PROCESS(1) =
+   -(pk(b, sig(i, ComXA:ComMsg))) .
+   +(pk(i, sig(b, com(n(b, r':Fresh), XB:Item)))) .
+   -(pk(a, sig(i, NA:Nonce)))
+   ||  n(b, r:Fresh) inI
+   || nil
+[nonexec] .
+
+eq ATTACK-PROCESS(2) =
+  (
+   -(pk(b, sig(a, ComXA:ComMsg))) .
+   +(pk(a, sig(b, com(n(b, r':Fresh), XB:Item)))) .
+   -(pk(a, sig(b, NA:Nonce))) .
+   +(pk(b, sig(a, n(b, r':Fresh)))) .
+   -(pk(b, sig(a, NA:Nonce ; n(b, r':Fresh) ; R))) .
+   (R eq win) .
+   ((open(NA:Nonce, ComXA:ComMsg) beats XB:Item) eq ok) .
+   (R' eq finished) .
+    +(pk(a, sig(b, NA:Nonce ; n(b, r':Fresh) ;  R')))
+    )
+   || empty
+   || never(
+   +(pk(b, sig(a, ComXA:ComMsg))) .
+   -(pk(a, sig(b, com(n(b, r':Fresh), XB:Item)))) .
+   +(pk(a, sig(b, NA:Nonce))) .
+   -(pk(b, sig(a, n(b, r':Fresh)))) .
+   (ok eq ok) .
+   (ok eq ok) .
+   (win eq win) .
+   +(pk(b, sig(a, NA:Nonce ; n(b, r':Fresh) ; win))) .
+   -(pk(a, sig(b, NA:Nonce ; n(b, r':Fresh) ; finished)))
+   || empty )
+[nonexec] .
+
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .
+
+--- red genGrammars .
+--- red summary(0,0) .
+--- red summary(0,1) .
+--- red summary(0,2) .
+--- red summary(0,3) .
+--- red summary(0,4) .
+--- red summary(0,5) .
+--- red summary(0,6) .
+--- red summary(0,7) .
+--- red summary(0,8) .
+--- red summary(0,9) .
+--- red initials(0,9) .
+
+--- red summary(1,0) .
+--- red summary(1,1) .
+
+--- red summary(2,0) .
+--- red summary(2,1) .
+--- red summary(2,2) .

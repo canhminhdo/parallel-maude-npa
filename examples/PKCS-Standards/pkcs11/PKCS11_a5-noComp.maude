@@ -1,0 +1,921 @@
+***(
+ There are three conflicting attributes constraints:
+			- Wrap/Decrypt
+			- Unwrap/Encrypt
+			- Wrap/Unwrap
+
+Since this protocol version involves asymmetric and symmetric encryption we
+must consider all the possible combinations, and, thus, will have several never patterns.
+However, note that in this protocol version we have commented out the strands for Wrap(sym-asym) and
+Unwrap (sym-sym) because they are not necessary to find the attack, and thus, we can reduce
+the state search space.
+
+The conflicting attributes constraints we consider are as follows:
+
+Considering the Wrap(sym-sym), Wrap(sym-asym), Unwrap(sym-sym) and Unwrap(sym-asym)
+commands we have the following conflicting attributes constraints. However, we need
+to specify only some of them (more specifically, the ones beginning with only one "-")
+
+
+***  Possible combinations for Conflicting attributes pair Wrap/Decrypt
+- Wrap (sym/sym) / SDecrypt
+--- Wrap (sym/sym)/ADecrypt: NO tiene sentido (distinto tipo de claves)
+
+--- Wrap (sym/asym) / SDecrypt: NO tiene sentido (distinto tipo de claves)
+-- Wrap (sym/asym)/ADecrypt: no hace falta, porque el comando Wrap(sym/asym) se ha comentado
+
+
+***  Possible combinations for Conflicting attributes pair Unwrap/Encrypt
+-- Unwrap (sym/sym)/SEncrypt: no hace falta, porque  el comando unwrap(sym/sym) se ha comentado
+--- Unwrap(sym/sym)/AEncrypt: NO tiene sentido (distinto tipo de claves)
+
+--- Unwrap (sym/asym) /SEncrypt: NO tiene sentido (distinto tipo de claves)
+- Unwrap (sym/asym) /AEncrypt (*)
+
+***  Possible combinations for Conflicting attributes pair
+-- Wrap (sym/sym) / Unwrap (sym/sym): no hace falta, porque  el comando Unwrap(sym/sym) se ha comentado
+--- Wrap(sym/sym) / Unwrap(sym/asym): NO tiene sentido (distinto tipo de claves)
+
+--- Wrap (sym/asym) / Unwrap (sym/sym):  NO tiene sentido (distinto tipo de claves)
+-- Wrap (sym/asym) / Unwrap (sym/asym): no hace falta, porque el comando Wrap(sym/asym) se ha comentado
+
+Note, however, that we have not included the strands corresponding to Wrap(asym-sym) and Unwrap(asym-sym).
+If we ever include those strands, we must add new never patterns to reflect the conflicting attributes contraints
+)
+
+
+fmod PROTOCOL-EXAMPLE-SYMBOLS is
+
+protecting DEFINITION-PROTOCOL-RULES .
+
+
+  --- Sort Information
+  sorts  Name Key   Nonce   Handle     Skey  PubKey PrivKey Akey .
+  subsort Name  Key Nonce Handle      < IMsg .
+  subsort Name < Public .
+  subsort Skey Akey < Key .
+  subsort PubKey PrivKey  < Akey .
+
+
+  --- Handle operator
+  op h(_,_) : Nonce Key -> Handle [frozen] .
+
+  --- Symmetric Encoding
+  op senc : Skey Skey -> IMsg [frozen] .
+
+--- Asymmetric Encoding
+  op aenc : Skey Akey -> IMsg [ frozen] .
+
+ --- Encoding operators for public/private encryption
+  op pub : Name -> PubKey .
+  op priv : Name -> PrivKey .
+
+
+  --- Nonce operator
+  op n : Name Fresh -> Nonce [frozen] .
+
+  --- Concatenation operator
+  op _;_ : IMsg  IMsg  -> IMsg [ assoc comm frozen ] .
+
+  --- Symmetric Key operator
+  op sKey :  Name Fresh -> Skey [frozen] .
+
+
+
+ --- Principals
+  op i : -> Name . --- Intruder
+  op a : -> Name .
+
+ endfm
+
+fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the algebraic properties
+  --- of your protocol
+  ----------------------------------------------------------
+
+
+
+endfm
+
+
+
+fmod PROTOCOL-SPECIFICATION is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  protecting DEFINITION-PROTOCOL-RULES .
+  protecting DEFINITION-CONSTRAINTS-INPUT .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the strands
+  --- of your protocol
+  ----------------------------------------------------------
+
+  vars r r' r'' r# r1 r1' r2 r2' r3 r3' r4 r6 : Fresh .
+  vars A B C A1 A2 S1 : Name .
+  vars NA NB N N' N'' : Nonce .
+  vars X Y H M M1 M2 M3 M4 : IMsg .
+  vars P Q : Name .
+  vars SK SK' : Skey .
+  vars K1 K2 K3 K4 K5 K6 K7 K8 SK1 SK2 SK3 SK4  : Skey .
+  var  N1 N2 N3 N4 N5 : Nonce .
+  vars Ro Ro' Ro1 Ro1' Ro2 Ro2'  : Role .
+  var Val : Bool .
+
+  --- TO SOLVE: include or remove concatenation strands?
+  eq STRANDS-DOLEVYAO
+   = :: nil :: [ nil | +(A) , nil ] &
+     :: r :: [ nil | +(n(i,r)), nil ]  &
+     :: nil :: [ nil | -(SK1), -(SK2), +(senc(SK1,SK2)), nil ] &
+	 :: nil :: [ nil | -(senc(SK1,SK2)), -(SK2), +(SK1), nil ] &
+     :: nil :: [ nil | -(SK), -(AK:Akey), +(aenc(SK,AK:Akey)), nil ] & --- en donde AK puede ser algo del estilo pub(A) o priv(A)
+
+     :: r :: [ nil | +(sKey(i,r)), nil ] &
+        ---- strands que representan la cancelación de la public-private encryption cancellation
+     :: nil :: [ nil |  -(aenc(SK, pub(A))), -(priv(A)), +(SK), nil ] &
+     :: nil :: [ nil |  -(aenc(SK, priv(A))), -(pub(A)), +(SK), nil ] &
+     :: nil :: [ nil | +(pub(A)) , nil ] &  --- el intruso conoce cualquier clave pública
+     :: nil :: [ nil | +(priv(i)) , nil ] &    --- el intruso inicialmente sólo conoce su clave privada
+     :: r :: [ nil |   +(h(n(i,r),priv(	A))), nil ]
+  [nonexec] .
+
+
+  eq STRANDS-PROTOCOL
+   =   :: r, r1, r1', r2, r2', r3, r3' :: --- Initial operator
+      [ nil | +(h(n(A,r1), sKey(A,r1'))),
+       	      +(h(n(A,r2),sKey(A,r2'))),
+			 +(sKey(A,r3)),
+			 +(h(n(A,r3'),priv(A))),  nil] &
+
+	:: nil ::  --- Wrap (sym/sym)
+        [nil | -(h(N, SK)), -(h(N', SK')), +(senc(SK', SK)), nil]  &
+
+***(
+	:: nil ::  --- Wrap (sym/asym)
+        [nil | -(h(N, priv(A))), -(h(N', SK')), +(aenc(SK', pub(A))), nil]  &
+
+       :: r :: --- Unwrap (sym/sym)
+       [nil | -(h(N,SK)), -(senc(SK',SK)), +(h(n(A,r),SK')), nil] &
+
+)
+
+    :: r :: --- Unwrap (sym/asym) --- This command is different to the unwrap of other protocol versions
+    [nil | -(h(N,priv(B))), -(aenc(SK, pub(B))), +(h(n(A,r), SK)) , nil] &
+
+    :: nil :: --- Sencrypt
+    [ nil |  -(h(N,SK)), -(SK'),  +(senc(SK',SK)), nil] &
+
+  	:: nil ::  --- SDecrypt
+    [ nil | -(h(N,SK)), -(senc(SK',SK)), +(SK'), nil] &
+
+ 	:: nil ::   --- AEncryption
+    [ nil | -(h(N, priv(A))), -(SK), +(aenc(SK, pub(A))), nil ] &
+
+    :: nil ::   --- ADecrypt
+    [ nil | -(h(N, priv(A))), -(aenc(SK, pub(A))),  +(SK),  nil ]
+
+[nonexec] .
+
+
+     eq ATTACK-STATE(0)
+     =   :: r, r1, r1', r2, r2', r3, r3'  :: --- Initial operator
+      [ nil, +(h(n(a,r1), sKey(a,r1'))),
+       	     +(h(n(a,r2),sKey(a,r2'))),
+			 +(sKey(a,r3)),
+			 +(h(n(a,r3'),priv(a)))  | nil]  &
+
+	 :: nil :: [ nil,  -(senc(sKey(a,r1'),sKey(a,r2'))), -(sKey(a,r2')), +(sKey(a,r1')) | nil ]
+     || sKey(a,r1') inI
+     || nil
+     || nil
+     || never(
+    *** Never patters to avoid more than one initial strand (also partial instances of initial strand)
+        --- NP1
+		( SS1:StrandSet &
+  		  :: r, r1, r1', r2, r2', r3 , r3' :: --- Initial operator
+          [ nil, +(h(n(a,r1), sKey(a,r1'))),
+       	     +(h(n(a,r2),sKey(a,r2'))),
+			 +(sKey(a,r3)),
+			 +(h(n(a,r3'),priv(a)))  | nil]  &
+		  :: RS1:FreshSet ::
+		  [ nil, +(H1a:Handle),
+				 +(H1b:Handle),
+				 +(SK1a:Skey),
+				 +(H1c:Handle) | nil ]
+		  || IK1:IntruderKnowledge
+		)
+
+		 --- NP2
+		( SS2:StrandSet &
+  		  :: r, r1, r1', r2, r2', r3, r3'  :: --- Initial operator
+          [ nil, +(h(n(a,r1), sKey(a,r1'))),
+       	     +(h(n(a,r2),sKey(a,r2'))),
+			 +(sKey(a,r3)),
+			 +(h(n(a,r3'),priv(a)))  | nil]  &
+		  :: RS2:FreshSet ::
+		  [ nil, +(H2a:Handle),
+				 +(H2b:Handle),
+				 +(SK2a:Skey)  | nil ]
+		  || IK2:IntruderKnowledge
+		)
+
+		--- NP3
+		( SS3:StrandSet &
+  		  :: r, r1, r1', r2, r2', r3, r3'  :: --- Initial operator
+          [ nil, +(h(n(a,r1), sKey(a,r1'))),
+       	     +(h(n(a,r2),sKey(a,r2'))),
+			 +(sKey(a,r3)),
+			 +(h(n(a,r3'),priv(a)))  | nil]  &
+		  :: RS3:FreshSet ::
+		  [ nil, +(H3a:Handle),
+				 +(H3b:Handle)   | nil ]
+		  || IK3:IntruderKnowledge
+		)
+
+		--- NP4
+		( SS4:StrandSet &
+  		  :: r, r1, r1', r2, r2', r3, r3'  :: --- Initial operator
+          [ nil, +(h(n(a,r1), sKey(a,r1'))),
+       	     +(h(n(a,r2),sKey(a,r2'))),
+			 +(sKey(a,r3)),
+			 +(h(n(a,r3'),priv(a)))  | nil]  &
+		  :: RS4:FreshSet ::
+		  [ nil, +(H4a:Handle)   | nil ]
+		  || IK4:IntruderKnowledge
+		)
+
+        *** Never patterns for conflicting attributes
+		-----------------------------------------------------------------------
+		--- NP5:  A stored handle cannot have both wrap and decrypt
+		---       i.e. avoid using the same handle to wrap or decrypt
+		---       We need NP only for the case:  Wrap (sym/sym) / SDecrypt
+		-----------------------------------------------------------------------
+		( SS5:StrandSet &
+		   :: nil ::  --- Wrap (sym/sym)
+           [nil | -(h(N5a:Nonce, SK5a:Skey)), -(h(N5a':Nonce, SK5a':Skey)),
+			      +(senc(SK5a':Skey, SK5a:Skey)), nil]  &
+ 	        :: nil ::  --- SDecrypt
+            [ nil | -(h(N5a:Nonce, SK5a:Skey)), -(senc(SK5b:Skey,SK5a:Skey)), +(SK5b:Skey), nil]
+		    || IK5:IntruderKnowledge
+		)
+
+		-----------------------------------------------------------------------
+		--- NP6:  A stored handle cannot have both unwrap and encrypt
+		---       i.e. avoid using the same handle to unwrap and encrypt
+		---       We need NP only for the case:  Unwrap (sym/asym) /AEncrypt
+		-----------------------------------------------------------------------
+		( SS6:StrandSet &
+		  :: r6:Fresh :: --- Unwrap (sym/asym)
+          [nil | -(h(N6:Nonce,priv(S6:Name))), -(aenc(SK6a:Skey,pub(S6:Name))), +(h(n(B,r6:Fresh),SK6a:Skey)), nil] &
+
+ 	      :: nil ::   --- AEncryption
+		  [ nil | -(h(N6:Nonce,priv(S6:Name))), -(SK6b:Skey), +(aenc(SK6b:Skey, pub(S6:Name))), nil ]
+		   || IK6:IntruderKnowledge
+	    )
+
+	  )
+	 [nonexec] .
+
+*** 4 initial states found
+***(
+==========================================
+reduce in MAUDE-NPA : summary(0, 14) .
+rewrites: 1284955 in 5464ms cpu (5465ms real) (235152 rewrites/second)
+result Summary: States>> 4 Solutions>> 4
+==========================================
+reduce in MAUDE-NPA : initials(0,14) .
+rewrites: 86 in 4ms cpu (0ms real) (21500 rewrites/second)
+result IdSystemSet: (< 1 . 1 . 4 . 4 . 2{4} . 4 . 2 . 1 . 2 . 2 > (
+:: nil ::
+[ nil |
+   -(h(n(a, #6:Fresh),sKey(a, #3:Fresh))),
+   -(h(n(a, #1:Fresh),sKey(a, #5:Fresh))),
+   +(senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh))), nil]  &
+:: nil ::
+[ nil |
+   -(h(n(#7:Name, #8:Fresh),#9:Skey)),
+   -(h(n(a, #6:Fresh),sKey(a, #3:Fresh))),
+   +(senc(sKey(a, #3:Fresh), #9:Skey)), nil]  &
+:: nil ::
+[ nil |
+   -(senc(sKey(a, #3:Fresh), #9:Skey)),
+   -(#9:Skey),
+   +(sKey(a, #3:Fresh)), nil]  &
+:: nil ::
+[ nil |
+   -(senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh))),
+   -(sKey(a, #3:Fresh)),
+   +(sKey(a, #5:Fresh)), nil]  &
+:: #8:Fresh ::
+[ nil |
+   -(h(n(a, #2:Fresh),priv(a))),
+   -(aenc(#9:Skey, pub(a))),
+   +(h(n(#7:Name, #8:Fresh),#9:Skey)), nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil |
+   +(h(n(a, #1:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #6:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #0:Fresh)),
+   +(h(n(a, #2:Fresh),priv(a))), nil] )
+||
+#9:Skey !inI,
+h(n(a, #1:Fresh),sKey(a, #5:Fresh)) !inI,
+h(n(a, #2:Fresh),priv(a)) !inI,
+h(n(a, #6:Fresh),sKey(a, #3:Fresh)) !inI,
+h(n(#7:Name, #8:Fresh),#9:Skey) !inI,
+senc(sKey(a, #3:Fresh), #9:Skey) !inI,
+senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh)) !inI,
+aenc(#9:Skey, pub(a)) !inI,
+sKey(a, #3:Fresh) !inI,
+sKey(a, #5:Fresh) !inI
+||
++(h(n(a, #1:Fresh),sKey(a, #5:Fresh))),
++(h(n(a, #6:Fresh),sKey(a, #3:Fresh))),
++(sKey(a, #0:Fresh)),
+generatedByIntruder(aenc(#9:Skey, pub(a))),
+generatedByIntruder(#9:Skey),
++(h(n(a, #2:Fresh),priv(a))),
+-(h(n(a, #2:Fresh),priv(a))),
+-(aenc(#9:Skey, pub(a))),
++(h(n(#7:Name, #8:Fresh),#9:Skey)),
+-(h(n(#7:Name, #8:Fresh),#9:Skey)),
+-(h(n(a, #6:Fresh),sKey(a, #3:Fresh))),
++(senc(sKey(a, #3:Fresh), #9:Skey)),
+-(senc(sKey(a, #3:Fresh), #9:Skey)),
+-(#9:Skey),
++(sKey(a, #3:Fresh)),
+-(h(n(a, #6:Fresh),sKey(a, #3:Fresh))),
+-(h(n(a, #1:Fresh),sKey(a, #5:Fresh))),
++(senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh))),
+-(senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh))),
+-(sKey(a, #3:Fresh)),
++(sKey(a, #5:Fresh))
+||
+nil
+|| never(((#10:StrandSet &
+:: #11:FreshSet ::
+[ nil,
+   +(#12:Handle),
+   +(#13:Handle),
+   +(#14:Skey) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #1:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #6:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #0:Fresh)),
+   +(h(n(a, #2:Fresh),priv(a))) | nil] ) || #15:IntruderKnowledge)
+((#16:StrandSet &
+:: #17:FreshSet ::
+[ nil,
+   +(#18:Handle),
+   +(#19:Handle),
+   +(#20:Skey),
+   +(#21:Handle) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #1:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #6:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #0:Fresh)),
+   +(h(n(a, #2:Fresh),priv(a))) | nil] ) || #22:IntruderKnowledge)
+((#23:StrandSet &
+:: nil ::
+[ nil |
+   -(h(#24:Nonce,#25:Skey)),
+   -(h(#26:Nonce,#27:Skey)),
+   +(senc(#27:Skey, #25:Skey)), nil]  &
+:: nil ::
+[ nil |
+   -(h(#24:Nonce,#25:Skey)),
+   -(senc(#28:Skey, #25:Skey)),
+   +(#28:Skey), nil] ) || #29:IntruderKnowledge)
+((#30:StrandSet &
+:: nil ::
+[ nil |
+   -(h(#31:Nonce,priv(#32:Name))),
+   -(#33:Skey),
+   +(aenc(#33:Skey, pub(#32:Name))), nil]  &
+:: #34:Fresh ::
+[ nil |
+   -(h(#31:Nonce,priv(#32:Name))),
+   -(aenc(#35:Skey, pub(#32:Name))),
+   +(h(n(#36:Name, #34:Fresh),#35:Skey)), nil] ) || #37:IntruderKnowledge)
+((#38:StrandSet &
+:: #39:FreshSet ::
+[ nil,
+   +(#40:Handle),
+   +(#41:Handle) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #1:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #6:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #0:Fresh)),
+   +(h(n(a, #2:Fresh),priv(a))) | nil] ) || #42:IntruderKnowledge)
+(#43:StrandSet &
+:: #44:FreshSet ::
+[ nil,
+   +(#45:Handle) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #1:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #6:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #0:Fresh)),
+   +(h(n(a, #2:Fresh),priv(a))) | nil] ) || #46:IntruderKnowledge))
+(< 1 . 1 . 2 . 2{4} . 6 . 3{4} . 6{1} . 2 . 1 . 2 . 2 > (
+:: nil ::
+[ nil |
+   -(h(n(a, #2:Fresh),sKey(a, #3:Fresh))),
+   -(h(n(a, #4:Fresh),sKey(a, #5:Fresh))),
+   +(senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh))), nil]  &
+:: nil ::
+[ nil |
+   -(h(n(#7:Name, #8:Fresh),#9:Skey)),
+   -(h(n(a, #2:Fresh),sKey(a, #3:Fresh))),
+   +(senc(sKey(a, #3:Fresh), #9:Skey)), nil]  &
+:: nil ::
+[ nil |
+   -(h(n(#10:Name, #11:Fresh),#9:Skey)),
+   -(senc(sKey(a, #3:Fresh), #9:Skey)),
+   +(sKey(a, #3:Fresh)), nil]  &
+:: nil ::
+[ nil |
+   -(senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh))),
+   -(sKey(a, #3:Fresh)),
+   +(sKey(a, #5:Fresh)), nil]  &
+:: #8:Fresh ::
+[ nil |
+   -(h(n(a, #6:Fresh),priv(a))),
+   -(aenc(#9:Skey, pub(a))),
+   +(h(n(#7:Name, #8:Fresh),#9:Skey)), nil]  &
+:: #11:Fresh ::
+[ nil |
+   -(h(n(a, #6:Fresh),priv(a))),
+   -(aenc(#9:Skey, pub(a))),
+   +(h(n(#10:Name, #11:Fresh),#9:Skey)), nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil |
+   +(h(n(a, #4:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #2:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #1:Fresh)),
+   +(h(n(a, #6:Fresh),priv(a))), nil] )
+||
+h(n(a, #2:Fresh),sKey(a, #3:Fresh)) !inI,
+h(n(a, #4:Fresh),sKey(a, #5:Fresh)) !inI,
+h(n(a, #6:Fresh),priv(a)) !inI,
+h(n(#7:Name, #8:Fresh),#9:Skey) !inI,
+h(n(#10:Name, #11:Fresh),#9:Skey) !inI,
+senc(sKey(a, #3:Fresh), #9:Skey) !inI,
+senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh)) !inI,
+aenc(#9:Skey, pub(a)) !inI,
+sKey(a, #3:Fresh) !inI,
+sKey(a, #5:Fresh) !inI,(
+h(n(#7:Name, #8:Fresh),#9:Skey) != h(n(#10:Name, #11:Fresh),#9:Skey)),
+n(#7:Name, #8:Fresh) != n(#10:Name, #11:Fresh)
+||
++(h(n(a, #4:Fresh),sKey(a, #5:Fresh))),
++(h(n(a, #2:Fresh),sKey(a, #3:Fresh))),
++(sKey(a, #1:Fresh)),
+generatedByIntruder(aenc(#9:Skey, pub(a))),
++(h(n(a, #6:Fresh),priv(a))),
+-(h(n(a, #6:Fresh),priv(a))),
+-(aenc(#9:Skey, pub(a))),
++(h(n(#7:Name, #8:Fresh),#9:Skey)),
+-(h(n(a, #2:Fresh),sKey(a, #3:Fresh))),
+-(h(n(a, #4:Fresh),sKey(a, #5:Fresh))),
++(senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh))),
+-(h(n(a, #6:Fresh),priv(a))),
+-(aenc(#9:Skey, pub(a))),
++(h(n(#10:Name, #11:Fresh),#9:Skey)),
+-(h(n(#7:Name, #8:Fresh),#9:Skey)),
+-(h(n(a, #2:Fresh),sKey(a, #3:Fresh))),
++(senc(sKey(a, #3:Fresh), #9:Skey)),
+-(h(n(#10:Name, #11:Fresh),#9:Skey)),
+-(senc(sKey(a, #3:Fresh), #9:Skey)),
++(sKey(a, #3:Fresh)),
+-(senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh))),
+-(sKey(a, #3:Fresh)),
++(sKey(a, #5:Fresh))
+||
+nil
+|| never(((#12:StrandSet &
+:: #13:FreshSet ::
+[ nil,
+   +(#14:Handle),
+   +(#15:Handle),
+   +(#16:Skey) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #4:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #2:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #1:Fresh)),
+   +(h(n(a, #6:Fresh),priv(a))) | nil] ) || #17:IntruderKnowledge)
+((#18:StrandSet &
+:: #19:FreshSet ::
+[ nil,
+   +(#20:Handle),
+   +(#21:Handle),
+   +(#22:Skey),
+   +(#23:Handle) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #4:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #2:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #1:Fresh)),
+   +(h(n(a, #6:Fresh),priv(a))) | nil] ) || #24:IntruderKnowledge)
+((#25:StrandSet &
+:: #26:FreshSet ::
+[ nil,
+   +(#27:Handle) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #4:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #2:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #1:Fresh)),
+   +(h(n(a, #6:Fresh),priv(a))) | nil] ) || #28:IntruderKnowledge)
+((#29:StrandSet &
+:: nil ::
+[ nil |
+   -(h(#30:Nonce,#31:Skey)),
+   -(h(#32:Nonce,#33:Skey)),
+   +(senc(#33:Skey, #31:Skey)), nil]  &
+:: nil ::
+[ nil |
+   -(h(#30:Nonce,#31:Skey)),
+   -(senc(#34:Skey, #31:Skey)),
+   +(#34:Skey), nil] ) || #35:IntruderKnowledge)
+((#36:StrandSet &
+:: nil ::
+[ nil |
+   -(h(#37:Nonce,priv(#38:Name))),
+   -(#39:Skey),
+   +(aenc(#39:Skey, pub(#38:Name))), nil]  &
+:: #40:Fresh ::
+[ nil |
+   -(h(#37:Nonce,priv(#38:Name))),
+   -(aenc(#41:Skey, pub(#38:Name))),
+   +(h(n(#42:Name, #40:Fresh),#41:Skey)), nil] ) || #43:IntruderKnowledge)
+(#44:StrandSet &
+:: #45:FreshSet ::
+[ nil,
+   +(#46:Handle),
+   +(#47:Handle) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #4:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #2:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #1:Fresh)),
+   +(h(n(a, #6:Fresh),priv(a))) | nil] ) || #48:IntruderKnowledge))
+(< 1 . 4 . 3{4} . 1 . 11 . 3{2} . 3{7} . 9{1} . 3{9} . 6{1} . 2 . 1 . 2 . 2 > (
+:: nil ::
+[ nil |
+   -(h(n(a, #1:Fresh),sKey(a, #3:Fresh))),
+   -(h(n(a, #2:Fresh),sKey(a, #5:Fresh))),
+   +(senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh))), nil]  &
+:: nil ::
+[ nil |
+   -(h(n(#7:Name, #8:Fresh),#9:Skey)),
+   -(h(n(a, #1:Fresh),sKey(a, #3:Fresh))),
+   +(senc(sKey(a, #3:Fresh), #9:Skey)), nil]  &
+:: nil ::
+[ nil |
+   -(h(n(#7:Name, #8:Fresh),#9:Skey)),
+   -(h(n(a, #2:Fresh),sKey(a, #5:Fresh))),
+   +(senc(sKey(a, #5:Fresh), #9:Skey)), nil]  &
+:: nil ::
+[ nil |
+   -(h(n(#10:Name, #11:Fresh),#9:Skey)),
+   -(senc(sKey(a, #3:Fresh), #9:Skey)),
+   +(sKey(a, #3:Fresh)), nil]  &
+:: nil ::
+[ nil |
+   -(h(n(#12:Name, #13:Fresh),#9:Skey)),
+   -(senc(sKey(a, #5:Fresh), #9:Skey)),
+   +(sKey(a, #5:Fresh)), nil]  &
+:: nil ::
+[ nil |
+   -(senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh))),
+   -(sKey(a, #3:Fresh)),
+   +(sKey(a, #5:Fresh)), nil]  &
+:: #8:Fresh ::
+[ nil |
+   -(h(n(a, #6:Fresh),priv(a))),
+   -(aenc(#9:Skey, pub(a))),
+   +(h(n(#7:Name, #8:Fresh),#9:Skey)), nil]  &
+:: #11:Fresh ::
+[ nil |
+   -(h(n(a, #6:Fresh),priv(a))),
+   -(aenc(#9:Skey, pub(a))),
+   +(h(n(#10:Name, #11:Fresh),#9:Skey)), nil]  &
+:: #13:Fresh ::
+[ nil |
+   -(h(n(a, #6:Fresh),priv(a))),
+   -(aenc(#9:Skey, pub(a))),
+   +(h(n(#12:Name, #13:Fresh),#9:Skey)), nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil |
+   +(h(n(a, #2:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #1:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #0:Fresh)),
+   +(h(n(a, #6:Fresh),priv(a))), nil] )
+||
+h(n(a, #1:Fresh),sKey(a, #3:Fresh)) !inI,
+h(n(a, #2:Fresh),sKey(a, #5:Fresh)) !inI,
+h(n(a, #6:Fresh),priv(a)) !inI,
+h(n(#7:Name, #8:Fresh),#9:Skey) !inI,
+h(n(#10:Name, #11:Fresh),#9:Skey) !inI,
+h(n(#12:Name, #13:Fresh),#9:Skey) !inI,
+senc(sKey(a, #3:Fresh), #9:Skey) !inI,
+senc(sKey(a, #5:Fresh), #9:Skey) !inI,
+senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh)) !inI,
+aenc(#9:Skey, pub(a)) !inI,
+sKey(a, #3:Fresh) !inI,
+sKey(a, #5:Fresh) !inI,
+n(#10:Name, #11:Fresh) != n(#12:Name, #13:Fresh)
+||
++(h(n(a, #2:Fresh),sKey(a, #5:Fresh))),
++(h(n(a, #1:Fresh),sKey(a, #3:Fresh))),
++(sKey(a, #0:Fresh)),
+generatedByIntruder(aenc(#9:Skey, pub(a))),
++(h(n(a, #6:Fresh),priv(a))),
+-(h(n(a, #6:Fresh),priv(a))),
+-(aenc(#9:Skey, pub(a))),
++(h(n(#7:Name, #8:Fresh),#9:Skey)),
+-(h(n(a, #1:Fresh),sKey(a, #3:Fresh))),
+-(h(n(a, #2:Fresh),sKey(a, #5:Fresh))),
++(senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh))),
+-(h(n(a, #6:Fresh),priv(a))),
+-(aenc(#9:Skey, pub(a))),
++(h(n(#10:Name, #11:Fresh),#9:Skey)),
+-(h(n(#7:Name, #8:Fresh),#9:Skey)),
+-(h(n(a, #1:Fresh),sKey(a, #3:Fresh))),
++(senc(sKey(a, #3:Fresh), #9:Skey)),
+-(h(n(#10:Name, #11:Fresh),#9:Skey)),
+-(senc(sKey(a, #3:Fresh), #9:Skey)),
++(sKey(a, #3:Fresh)),
+-(h(n(a, #6:Fresh),priv(a))),
+-(aenc(#9:Skey, pub(a))),
++(h(n(#12:Name, #13:Fresh),#9:Skey)),
+-(senc(sKey(a, #5:Fresh), sKey(a, #3:Fresh))),
+-(sKey(a, #3:Fresh)),
++(sKey(a, #5:Fresh)),
+-(h(n(#7:Name, #8:Fresh),#9:Skey)),
+-(h(n(a, #2:Fresh),sKey(a, #5:Fresh))),
++(senc(sKey(a, #5:Fresh), #9:Skey)),
+-(h(n(#12:Name, #13:Fresh),#9:Skey)),
+-(senc(sKey(a, #5:Fresh), #9:Skey)),
++(sKey(a, #5:Fresh))
+||
+nil
+|| never(((#14:StrandSet &
+:: #15:FreshSet ::
+[ nil,
+   +(#16:Handle),
+   +(#17:Handle),
+   +(#18:Skey) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #2:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #1:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #0:Fresh)),
+   +(h(n(a, #6:Fresh),priv(a))) | nil] ) || #19:IntruderKnowledge)
+((#20:StrandSet &
+:: #21:FreshSet ::
+[ nil,
+   +(#22:Handle),
+   +(#23:Handle),
+   +(#24:Skey),
+   +(#25:Handle) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #2:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #1:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #0:Fresh)),
+   +(h(n(a, #6:Fresh),priv(a))) | nil] ) || #26:IntruderKnowledge)
+((#27:StrandSet &
+:: #28:FreshSet ::
+[ nil,
+   +(#29:Handle),
+   +(#30:Handle) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #2:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #1:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #0:Fresh)),
+   +(h(n(a, #6:Fresh),priv(a))) | nil] ) || #31:IntruderKnowledge)
+((#32:StrandSet &
+:: #33:FreshSet ::
+[ nil,
+   +(#34:Handle) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #2:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #1:Fresh),sKey(a, #3:Fresh))),
+   +(sKey(a, #0:Fresh)),
+   +(h(n(a, #6:Fresh),priv(a))) | nil] ) || #35:IntruderKnowledge)
+((#36:StrandSet &
+:: nil ::
+[ nil |
+   -(h(#37:Nonce,#38:Skey)),
+   -(h(#39:Nonce,#40:Skey)),
+   +(senc(#40:Skey, #38:Skey)), nil]  &
+:: nil ::
+[ nil |
+   -(h(#37:Nonce,#38:Skey)),
+   -(senc(#41:Skey, #38:Skey)),
+   +(#41:Skey), nil] ) || #42:IntruderKnowledge)
+(#43:StrandSet &
+:: nil ::
+[ nil |
+   -(h(#44:Nonce,priv(#45:Name))),
+   -(#46:Skey),
+   +(aenc(#46:Skey, pub(#45:Name))), nil]  &
+:: #47:Fresh ::
+[ nil |
+   -(h(#44:Nonce,priv(#45:Name))),
+   -(aenc(#48:Skey, pub(#45:Name))),
+   +(h(n(#49:Name, #47:Fresh),#48:Skey)), nil] ) || #50:IntruderKnowledge))
+< 1 . 6 . 3{2} . 1 . 2{2} . 9 . 3{6} . 9{1} . 14{1} . 3{1} . 2 . 1 . 2 . 2 > (
+:: nil ::
+[ nil |
+   -(h(n(a, #3:Fresh),sKey(a, #2:Fresh))),
+   -(h(n(a, #0:Fresh),sKey(a, #5:Fresh))),
+   +(senc(sKey(a, #5:Fresh), sKey(a, #2:Fresh))), nil]  &
+:: nil ::
+[ nil |
+   -(h(n(#7:Name, #8:Fresh),#9:Skey)),
+   -(h(n(a, #3:Fresh),sKey(a, #2:Fresh))),
+   +(senc(sKey(a, #2:Fresh), #9:Skey)), nil]  &
+:: nil ::
+[ nil |
+   -(h(n(#10:Name, #11:Fresh),#12:Skey)),
+   -(h(n(a, #0:Fresh),sKey(a, #5:Fresh))),
+   +(senc(sKey(a, #5:Fresh), #12:Skey)), nil]  &
+:: nil ::
+[ nil |
+   -(h(n(#13:Name, #14:Fresh),#9:Skey)),
+   -(senc(sKey(a, #2:Fresh), #9:Skey)),
+   +(sKey(a, #2:Fresh)), nil]  &
+:: nil ::
+[ nil |
+   -(senc(sKey(a, #5:Fresh), #12:Skey)),
+   -(#12:Skey),
+   +(sKey(a, #5:Fresh)), nil]  &
+:: nil ::
+[ nil |
+   -(senc(sKey(a, #5:Fresh), sKey(a, #2:Fresh))),
+   -(sKey(a, #2:Fresh)),
+   +(sKey(a, #5:Fresh)), nil]  &
+:: #8:Fresh ::
+[ nil |
+   -(h(n(a, #1:Fresh),priv(a))),
+   -(aenc(#9:Skey, pub(a))),
+   +(h(n(#7:Name, #8:Fresh),#9:Skey)), nil]  &
+:: #11:Fresh ::
+[ nil |
+   -(h(n(a, #1:Fresh),priv(a))),
+   -(aenc(#12:Skey, pub(a))),
+   +(h(n(#10:Name, #11:Fresh),#12:Skey)), nil]  &
+:: #14:Fresh ::
+[ nil |
+   -(h(n(a, #1:Fresh),priv(a))),
+   -(aenc(#9:Skey, pub(a))),
+   +(h(n(#13:Name, #14:Fresh),#9:Skey)), nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil |
+   +(h(n(a, #0:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #3:Fresh),sKey(a, #2:Fresh))),
+   +(sKey(a, #6:Fresh)),
+   +(h(n(a, #1:Fresh),priv(a))), nil] )
+||
+#12:Skey !inI,
+h(n(a, #1:Fresh),priv(a)) !inI,
+h(n(a, #3:Fresh),sKey(a, #2:Fresh)) !inI,
+h(n(a, #0:Fresh),sKey(a, #5:Fresh)) !inI,
+h(n(#7:Name, #8:Fresh),#9:Skey) !inI,
+h(n(#10:Name, #11:Fresh),#12:Skey) !inI,
+h(n(#13:Name, #14:Fresh),#9:Skey) !inI,
+senc(sKey(a, #2:Fresh), #9:Skey) !inI,
+senc(sKey(a, #5:Fresh), #12:Skey) !inI,
+senc(sKey(a, #5:Fresh), sKey(a, #2:Fresh)) !inI,
+aenc(#9:Skey, pub(a)) !inI,
+aenc(#12:Skey, pub(a)) !inI,
+sKey(a, #2:Fresh) !inI,
+sKey(a, #5:Fresh) !inI,(
+h(n(#10:Name, #11:Fresh),#12:Skey) != h(n(#13:Name, #14:Fresh),#9:Skey)),
+n(#10:Name, #11:Fresh) != n(#13:Name, #14:Fresh)
+||
++(h(n(a, #0:Fresh),sKey(a, #5:Fresh))),
++(h(n(a, #3:Fresh),sKey(a, #2:Fresh))),
++(sKey(a, #6:Fresh)),
+generatedByIntruder(aenc(#12:Skey, pub(a))),
+generatedByIntruder(#12:Skey),
+generatedByIntruder(aenc(#9:Skey, pub(a))),
++(h(n(a, #1:Fresh),priv(a))),
+-(h(n(a, #3:Fresh),sKey(a, #2:Fresh))),
+-(h(n(a, #0:Fresh),sKey(a, #5:Fresh))),
++(senc(sKey(a, #5:Fresh), sKey(a, #2:Fresh))),
+-(h(n(a, #1:Fresh),priv(a))),
+-(aenc(#9:Skey, pub(a))),
++(h(n(#7:Name, #8:Fresh),#9:Skey)),
+-(h(n(a, #1:Fresh),priv(a))),
+-(aenc(#12:Skey, pub(a))),
++(h(n(#10:Name, #11:Fresh),#12:Skey)),
+-(h(n(#7:Name, #8:Fresh),#9:Skey)),
+-(h(n(a, #3:Fresh),sKey(a, #2:Fresh))),
++(senc(sKey(a, #2:Fresh), #9:Skey)),
+-(h(n(a, #1:Fresh),priv(a))),
+-(aenc(#9:Skey, pub(a))),
++(h(n(#13:Name, #14:Fresh),#9:Skey)),
+-(h(n(#13:Name, #14:Fresh),#9:Skey)),
+-(senc(sKey(a, #2:Fresh), #9:Skey)),
++(sKey(a, #2:Fresh)),
+-(senc(sKey(a, #5:Fresh), sKey(a, #2:Fresh))),
+-(sKey(a, #2:Fresh)),
++(sKey(a, #5:Fresh)),
+-(h(n(#10:Name, #11:Fresh),#12:Skey)),
+-(h(n(a, #0:Fresh),sKey(a, #5:Fresh))),
++(senc(sKey(a, #5:Fresh), #12:Skey)),
+-(senc(sKey(a, #5:Fresh), #12:Skey)),
+-(#12:Skey),
++(sKey(a, #5:Fresh))
+||
+nil
+|| never(((#15:StrandSet &
+:: nil ::
+[ nil |
+   -(h(#16:Nonce,priv(#17:Name))),
+   -(#18:Skey),
+   +(aenc(#18:Skey, pub(#17:Name))), nil]  &
+:: #19:Fresh ::
+[ nil |
+   -(h(#16:Nonce,priv(#17:Name))),
+   -(aenc(#20:Skey, pub(#17:Name))),
+   +(h(n(#21:Name, #19:Fresh),#20:Skey)), nil] ) || #22:IntruderKnowledge)
+((#23:StrandSet &
+:: nil ::
+[ nil |
+   -(h(#24:Nonce,#25:Skey)),
+   -(h(#26:Nonce,#27:Skey)),
+   +(senc(#27:Skey, #25:Skey)), nil]  &
+:: nil ::
+[ nil |
+   -(h(#24:Nonce,#25:Skey)),
+   -(senc(#28:Skey, #25:Skey)),
+   +(#28:Skey), nil] ) || #29:IntruderKnowledge)
+((#30:StrandSet &
+:: #31:FreshSet ::
+[ nil,
+   +(#32:Handle) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #0:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #3:Fresh),sKey(a, #2:Fresh))),
+   +(sKey(a, #6:Fresh)),
+   +(h(n(a, #1:Fresh),priv(a))) | nil] ) || #33:IntruderKnowledge)
+((#34:StrandSet &
+:: #35:FreshSet ::
+[ nil,
+   +(#36:Handle),
+   +(#37:Handle),
+   +(#38:Skey) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #0:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #3:Fresh),sKey(a, #2:Fresh))),
+   +(sKey(a, #6:Fresh)),
+   +(h(n(a, #1:Fresh),priv(a))) | nil] ) || #39:IntruderKnowledge)
+((#40:StrandSet &
+:: #41:FreshSet ::
+[ nil,
+   +(#42:Handle),
+   +(#43:Handle) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #0:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #3:Fresh),sKey(a, #2:Fresh))),
+   +(sKey(a, #6:Fresh)),
+   +(h(n(a, #1:Fresh),priv(a))) | nil] ) || #44:IntruderKnowledge)
+(#45:StrandSet &
+:: #46:FreshSet ::
+[ nil,
+   +(#47:Handle),
+   +(#48:Handle),
+   +(#49:Skey),
+   +(#50:Handle) | nil]  &
+:: #1:Fresh,#2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil,
+   +(h(n(a, #0:Fresh),sKey(a, #5:Fresh))),
+   +(h(n(a, #3:Fresh),sKey(a, #2:Fresh))),
+   +(sKey(a, #6:Fresh)),
+   +(h(n(a, #1:Fresh),priv(a))) | nil] ) || #51:IntruderKnowledge)
+)
+
+
+
+
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .
+
+

@@ -1,0 +1,515 @@
+***(
+  MAD process specification
+
+(Prover) :
+
++(commit(n(P?,f1),s(P?,f2))@t1) ·
+−(Commit@t2) ·
++(n(P?,f1)@t3) ·
+−(NV ⊕ n(P?,f1)@t4) ·
+if t4−t3 ≤ 2*d then +(s(P?,f2) ; mac(key(V?,P?), P? ; V? ; NV ; n(P?,f1))@t5) ·
+		    -(SV ;  mac(key(V?,P?), V? ; P? ; n(P?,f1) ; NV)@t6) ·
+                    if open(NV,SV,Commit) then +(ok@t7)
+		    else nilP
+else nilP
+
+(Verifier) :
+−(Commit@t1) ·
++(commit(n(V?,f1),s(V?,f2))@t2) ·
+-(NP@t3) ·
++(n(V?,f1) ⊕ NP@t4) ·
+-(SP ; mac(key(V?,P?), P? ; V? ; n(V?,f1) ; NP)@t5) ·
+if open(NP,SP,Commit) then +(s(V?,f2) ; Mac(key(V?,P?), V? ; P? ; NP ; n(V?,f1))@t6) ·
+		           -(ok@t7)
+else nilP
+
+ )***
+
+fmod PROTOCOL-EXAMPLE-SYMBOLS is
+  --- Importing sorts Msg, Fresh, Public, and GhostData
+  protecting DEFINITION-PROTOCOL-RULES .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the syntax of your protocol
+  --- Notes:
+  --- * Sort Msg and Fresh are special and imported
+  --- * Every sort must be a subsort of Msg
+  --- * No sort can be a supersort of Msg
+  ----------------------------------------------------------
+
+  --- Sort Information
+  sorts Name Nonce Key HonestA HonestB Honest Intruder NeTime ETime TMsg NTMsg TimeInfo Mac NameTime NameTimeSet Secret NNSet .
+  subsort Name Nonce Key Mac Secret < NTMsg .
+  subsort TMsg NTMsg Real < Msg .
+  subsort Name < Key .
+  subsort Name < Public .
+  subsort Honest Intruder < Name .
+  subsort NameTime < NameTimeSet .
+  --- XOR ---
+  subsort NNSet < NTMsg .
+  subsort Nonce < NNSet .
+
+  --- Nonce operator
+  op n : Name Fresh -> Nonce [frozen] .
+
+  op commit : Nonce Secret -> NTMsg .
+  op mac : Key NTMsg -> Mac .
+  op key : Name Name -> Key [comm] .
+  op s : Name Fresh -> Secret [frozen] .
+  op yes : -> NTMsg .
+
+  --- Ok operator
+  op ok : -> NTMsg .
+
+  --- Principals
+  op a : -> Honest . --- Alice
+  op b : -> Honest . --- Bob
+  op i : -> Intruder . --- Intruder
+
+  --- Real messages
+  op _@_ : NTMsg TimeInfo -> TMsg [metadata "grammar-arg-1" prec 50 format (d nis d d)] .
+
+  --- Associativity operator
+  op _;_ : NTMsg  NTMsg  -> NTMsg [gather (e E) frozen] .
+
+
+   --- Real information
+  op _:_ : Name Real -> NameTime [prec 10] .
+  op mt : -> NameTimeSet .
+  op _#_ : NameTimeSet NameTimeSet -> NameTimeSet [assoc comm id: mt prec 20] .
+  op _->_ : NameTime NameTimeSet -> TimeInfo .
+  op open : Nonce Secret NTMsg -> NTMsg .
+
+  --- Distance
+  op d : Name Name -> Real [comm] .
+
+  --- Exclusive or
+  op _*_ : NNSet NNSet -> NNSet [assoc comm frozen] .
+  op null : -> NNSet .
+
+endfm
+
+fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the algebraic properties
+  --- of your protocol
+  ----------------------------------------------------------
+  eq d(A:Name,A:Name) = 0/1 . --- Simplify search
+
+  *** Exclusive or properties
+  vars XN YN : NNSet .
+  eq XN * XN = null    [variant] .
+  eq XN * XN * YN = YN [variant] .
+  eq XN * null = XN    [variant] .
+
+  eq open(N1:Nonce,Sr:Secret,commit(N1:Nonce,Sr:Secret)) = yes [variant] .
+
+endfm
+
+fmod PROTOCOL-SPECIFICATION is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  protecting DEFINITION-PROTOCOL-RULES .
+  protecting DEFINITION-CONSTRAINTS-INPUT .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the strands
+  --- of your protocol
+  ----------------------------------------------------------
+
+  var Ke : Key .
+  vars X Y Z Commit : NTMsg .
+  vars r r' rA rA' rB rB' rI : Fresh .
+  var A C B : Name .
+  var AB AB1 AB2 : Honest .
+  var I : Intruder .
+  vars C1 C2 C3 C4 C5 : Name .
+  vars N NA NA' NB N1 N2 : Nonce .
+  vars SA SB S1 S2 : Secret .
+  vars d t0 t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11 t12 : Real .
+  vars t0' t1' t2' t3' t4' t5' t6' t7' t8' t9' t10' t11' t12' : Real .
+  vars t0n t1n t2n t3n t4n t5n : NeTime .
+  vars I1 I2 I3 I4 I5 : Real .
+  vars XN YN : NNSet .
+  vars AS1 AS2 AS3 AS4 AS5 AS6 AS7 AS8 : NameTimeSet .
+
+  eq STRANDS-DOLEVYAO
+   = :: nil :: [ nil | -(X @ AB1 : t1 -> AS1 # i : t2), --- Forward from honest participants
+                        (t2 === t1 +=+ d(AB1,i) and d(AB1,i) >= 0/1),
+                       +(X @ i : t2 -> AB2 : t3), nil ] &
+     :: nil :: [ nil | +(null @ i : t1 -> AS1), nil ] &
+     :: r ::   [ nil | +(n(i,r) @ i : t1 -> AS1), nil ] &
+     :: nil :: [ nil | -(X @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                       -(Y @ C2 : t3 -> AS2 # i : t4), (t4 === t3 +=+ d(C2,i) and d(C2,i) >= 0/1),
+                       (t5 >= t2 and t5 >= t4),
+                       +((X ; Y) @ i : t5 -> AS3), nil ] &
+     :: nil :: [ nil | -(X ; Y @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                       +(X @ i : t2 -> AS3), nil ] &
+     :: nil :: [ nil | -(X ; Y @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                       +(Y @ i : t2 -> AS3), nil ] &
+     :: nil :: [ nil | -(N1 @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                       -(S2 @ C2 : t3 -> AS2 # i : t4), (t4 === t3 +=+ d(C2,i) and d(C2,i) >= 0/1),
+                       (t5 >= t2 and t5 >= t4),
+                       +(commit(N1,S2) @ i : t5 -> AS3), nil ] &
+     :: nil :: [ nil | -(Ke @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                       -(X @ C2 : t3 -> AS2 # i : t4), (t4 === t3 +=+ d(C2,i) and d(C2,i) >= 0/1),
+                       (t5 >= t2 and t5 >= t4),
+                       +(mac(Ke,X) @ i : t5 -> AS3), nil ] &
+     :: nil :: [ nil | -(X @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                       -(N @ C2 : t3 -> AS2 # i : t4), (t4 === t3 +=+ d(C2,i) and d(C2,i) >= 0/1),
+                       -(SB @ C3 : t5 -> AS3 # i : t6), (t6 === t5 +=+ d(C3,i) and d(C3,i) >= 0/1),
+                       (t7 >= t2 and t7 >= t4 and t7 >= t6),
+                       +(open(N,SB,X) @ i : t7 -> AS4), nil ] &
+     :: nil :: [ nil | -(SB @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                       +(SB @ i : t2 -> AS2), nil ] &
+     :: nil :: [ nil | +(C @ i : t1 -> AS1), nil ] &
+     :: nil :: [ nil | +(key(i,AB) @ i : t1 -> AS1), nil ]
+  [nonexec] .
+
+  eq STRANDS-PROTOCOL
+   =  --- Alice --- Prover
+     :: rA , rA' ::
+     ---- initialization phase
+     [ nil | +(commit(n(A,rA),s(A,rA'))                               @ A : t1 -> AS1),
+             -(Commit                                                 @ C2 : t2 -> AS2 # A : t3), (t3 === t2 +=+ d(C2,A)),
+    --- Distance Bounding phase only one bit
+             +(n(A,rA)                                                @ A : t3 -> AS3),
+             -(NB * n(A,rA)                                           @ C3 : t4 -> AS4 # A : t5), (t5 === t4 +=+ d(C3,A)),
+                                                                       ((t5 -=- t3) <= (2/1 *=* d) and d > 0/1), --- roundtrip check
+    --- Authentication phase
+             +(s(A,rA') ; mac(key(A,B), A ; B ; NB ; n(A,rA))         @ A : t5 -> AS5),
+             -(SB ; mac(key(A,B), B ; A ; n(A,rA) ; NB)               @ C4 : t6 -> AS6 # A : t7), (t7 === t6 +=+ d(C4,A)),
+              (open(NB,SB,Commit) eq yes),
+             +(ok                                                     @ A : t7 -> AS7), nil ]
+
+     &
+     ---Bob --- Verifier
+     :: rB , rB' ::
+     ----initialization phase
+     [ nil | -(Commit                                                 @ C1 : t1 -> AS1 # B : t2), (t2 === t1 +=+ d(C1,B)),
+             +(commit(n(B,rB),s(B,rB'))                               @ B : t2 -> AS2),
+      --- Distance Bounding phase only one bit
+             -(NA                                                     @ C3 : t3 -> AS3 # B : t4), (t4 === t3 +=+ d(C3,B)),
+             +(n(B,rB) * NA                                           @ B : t4 -> AS4),
+      --- Authentication phase
+             -(SA ; mac(key(A,B), A ; B ; n(B,rB) ; NA)               @ C4 : t5 -> AS5 # B : t6), (t6 === t5 +=+ d(C4,B)),
+              (open(NA,SA,Commit) eq yes),
+             +(s(B,rB') ; mac(key(A,B), B ; A ; NA ; n(B,rB))         @ B : t6 -> AS6),
+             -(ok                                                     @ C5 : t7 -> AS7 # B : t8), (t8 === t7 +=+ d(C5,B)), nil ]
+  [nonexec] .
+
+eq ATTACK-STATE(1) = --- Mafia fraud
+--- Alice --- Prover
+     :: rA , rA' ::
+     ---- initialization phase
+     [ nil , +(commit(n(a,rA),s(a,rA'))
+               @ a : t1 -> i : t2),
+
+             -(commit(n(b,rB),s(b,rB'))
+              @ i : t3 -> a : t4), ((t4 === t3 +=+ d(i,a)) and d(i,a) > 0/1),
+    --- Distance Bounding phase only one bit
+             +(n(a,rA)
+              @ a : t4 -> i : t5),
+
+             -(n(b,rB) * n(a,rA)
+              @ i : t6 -> a : t7), ((t7 === t6 +=+ d(i,a)) and d(i,a) > 0/1),
+              ((t7 -=- t4) <= (2/1 *=* d) and d > 0/1)
+    | nil ]
+
+     &
+     ---Bob --- Verifier
+     :: rB , rB' ::
+     ----initialization phase
+     [ nil , -(commit(n(a,rA),s(a,rA'))
+              @ i : t1' -> b : t2'), ((t2' === t1' +=+ d(i,b)) and d(i,b) > 0/1),
+
+             +(commit(n(b,rB),s(b,rB'))
+              @ b : t2' -> i : t3'),
+      --- Distance Bounding phase only one bit
+             -(n(b,rA)
+              @ i : t4' -> b : t5'), ((t5' === t4' +=+ d(i,b)) and d(i,b) > 0/1),
+             +(n(b,rB) * n(a,rA)
+              @ b : t5' -> i : t6')
+      | nil ]
+     || smt((d(a,i) +=+ d(b,i)) > d)
+     || nil
+     || nil
+     || nil
+  [nonexec] .
+  ***(
+maude maude-npa.maude MAD.maude
+                     \||||||||||||||||||/
+                   --- Welcome to Maude ---
+                     /||||||||||||||||||\
+             Maude alpha128a built: Jul  6 2020 22:35:19
+             Copyright 1997-2020 SRI International
+                   Thu Aug 27 09:58:31 2020
+
+            Maude-NPA Version: 3.1.5 (August 9th 2020)
+            with direct composition, irreducibility constraints and time
+            (To be run with Maude 3.0 or above)
+            Copyright (c) 2020, University of Illinois
+            All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : summary(1, 0) .
+rewrites: 4594389 in 10864ms cpu (10866ms real) (422900 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 1) .
+rewrites: 775951 in 1992ms cpu (1990ms real) (389533 rewrites/second)
+result Summary: States>> 3 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 2) .
+rewrites: 2575288 in 7744ms cpu (7744ms real) (332552 rewrites/second)
+result Summary: States>> 7 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 3) .
+rewrites: 7231026 in 18472ms cpu (18470ms real) (391458 rewrites/second)
+result Summary: States>> 10 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 4) .
+rewrites: 16464476 in 40216ms cpu (40216ms real) (409401 rewrites/second)
+result Summary: States>> 10 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 5) .
+rewrites: 21599720 in 50824ms cpu (50824ms real) (424990 rewrites/second)
+result Summary: States>> 8 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 6) .
+rewrites: 20453942 in 51532ms cpu (51529ms real) (396917 rewrites/second)
+result Summary: States>> 5 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 7) .
+rewrites: 14486436 in 38056ms cpu (38055ms real) (380661 rewrites/second)
+result Summary: States>> 3 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 8) .
+rewrites: 5213587 in 17504ms cpu (17506ms real) (297851 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 9) .
+rewrites: 4410878 in 14480ms cpu (14479ms real) (304618 rewrites/second)
+result Summary: States>> 0 Solutions>> 0
+
+
+
+    )***
+
+  eq ATTACK-STATE(2) = --- Hijacking fraud --- Alice --- Prover
+     :: rA , rA' ::
+     ---- initialization phase
+     [ nil , +(commit(n(a,rA),s(a,rA'))
+               @ a : t1 -> b : t2 # i : t3),
+             -(commit(n(b,rB),s(b,rB'))
+               @ b : t2 -> a : t4 # i : t5), ((t4 === t2 +=+ d(b,a)) and d(b,a) > 0/1),
+    --- Distance Bounding phase only one bit
+             +(n(a,rA)
+               @ a : t4 -> b : t6 # i : t7),
+             -(n(b,rB) * n(a,rA)
+               @ b : t6 -> a : t8 # i : t9), ((t8 === t6 +=+ d(b,a)) and d(b,a) > 0/1),
+				((t9 -=- t4) <= (2/1 *=* d) and d > 0/1),
+	 --- Authentication phase
+             +(s(a,rA') ; mac(key(a,b), a ; b ; n(b,rB) ; n(a,rA))
+	       @ a : t8 -> b : t9 # i : t10)
+    | nil ]
+     &
+     :: rB , rB' ::  ---Bob --- Verifier
+     ----initialization phase
+     [ nil , -(commit(n(a,rA),s(a,rA'))
+                @ a : t1 -> b : t2 # i : t3), ((t2 === t1 +=+ d(b,a)) and d(b,a) > 0/1),
+              +(commit(n(b,rB),s(b,rB'))
+                @ b : t2 -> a : t4 # i : t5),
+      --- Distance Bounding phase only one bit
+             -(n(a,rA)
+               @ a : t4 -> b : t6 # i : t7), ((t6 === t4 +=+ d(b,a)) and d(b,a) > 0/1),
+             +(n(b,rB) * n(a,rA)
+               @ b : t6 -> a : t8 # i : t9),
+      --- Authentication phase
+             -(s(a,rA') ; mac(key(i,b),a ; b ; n(b,rB) ; n(a,rA))
+               @ i : t10 -> b : t11), ((t11 === t10 +=+ d(b,i)) and d(b,i) > 0/1),
+              ((open(n(a,rA),s(a,rA'),commit(n(a,rA),s(a,rA')))) eq yes)
+      | nil ]
+
+     &
+     :: nil :: --- DY actions To speed up analysis
+     [ nil,
+             -(commit(n(a,rA),s(a,rA'))
+              @ a : t1 -> b : t2 # i : t3), ((t3 === t1 +=+ d(a,i)) and d(a,i) > 0/1),
+
+             -(n(a,rA)
+              @ a : t4 -> b : t6 # i : t7), ((t7 === t4 +=+ d(a,i)) and d(a,i) > 0/1),
+
+             -(n(b,rB) * n(a,rA)
+              @ b : t6 -> a : t8 # i : t9), ((t9 === t6 +=+ d(b,i)) and d(b,i) > 0/1),
+
+             -(s(a,rA') ; mac(key(a,b), a ; b ; n(b,rB) ; n(a,rA))
+			   @ a : t8 -> b : t9 # i : t10), ((t10 === t8 +=+ d(a,i)) and d(a,i) > 0/1),
+
+             +(s(a,rA') ; mac(key(i,b),a ; b ; n(b,rB) ; n(a,rA))
+              @ i : t10 -> b : t11)
+      | nil ]
+
+     || empty
+     || nil
+     || nil
+     || nil
+  [nonexec] .
+
+***(
+==========================================
+reduce in MAUDE-NPA : summary(2, 0) .
+rewrites: 231 in 10ms cpu (10ms real) (22440 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 1) .
+rewrites: 2830936 in 3461ms cpu (3488ms real) (817805 rewrites/second)
+result Summary: States>> 5 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 2) .
+rewrites: 13908969 in 21352ms cpu (21584ms real) (651411 rewrites/second)
+result Summary: States>> 10 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 3) .
+rewrites: 47400818 in 66900ms cpu (67558ms real) (708530 rewrites/second)
+result Summary: States>> 14 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 4) .
+rewrites: 107997710 in 143142ms cpu (144564ms real) (754479 rewrites/second)
+result Summary: States>> 18 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 5) .
+rewrites: 240182378 in 306572ms cpu (309778ms real) (783444 rewrites/second)
+result Summary: States>> 27 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 6) .
+rewrites: 641312317 in 777434ms cpu (784047ms real) (824908 rewrites/second)
+result Summary: States>> 41 Solutions>> 1
+==========================================
+reduce in MAUDE-NPA : run(2, 6) .
+rewrites: 1860 in 11ms cpu (11ms real) (166249 rewrites/second)
+result IdSystemSet: (< 1 . 1 . 1 . 3 . 1 . 3 . 1 > (
+:: nil ::
+[ nil |
+   -(commit(n(a, #0:Fresh), s(a, #1:Fresh))
+      @ a : #2:Real -> b : #3:Real # i : #4:Real), (#4:Real === #2:Real +=+ d(a, i) and d(a, i) > 0/1),
+   -(n(a, #0:Fresh)
+      @ a : #5:Real -> b : #6:Real # i : #7:Real), (#7:Real === #5:Real +=+ d(a, i) and d(a, i) > 0/1),
+   -(n(a, #0:Fresh) * n(b, #8:Fresh)
+      @ b : #6:Real -> a : #9:Real # i : #10:Real), (#10:Real === #6:Real +=+ d(b, i) and d(b, i) > 0/1),
+   -(s(a, #1:Fresh) ; mac(key(a, b), a ; b ; n(b, #8:Fresh) ; n(a, #0:Fresh))
+      @ a : #9:Real -> b : #10:Real # i : #11:Real), (#11:Real === #9:Real +=+ d(a, i) and d(a, i) > 0/1),
+   +(s(a, #1:Fresh) ; mac(key(b, i), a ; b ; n(b, #8:Fresh) ; n(a, #0:Fresh))
+      @ i : #11:Real -> b : #12:Real), nil]  &
+:: #1:Fresh,#0:Fresh ::
+[ nil |
+   +(commit(n(a, #0:Fresh), s(a, #1:Fresh))
+      @ a : #2:Real -> b : #3:Real # i : #4:Real),
+   -(commit(n(b, #8:Fresh), s(b, #13:Fresh))
+      @ b : #3:Real -> a : #5:Real # i : #14:Real), (#5:Real === #3:Real +=+ d(a, b) and d(a, b) > 0/1),
+   +(n(a, #0:Fresh)
+      @ a : #5:Real -> b : #6:Real # i : #7:Real),
+   -(n(a, #0:Fresh) * n(b, #8:Fresh)
+      @ b : #6:Real -> a : #9:Real # i : #10:Real), (#9:Real === #6:Real +=+ d(a, b) and d(a, b) > 0/1), ((#10:Real -=- #5:Real) <= (2/1 *=* #15:Real) and #15:Real > 0/1),
+   +(s(a, #1:Fresh) ; mac(key(a, b), a ; b ; n(b, #8:Fresh) ; n(a, #0:Fresh))
+      @ a : #9:Real -> b : #10:Real # i : #11:Real), nil]  &
+:: #8:Fresh,#13:Fresh ::
+[ nil |
+   -(commit(n(a, #0:Fresh), s(a, #1:Fresh))
+      @ a : #2:Real -> b : #3:Real # i : #4:Real), (#3:Real === #2:Real +=+ d(a, b) and d(a, b) > 0/1),
+   +(commit(n(b, #8:Fresh), s(b, #13:Fresh))
+      @ b : #3:Real -> a : #5:Real # i : #14:Real),
+   -(n(a, #0:Fresh)
+      @ a : #5:Real -> b : #6:Real # i : #7:Real), (#6:Real === #5:Real +=+ d(a, b) and d(a, b) > 0/1),
+   +(n(a, #0:Fresh) * n(b, #8:Fresh)
+      @ b : #6:Real -> a : #9:Real # i : #10:Real),
+   -(s(a, #1:Fresh) ; mac(key(b, i), a ; b ; n(b, #8:Fresh) ; n(a, #0:Fresh))
+      @ i : #11:Real -> b : #12:Real), (#12:Real === #11:Real +=+ d(b, i) and d(b, i) > 0/1),
+   yes eq yes, nil] )
+|
+(n(a, #0:Fresh)
+ @ a : #5:Real -> b : #6:Real # i : #7:Real) !inI,
+(commit(n(a, #0:Fresh), s(a, #1:Fresh))
+ @ a : #2:Real -> b : #3:Real # i : #4:Real) !inI,
+(commit(n(b, #8:Fresh), s(b, #13:Fresh))
+ @ b : #3:Real -> a : #5:Real # i : #14:Real) !inI,
+(s(a, #1:Fresh) ; mac(key(a, b), a ; b ; n(b, #8:Fresh) ; n(a, #0:Fresh))
+ @ a : #9:Real -> b : #10:Real # i : #11:Real) !inI,
+(s(a, #1:Fresh) ; mac(key(b, i), a ; b ; n(b, #8:Fresh) ; n(a, #0:Fresh))
+ @ i : #11:Real -> b : #12:Real) !inI,
+(n(a, #0:Fresh) * n(b, #8:Fresh)
+ @ b : #6:Real -> a : #9:Real # i : #10:Real) !inI,
+smt(#3:Real === #2:Real +=+ d(a, b) and d(a, b) > 0/1 and (#5:Real === #3:Real +=+ d(a, b) and d(a, b) > 0/1 and (#6:Real === #5:Real +=+ d(a, b) and d(a, b) > 0/1 and (#9:Real === #6:Real +=+ d(a, b) and d(a, b) > 0/1 and ((#10:Real -=- #5:Real) <= (2/1 *=* #15:Real)
+    and #15:Real > 0/1 and (#4:Real === #2:Real +=+ d(a, i) and d(a, i) > 0/1 and (#7:Real === #5:Real +=+ d(a, i) and d(a, i) > 0/1 and (#10:Real === #6:Real +=+ d(b, i) and d(b, i) > 0/1 and (#11:Real === #9:Real +=+ d(a, i) and d(a, i) > 0/1 and (#12:Real ===
+    #11:Real +=+ d(b, i) and d(b, i) > 0/1))))))))))
+|
++(commit(n(a, #0:Fresh), s(a, #1:Fresh))
+   @ a : #2:Real -> b : #3:Real # i : #4:Real),
+-(commit(n(a, #0:Fresh), s(a, #1:Fresh))
+   @ a : #2:Real -> b : #3:Real # i : #4:Real),
++(commit(n(b, #8:Fresh), s(b, #13:Fresh))
+   @ b : #3:Real -> a : #5:Real # i : #14:Real),
+-(commit(n(b, #8:Fresh), s(b, #13:Fresh))
+   @ b : #3:Real -> a : #5:Real # i : #14:Real),
++(n(a, #0:Fresh)
+   @ a : #5:Real -> b : #6:Real # i : #7:Real),
+-(n(a, #0:Fresh)
+   @ a : #5:Real -> b : #6:Real # i : #7:Real),
++(n(a, #0:Fresh) * n(b, #8:Fresh)
+   @ b : #6:Real -> a : #9:Real # i : #10:Real),
+-(n(a, #0:Fresh) * n(b, #8:Fresh)
+   @ b : #6:Real -> a : #9:Real # i : #10:Real),
++(s(a, #1:Fresh) ; mac(key(a, b), a ; b ; n(b, #8:Fresh) ; n(a, #0:Fresh))
+   @ a : #9:Real -> b : #10:Real # i : #11:Real),
+-(commit(n(a, #0:Fresh), s(a, #1:Fresh))
+   @ a : #2:Real -> b : #3:Real # i : #4:Real),
+-(n(a, #0:Fresh)
+   @ a : #5:Real -> b : #6:Real # i : #7:Real),
+-(n(a, #0:Fresh) * n(b, #8:Fresh)
+   @ b : #6:Real -> a : #9:Real # i : #10:Real),
+-(s(a, #1:Fresh) ; mac(key(a, b), a ; b ; n(b, #8:Fresh) ; n(a, #0:Fresh))
+   @ a : #9:Real -> b : #10:Real # i : #11:Real),
++(s(a, #1:Fresh) ; mac(key(b, i), a ; b ; n(b, #8:Fresh) ; n(a, #0:Fresh))
+   @ i : #11:Real -> b : #12:Real),
+-(s(a, #1:Fresh) ; mac(key(b, i), a ; b ; n(b, #8:Fresh) ; n(a, #0:Fresh))
+   @ i : #11:Real -> b : #12:Real)
+|
+nil)
+)***
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .
+
+--- red displayGrammars .
+
+--- red summary(1,0) .
+--- red summary(1,1) .
+--- red summary(1,2) .
+--- red summary(1,3) .
+--- red summary(1,4) .
+--- red summary(1,5) .
+--- red summary(1,6) .
+--- red summary(1,7) .
+--- red summary(1,8) .
+--- red summary(1,9) .
+
+--- red summary(2,0) .
+--- red summary(2,1) .
+--- red summary(2,2) .
+--- red summary(2,3) .
+--- red summary(2,4) .
+--- red summary(2,5) .
+--- red summary(2,6) .
+--- red run(2,6) .

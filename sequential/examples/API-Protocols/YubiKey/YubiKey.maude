@@ -1,0 +1,273 @@
+    fmod PROTOCOL-EXAMPLE-SYMBOLS is
+  --- Importing sorts Msg, Fresh, Public
+  protecting DEFINITION-PROTOCOL-RULES .
+  
+  ----------------------------------------------------------
+  --- Overwrite this module with the syntax of your protocol
+  --- Notes:
+  --- * Sort Msg and Fresh are special and imported
+  --- * Every sort must be a subsort of Msg
+  --- * No sort can be a supersort of Msg
+  ----------------------------------------------------------
+
+  --- Sort Information
+  --- sort Msg is split into three blocks: StdMsg, GlobalMsg, and EventList 
+
+
+  sorts Event EventList StdMsg GlobalMsg Fr FrNonce GlobalEventList .
+
+  sorts Y YubiCounter Server SharedKey Senc Init ExtendedInit Yubi YubiPress Login LoginCounter Counter .
+
+  subsorts StdMsg GlobalEventList < Msg .
+  subsort Event < EventList .
+  subsort FrNonce Senc Counter < StdMsg .
+  subsort Counter < Public .
+
+  subsorts Y SharedKey YubiCounter Server < GlobalMsg .
+
+  subsorts Init ExtendedInit Yubi YubiPress Login LoginCounter < Event .
+
+
+  ----1----
+  op Fr : Fresh -> FrNonce .
+  op Init : FrNonce FrNonce -> Init .
+  op ExtendedInit : FrNonce FrNonce FrNonce -> ExtendedInit .
+  op Y : FrNonce FrNonce -> Y .
+  op YubiCounter : FrNonce Counter -> YubiCounter .
+  op Server : FrNonce FrNonce Counter -> Server .
+  op init : -> StdMsg .
+
+  ----2----
+  op Yubi : FrNonce Counter -> Yubi .
+
+  op 1 : -> Counter . 
+  op _+_ : Counter Counter -> Counter [assoc comm] .
+  ---------
+
+
+  op SharedKey : FrNonce FrNonce -> SharedKey .
+  op _;_ : StdMsg StdMsg -> StdMsg [gather (e E)] .
+
+
+  op _|>_ : GlobalMsg EventList -> GlobalEventList [prec 50] .
+
+  op _@_ : GlobalMsg GlobalMsg -> GlobalMsg [prec 20 assoc comm id: empty] .
+  op empty : -> GlobalMsg .   --- Persistent memory ---
+  
+  op senc : StdMsg FrNonce -> Senc .
+  op YubiPress : FrNonce Counter -> YubiPress .
+  
+  ----4----
+  op Login : FrNonce FrNonce Counter StdMsg -> Login . 
+  op LoginCounter : FrNonce Counter Counter -> LoginCounter .
+
+  op yubikey : -> Role .
+  
+  
+  op nil : -> EventList .
+  op _++_ : EventList EventList -> EventList [assoc id: nil prec 40] . 
+endfm
+
+fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  
+  ----------------------------------------------------------
+  --- Overwrite this module with the algebraic properties 
+  --- of your protocol
+  ----------------------------------------------------------
+  
+ --- eq X:StdMsg * mt = X:StdMsg [variant] .
+---  eq X:StdMsg * X:StdMsg = mt [variant] .
+---  eq X:StdMsg * X:StdMsg * Y:StdMsg = Y:StdMsg [variant] .
+
+endfm
+
+fmod PROTOCOL-SPECIFICATION is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  protecting DEFINITION-PROTOCOL-RULES .
+  protecting DEFINITION-CONSTRAINTS-INPUT .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the strands 
+  --- of your protocol
+  ----------------------------------------------------------
+
+    vars pid sid npr key nonce k : FrNonce .
+    vars pid1 sid1 key1 : FrNonce .
+    vars r rpid rsid rnpr rk rnonce : Fresh .
+    vars counter1 counter2 counter3 : Counter .
+    vars mem mem1 mem2 mem3 mem4 mem5 : GlobalMsg .
+    vars EL EL1 EL2 EL3 : EventList . 
+     
+     
+        
+eq STRANDS-DOLEVYAO =
+   :: nil :: [ nil | +(c:Counter), nil ] &
+   :: r   :: [ nil | +(Fr(r)), nil ]  &
+   :: nil :: [ nil | -(X:StdMsg), -(K:FrNonce), +(senc(X:StdMsg,K:FrNonce)), nil ] &
+   :: nil :: [ nil | -(K:FrNonce), -(senc(X:StdMsg,K:FrNonce)), +(X:StdMsg), nil ] &
+   :: nil :: [ nil | -(X:StdMsg), -(Y:StdMsg), +(X:StdMsg ; Y:StdMsg), nil ] &
+   :: nil :: [ nil | -(X:StdMsg ; Y:StdMsg), +(X:StdMsg), nil ] &
+   :: nil :: [ nil | -(X:StdMsg ; Y:StdMsg), +(Y:StdMsg), nil ] 
+[nonexec] .
+
+eq STRANDS-PROTOCOL = 
+:: rk,rpid,rsid ::
+[nil |
+       +(init),
+         {yubikey -> yubikey ;; 1-1 ;;
+	    YubiCounter(Fr(rpid:Fresh), 1) @
+	    Server(Fr(rpid:Fresh),Fr(rsid:Fresh),1) @ 
+            Y(Fr(rpid:Fresh),Fr(rsid:Fresh)) @
+	    SharedKey(Fr(rpid:Fresh),Fr(rk:Fresh))
+	    |> Init(Fr(rpid:Fresh),Fr(rk:Fresh)) 
+      ++ ExtendedInit(Fr(rpid:Fresh),Fr(rsid:Fresh),Fr(rk:Fresh)) } 
+, nil ]
+&
+
+:: nil :: *** Fig 2. Yubikey Plugin API Command
+[nil | 
+         {yubikey -> yubikey ;; 1-1 ;;
+         YubiCounter(pid:FrNonce,otc:Counter) @ mem:GlobalMsg
+	       |> EL:EventList },
+	 
+         -(tc:Counter), 
+         (tc:Counter eq (otc:Counter + extra:Counter)),
+
+         {yubikey -> yubikey ;; 1-1 ;;
+	 YubiCounter(pid:FrNonce,tc:Counter) @ mem:GlobalMsg
+	       |> EL:EventList ++ Yubi(pid:FrNonce,tc:Counter) }
+, nil ] 
+&
+
+:: rnpr,rnonce :: *** Fig 3. Yubikey PressButton Command
+[nil | 
+         {yubikey -> yubikey ;; 1-1 ;;
+	  YubiCounter(pid:FrNonce,tc:Counter) @ Y(pid:FrNonce,sid:FrNonce) @ SharedKey(pid:FrNonce,k:FrNonce) @ mem:GlobalMsg 
+    |> EL:EventList },
+
+         -(tc:Counter),
+         +(pid:FrNonce ; Fr(rnonce:Fresh) ; senc(sid:FrNonce ; (tc:Counter + 1) ; Fr(rnpr:Fresh),k:FrNonce)), 
+	    
+         {yubikey -> yubikey ;; 1-1 ;;
+	 YubiCounter(pid:FrNonce,tc:Counter + 1) @ Y(pid:FrNonce,sid:FrNonce) @ SharedKey(pid:FrNonce,k:FrNonce) @ mem:GlobalMsg 
+   |> EL:EventList ++
+      YubiPress(pid:FrNonce,tc:Counter + 1)}
+, nil ] 
+&
+:: nil :: *** Fig 4. Yubikey Login Command
+[nil | 
+         {yubikey -> yubikey ;; 1-1 ;;
+	 Server(pid:FrNonce,sid:FrNonce,otc:Counter) @ SharedKey(pid:FrNonce,k:FrNonce) @ mem:GlobalMsg 
+   |> EL:EventList },
+	    
+         -(pid:FrNonce ; nonce:FrNonce ; senc(sid:FrNonce ; tc:Counter ; pr:FrNonce, k:FrNonce)),
+	 -(otc:Counter), ---In(otc)
+         (tc:Counter eq (otc:Counter + extra:Counter)),
+          
+         {yubikey -> yubikey ;; 1-1 ;;
+	 Server(pid:FrNonce,sid:FrNonce,tc:Counter) @ SharedKey(pid:FrNonce,k:FrNonce) @ mem:GlobalMsg 
+   |> EL:EventList ++
+      Login(pid:FrNonce,sid:FrNonce,tc:Counter,senc(sid:FrNonce ; tc:Counter ; pr:FrNonce, k:FrNonce)) ++ 
+      LoginCounter(pid:FrNonce,otc:Counter,tc:Counter)  }
+, nil ]
+[nonexec] .
+
+  eq ATTACK-STATE(0) =
+    :: nil ::
+    [nil, {yubikey -> yubikey ;; 1-1 ;; mem:GlobalMsg |> 
+            Init(pid,k) ++
+	    ExtendedInit(pid,sid,k) ++
+	    YubiPress(pid,1 + 1) ++
+	    Login(pid,sid, (1 + 1), senc(sid ; (1 + 1) ; npr, k)) ++ 
+            LoginCounter(pid,1,(1 + 1))}
+        | nil ]
+     || empty
+     || nil
+     || nil
+     || nil
+  [nonexec] .
+
+---YubiKey output attack (a)
+---------Absence of replay attacks in YubiKey, i.e., there are no two distinct logins that accept the same counter value.
+eq ATTACK-STATE(1)
+ = :: nil ::
+   [ nil, {yubikey -> yubikey ;; 1-1 ;; mem:GlobalMsg |>
+          EL1:EventList ++
+          Login(pid:FrNonce,sid:FrNonce,counter2:Counter,X:Senc) ++
+          EL2:EventList ++ 	
+          Login(pid:FrNonce,sid:FrNonce,counter2:Counter,Y:Senc) ++
+          EL3:EventList } | nil ]
+   || X:Senc != Y:Senc     
+   || nil
+   || nil
+   || nil
+[nonexec] .
+
+---YubiKey output attack (b)
+-------Correspondence between pressing the button on a YubiKey and a successful login. 
+-------In other words, a successful login must have been preceded by a button pressed for the same counter value.
+eq ATTACK-STATE(2)
+ = :: nil ::
+   [ nil, {yubikey -> yubikey ;; 1-1 ;; mem:GlobalMsg |>
+          EL:EventList ++
+          YubiPress(pid:FrNonce,c4:Counter) ++
+          EL1:EventList ++
+          Login(pid:FrNonce,sid:FrNonce,c4:Counter,X:StdMsg) ++
+          EL2:EventList ++
+          Login(pid:FrNonce,sid:FrNonce,c4:Counter,Y:StdMsg) ++
+          EL3:EventList } | nil ]
+   || empty
+   || nil
+   || nil
+   || nil
+[nonexec] .
+
+---YubiKey output attack (b)
+-------Correspondence between pressing the button on a YubiKey and a successful login. 
+-------In other words, a successful login must have been preceded by a button pressed for the same counter value.
+-------Attack pattern 2 but using Cathy's version
+
+eq ATTACK-STATE(21)
+ = :: nil ::
+   [ nil, {yubikey -> yubikey ;; 1-1 ;; mem:GlobalMsg |>
+          EL1:EventList ++
+          Login(pid:FrNonce,sid:FrNonce,1 + c4:Counter,Y:StdMsg) ++
+          EL2:EventList } | nil ]
+   || empty
+   || nil
+   || nil
+   || never *** for authentication
+     (:: nil ::
+      [ nil | {yubikey -> yubikey ;; 1-1 ;; mem:GlobalMsg |>
+              EL1a:EventList ++
+              YubiPress(pid:FrNonce,1 + c4:Counter) ++
+              EL1b:EventList ++
+              Login(pid:FrNonce,sid:FrNonce,1 + c4:Counter,Y:StdMsg) ++
+              EL2:EventList }, nil ] 
+     & S:StrandSet  
+     || K:IntruderKnowledge)
+[nonexec] .
+
+
+---YubiKey output attack (c)
+-------Counter values of YubiKey are different over time, where a successful login invalidates previous OTPs.
+
+eq ATTACK-STATE(3)
+   = :: nil ::
+     [ nil, {yubikey -> yubikey ;; 1-1 ;; mem:GlobalMsg |>
+            EL1:EventList ++
+	    LoginCounter(pid:FrNonce,c1:Counter,c2:Counter + c4:Counter) ++
+	    EL2:EventList ++
+            LoginCounter(pid:FrNonce,c3:Counter,c4:Counter) ++
+	    EL3:EventList } | nil ]
+     || empty
+     || nil
+     || nil
+     || nil
+  [nonexec] .
+
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .

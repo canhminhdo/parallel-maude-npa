@@ -1,0 +1,1770 @@
+Tue Jun  2 19:21:58 CEST 2020
+		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	     Maude alpha128 built: Mar 10 2020 14:45:05
+	     Copyright 1997-2020 SRI International
+		   Tue Jun  2 19:21:58 2020
+
+	    Maude-NPA Version: 3.1.4 (June 2nd 2020)
+	    with direct composition, irreducibility constraints and time
+	    (To be run with Maude alpha 121 or above)
+	    Copyright (c) 2020, University of Illinois
+	    All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern
+    X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : genGrammars .
+rewrites: 1488667 in 4668ms cpu (20227ms real) (318908 rewrites/second)
+result GrammarList: (errorNoHeuristicApplied {
+grl #0:Skey inL => senc(#0:Skey, #1:Skey) inL . ,none,
+grl #0:Skey inL => (h(#4:Nonce,#1:Skey),h(#5:Nonce,#0:Skey)) inL . ,none,
+grl (#7:Msg ; #0:Skey) notInI,
+   (#0:Skey notLeq #8:Name),
+   (#0:Skey notLeq h(n(#9:Name, #10:Fresh),#11:Skey)),
+   (#0:Skey notLeq senc(#12:Skey, #13:Skey)),
+   (#0:Skey notLeq n(i, #14:Fresh)),
+   (#0:Skey notLeq sKey(i, #15:Fresh)),
+   (#7:Msg ; #0:Skey) notLeq #16:Msg ; sKey(#17:Name, #18:Fresh) => (h(
+    #4:Nonce,#1:Skey),h(#5:Nonce,#0:Skey)) inL . } usingGrammar 
+grl #0:Skey inL => h(#1:Nonce,#0:Skey) inL .  ; 
+grl #0:Skey inL => senc(#0:Skey, #1:Skey) inL .  ; 
+grl #0:Msg notInI,
+   (#0:Msg notLeq #1:Name),
+   (#0:Msg notLeq h(n(#2:Name, #3:Fresh),#4:Skey)),
+   (#0:Msg notLeq senc(#5:Skey, #6:Skey)),
+   (#0:Msg notLeq n(i, #7:Fresh)),
+   (#0:Msg notLeq #8:Msg ; sKey(#9:Name, #10:Fresh)),
+   #0:Msg notLeq sKey(i, #11:Fresh) => (#0:Msg ; #12:Msg) inL .  ; 
+grl (#1:Msg ; #0:Msg) notInI,
+   (#1:Msg notLeq #2:Name),
+   (#1:Msg notLeq h(n(#3:Name, #4:Fresh),#5:Skey)),
+   (#1:Msg notLeq senc(#6:Skey, #7:Skey)),
+   (#1:Msg notLeq n(i, #8:Fresh)),
+   (#1:Msg notLeq sKey(i, #9:Fresh)),
+   (#1:Msg ; #0:Msg) notLeq #10:Msg ; sKey(#11:Name, #12:Fresh) => #1:Msg inL .
+    )
+| 
+grl empty => (#1:Msg ; #2:Msg) inL . 
+| 
+grl #0:Nonce notInI,
+   #0:Nonce notLeq n(#1:Name, #2:Fresh) => h(#0:Nonce,#3:Key) inL . 
+| 
+grl #0:Key notInI,
+   #0:Key notLeq sKey(#1:Name, #2:Fresh) => h(#3:Nonce,#0:Key) inL . 
+| 
+grl h(#0:Nonce,#1:Key) notLeq h(n(#2:Name, #3:Fresh),#4:Skey) => h(#0:Nonce,
+    #1:Key) inL . 
+| 
+grl n(#0:Name, #1:Fresh) notLeq n(i, #2:Fresh) => n(#0:Name, #1:Fresh) inL . 
+| (errorInconsistentExceptionsInGrammarRule 
+grl sKey(#0:Name, #1:Fresh) notLeq sKey(#2:Name, #4:Fresh) => sKey(#0:Name,
+    #1:Fresh) inL .  inGrammar 
+grl #0:Skey inL => h(#1:Nonce,#0:Skey) inL .  ; 
+grl #0:Skey inL => senc(#0:Skey, #1:Skey) inL .  ; 
+grl sKey(#0:Name, #1:Fresh) notLeq sKey(#2:Name, #4:Fresh) => sKey(#0:Name,
+    #1:Fresh) inL . )
+| (errorNoHeuristicApplied {
+grl #50:Skey notInI => senc(#50:Skey, #60:Skey) inL . ,none,
+grl #50:Skey notInI => (h(#63:Nonce,#60:Skey),h(#64:Nonce,#50:Skey)) inL . ,
+    none,
+grl #50:Skey notInI => (h(#63:Nonce,#60:Skey),h(#64:Nonce,#50:Skey)) inL . }
+    usingGrammar 
+grl #50:Skey notInI => senc(#50:Skey, #60:Skey) inL . )
+| (errorNoHeuristicApplied {
+grl #50:Skey notInI => senc(#1:Skey, #50:Skey) inL . ,none,
+grl #50:Skey notInI => (h(#53:Nonce,#50:Skey),h(#54:Nonce,#1:Skey)) inL . ,
+    none,
+grl #50:Skey notInI => (h(#53:Nonce,#50:Skey),h(#54:Nonce,#1:Skey)) inL . }
+    usingGrammar 
+grl #50:Skey notInI => senc(#1:Skey, #50:Skey) inL . )
+| errorNoHeuristicApplied {
+grl empty => senc(#1:Skey, #2:Skey) inL . ,none,
+grl empty => (h(#5:Nonce,#2:Skey),h(#6:Nonce,#1:Skey)) inL . ,none,
+grl empty => (h(#5:Nonce,#2:Skey),h(#6:Nonce,#1:Skey)) inL . } usingGrammar 
+grl empty => senc(#1:Skey, #2:Skey) inL . 
+==========================================
+reduce in MAUDE-NPA : run(0) .
+rewrites: 3463 in 128ms cpu (513ms real) (27054 rewrites/second)
+result ShortIdSystem: < 1 > 
+:: r1:Fresh,r2:Fresh,r1':Fresh,r2':Fresh ::
+[ nil, 
+   +(h(n(a, r1:Fresh),sKey(a, r1':Fresh))), 
+   +(h(n(a, r2:Fresh),sKey(a, r2':Fresh))) | nil] 
+| 
+sKey(a, r1':Fresh) inI
+| 
+nil
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : summary(1) .
+rewrites: 130474 in 348ms cpu (1448ms real) (374925 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2) .
+rewrites: 325425 in 1220ms cpu (5165ms real) (266741 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3) .
+rewrites: 929538 in 2636ms cpu (10937ms real) (352632 rewrites/second)
+result Summary: States>> 4 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(4) .
+rewrites: 9594184 in 15964ms cpu (60136ms real) (600988 rewrites/second)
+result Summary: States>> 11 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(5) .
+rewrites: 28297475 in 46164ms cpu (159578ms real) (612977 rewrites/second)
+result Summary: States>> 11 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(6) .
+rewrites: 26355618 in 47172ms cpu (143144ms real) (558713 rewrites/second)
+result Summary: States>> 5 Solutions>> 1
+==========================================
+reduce in MAUDE-NPA : run(1) .
+rewrites: 115 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 > (
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #0:Fresh), #1:Skey)), 
+   -(#1:Skey), 
+   +(sKey(a, #0:Fresh)), nil]  & 
+:: #2:Fresh,#3:Fresh,#4:Fresh,#0:Fresh ::
+[ nil, 
+   +(h(n(a, #2:Fresh),sKey(a, #0:Fresh))), 
+   +(h(n(a, #3:Fresh),sKey(a, #4:Fresh))) | nil] )
+| 
+sKey(a, #0:Fresh) !inI,
+senc(sKey(a, #0:Fresh), #1:Skey) inI
+| 
+-(senc(sKey(a, #0:Fresh), #1:Skey)), 
+-(#1:Skey), 
++(sKey(a, #0:Fresh))
+| ghost(#1:Skey))
+< 1 . 3 > 
+:: #1:Fresh,#2:Fresh,#3:Fresh,#0:Fresh ::
+[ nil, 
+   +(h(n(a, #0:Fresh),sKey(a, #2:Fresh))) | 
+   +(h(n(a, #1:Fresh),sKey(a, #3:Fresh))), nil] 
+| 
+sKey(a, #2:Fresh) inI
+| 
++(h(n(a, #1:Fresh),sKey(a, #3:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(2) .
+rewrites: 160 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 1 > (
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #0:Fresh), #1:Skey)), 
+   -(#1:Skey), 
+   +(sKey(a, #0:Fresh)), nil]  & 
+:: #2:Fresh,#3:Fresh,#4:Fresh,#0:Fresh ::
+[ nil, 
+   +(h(n(a, #2:Fresh),sKey(a, #0:Fresh))) | 
+   +(h(n(a, #3:Fresh),sKey(a, #4:Fresh))), nil] )
+| 
+sKey(a, #0:Fresh) !inI,
+senc(sKey(a, #0:Fresh), #1:Skey) inI
+| 
++(h(n(a, #3:Fresh),sKey(a, #4:Fresh))), 
+-(senc(sKey(a, #0:Fresh), #1:Skey)), 
+-(#1:Skey), 
++(sKey(a, #0:Fresh))
+| ghost(#1:Skey))
+< 1 . 2 . 2{1} > (
+:: nil ::
+[ nil | 
+   -(h(#2:Nonce,#1:Skey)), 
+   -(h(#3:Nonce,sKey(a, #0:Fresh))), 
+   +(senc(sKey(a, #0:Fresh), #1:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #0:Fresh), #1:Skey)), 
+   -(#1:Skey), 
+   +(sKey(a, #0:Fresh)), nil]  & 
+:: #4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil, 
+   +(h(n(a, #4:Fresh),sKey(a, #0:Fresh))), 
+   +(h(n(a, #5:Fresh),sKey(a, #6:Fresh))) | nil] )
+| 
+senc(sKey(a, #0:Fresh), #1:Skey) !inI,
+sKey(a, #0:Fresh) !inI,
+h(#2:Nonce,#1:Skey) inI,
+h(#3:Nonce,sKey(a, #0:Fresh)) inI,(
+#2:Nonce != #3:Nonce),(
+#1:Skey != sKey(a, #0:Fresh)),
+h(#2:Nonce,#1:Skey) != h(#3:Nonce,sKey(a, #0:Fresh))
+| 
+-(h(#2:Nonce,#1:Skey)), 
+-(h(#3:Nonce,sKey(a, #0:Fresh))), 
++(senc(sKey(a, #0:Fresh), #1:Skey)), 
+-(senc(sKey(a, #0:Fresh), #1:Skey)), 
+-(#1:Skey), 
++(sKey(a, #0:Fresh))
+| ghost(#1:Skey)
+==========================================
+reduce in MAUDE-NPA : run(3) .
+rewrites: 225 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 1 . 2{1} > (
+:: nil ::
+[ nil | 
+   -(h(#2:Nonce,#1:Skey)), 
+   -(h(#3:Nonce,sKey(a, #0:Fresh))), 
+   +(senc(sKey(a, #0:Fresh), #1:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #0:Fresh), #1:Skey)), 
+   -(#1:Skey), 
+   +(sKey(a, #0:Fresh)), nil]  & 
+:: #4:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil, 
+   +(h(n(a, #4:Fresh),sKey(a, #0:Fresh))) | 
+   +(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), nil] )
+| 
+senc(sKey(a, #0:Fresh), #1:Skey) !inI,
+sKey(a, #0:Fresh) !inI,
+h(#2:Nonce,#1:Skey) inI,
+h(#3:Nonce,sKey(a, #0:Fresh)) inI,(
+#2:Nonce != #3:Nonce),(
+#1:Skey != sKey(a, #0:Fresh)),
+h(#2:Nonce,#1:Skey) != h(#3:Nonce,sKey(a, #0:Fresh))
+| 
+-(h(#2:Nonce,#1:Skey)), 
+-(h(#3:Nonce,sKey(a, #0:Fresh))), 
++(senc(sKey(a, #0:Fresh), #1:Skey)), 
++(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), 
+-(senc(sKey(a, #0:Fresh), #1:Skey)), 
+-(#1:Skey), 
++(sKey(a, #0:Fresh))
+| ghost(#1:Skey))
+(< 1 . 2 . 2{1} . 5{2} > (
+:: nil ::
+[ nil | 
+   -(h(#0:Nonce,#1:Skey)), 
+   -(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #1:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #1:Skey)), 
+   -(#1:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #3:Fresh ::
+[ nil | 
+   -(h(#5:Nonce,#6:Skey)), 
+   -(senc(sKey(a, #4:Fresh), #6:Skey)), 
+   +(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), nil]  & 
+:: #4:Fresh,#7:Fresh,#8:Fresh,#9:Fresh ::
+[ nil, 
+   +(h(n(a, #7:Fresh),sKey(a, #4:Fresh))), 
+   +(h(n(a, #8:Fresh),sKey(a, #9:Fresh))) | nil] )
+| 
+h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh)) !inI,
+senc(sKey(a, #4:Fresh), #1:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#5:Nonce,#6:Skey) inI,
+h(#0:Nonce,#1:Skey) inI,
+senc(sKey(a, #4:Fresh), #6:Skey) inI,(
+#5:Nonce != n(#2:Name, #3:Fresh)),(
+#0:Nonce != n(#2:Name, #3:Fresh)),(
+#1:Skey != sKey(a, #4:Fresh)),(
+#6:Skey != sKey(a, #4:Fresh)),(
+h(#5:Nonce,#6:Skey) != h(#0:Nonce,#1:Skey)),
+h(#0:Nonce,#1:Skey) != h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))
+| 
+-(h(#5:Nonce,#6:Skey)), 
+-(senc(sKey(a, #4:Fresh), #6:Skey)), 
++(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+-(h(#0:Nonce,#1:Skey)), 
+-(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(#1:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#1:Skey))
+(< 1 . 2 . 2{1} . 6{1} > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   -(senc(#2:Skey, sKey(a, #4:Fresh))), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh,#7:Fresh,#8:Fresh,#9:Fresh ::
+[ nil, 
+   +(h(n(a, #7:Fresh),sKey(a, #4:Fresh))), 
+   +(h(n(a, #8:Fresh),sKey(a, #9:Fresh))) | nil] )
+| 
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#3:Nonce,sKey(a, #4:Fresh)) inI,
+senc(#2:Skey, sKey(a, #4:Fresh)) inI,(
+#3:Nonce != n(#0:Name, #1:Fresh)),(
+#2:Skey != sKey(a, #4:Fresh)),
+h(#3:Nonce,sKey(a, #4:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)
+| 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
+-(senc(#2:Skey, sKey(a, #4:Fresh))), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#2:Skey))
+< 1 . 2 . 2{1} . 6{2} > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(#5:Nonce,#6:Skey)), 
+   -(senc(#2:Skey, #6:Skey)), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh,#7:Fresh,#8:Fresh,#9:Fresh ::
+[ nil, 
+   +(h(n(a, #7:Fresh),sKey(a, #4:Fresh))), 
+   +(h(n(a, #8:Fresh),sKey(a, #9:Fresh))) | nil] )
+| 
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#3:Nonce,sKey(a, #4:Fresh)) inI,
+h(#5:Nonce,#6:Skey) inI,(
+#3:Nonce != n(#0:Name, #1:Fresh)),(
+#5:Nonce != n(#0:Name, #1:Fresh)),(
+#2:Skey != sKey(a, #4:Fresh)),(
+#6:Skey != sKey(a, #4:Fresh)),(
+h(#3:Nonce,sKey(a, #4:Fresh)) != h(#5:Nonce,#6:Skey)),
+h(#3:Nonce,sKey(a, #4:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)
+| 
+-(h(#5:Nonce,#6:Skey)), 
+-(senc(#2:Skey, #6:Skey)), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#2:Skey),
+ghost(senc(#2:Skey, #6:Skey))
+==========================================
+reduce in MAUDE-NPA : run(4) .
+rewrites: 389 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 1 . 2{1} . 2 > (
+:: nil ::
+[ nil | 
+   -(h(#0:Nonce,#1:Skey)), 
+   -(h(n(a, #2:Fresh),sKey(a, #3:Fresh))), 
+   +(senc(sKey(a, #3:Fresh), #1:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #3:Fresh), #1:Skey)), 
+   -(#1:Skey), 
+   +(sKey(a, #3:Fresh)), nil]  & 
+:: #2:Fresh,#3:Fresh,#4:Fresh,#5:Fresh ::
+[ nil | 
+   +(h(n(a, #2:Fresh),sKey(a, #3:Fresh))), 
+   +(h(n(a, #4:Fresh),sKey(a, #5:Fresh))), nil] )
+| 
+h(n(a, #2:Fresh),sKey(a, #3:Fresh)) !inI,
+senc(sKey(a, #3:Fresh), #1:Skey) !inI,
+sKey(a, #3:Fresh) !inI,
+h(#0:Nonce,#1:Skey) inI,(
+#0:Nonce != n(a, #2:Fresh)),(
+#1:Skey != sKey(a, #3:Fresh)),
+h(#0:Nonce,#1:Skey) != h(n(a, #2:Fresh),sKey(a, #3:Fresh))
+| 
++(h(n(a, #2:Fresh),sKey(a, #3:Fresh))), 
+-(h(#0:Nonce,#1:Skey)), 
+-(h(n(a, #2:Fresh),sKey(a, #3:Fresh))), 
++(senc(sKey(a, #3:Fresh), #1:Skey)), 
++(h(n(a, #4:Fresh),sKey(a, #5:Fresh))), 
+-(senc(sKey(a, #3:Fresh), #1:Skey)), 
+-(#1:Skey), 
++(sKey(a, #3:Fresh))
+| ghost(#1:Skey))
+(< 1 . 2 . 1 . 2{1} . 6{2} > (
+:: nil ::
+[ nil | 
+   -(h(#0:Nonce,#1:Skey)), 
+   -(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #1:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #1:Skey)), 
+   -(#1:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #3:Fresh ::
+[ nil | 
+   -(h(#5:Nonce,#6:Skey)), 
+   -(senc(sKey(a, #4:Fresh), #6:Skey)), 
+   +(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), nil]  & 
+:: #4:Fresh,#7:Fresh,#8:Fresh,#9:Fresh ::
+[ nil, 
+   +(h(n(a, #7:Fresh),sKey(a, #4:Fresh))) | 
+   +(h(n(a, #8:Fresh),sKey(a, #9:Fresh))), nil] )
+| 
+h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh)) !inI,
+senc(sKey(a, #4:Fresh), #1:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#5:Nonce,#6:Skey) inI,
+h(#0:Nonce,#1:Skey) inI,
+senc(sKey(a, #4:Fresh), #6:Skey) inI,(
+#5:Nonce != n(#2:Name, #3:Fresh)),(
+#0:Nonce != n(#2:Name, #3:Fresh)),(
+#1:Skey != sKey(a, #4:Fresh)),(
+#6:Skey != sKey(a, #4:Fresh)),(
+h(#5:Nonce,#6:Skey) != h(#0:Nonce,#1:Skey)),
+h(#0:Nonce,#1:Skey) != h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))
+| 
+-(h(#5:Nonce,#6:Skey)), 
+-(senc(sKey(a, #4:Fresh), #6:Skey)), 
++(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+-(h(#0:Nonce,#1:Skey)), 
+-(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #1:Skey)), 
++(h(n(a, #8:Fresh),sKey(a, #9:Fresh))), 
+-(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(#1:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#1:Skey))
+(< 1 . 2 . 1 . 2{1} . 7{1} > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   -(senc(#2:Skey, sKey(a, #4:Fresh))), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh,#7:Fresh,#8:Fresh,#9:Fresh ::
+[ nil, 
+   +(h(n(a, #7:Fresh),sKey(a, #4:Fresh))) | 
+   +(h(n(a, #8:Fresh),sKey(a, #9:Fresh))), nil] )
+| 
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#3:Nonce,sKey(a, #4:Fresh)) inI,
+senc(#2:Skey, sKey(a, #4:Fresh)) inI,(
+#3:Nonce != n(#0:Name, #1:Fresh)),(
+#2:Skey != sKey(a, #4:Fresh)),
+h(#3:Nonce,sKey(a, #4:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)
+| 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
+-(senc(#2:Skey, sKey(a, #4:Fresh))), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
++(h(n(a, #8:Fresh),sKey(a, #9:Fresh))), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#2:Skey))
+(< 1 . 2 . 1 . 2{1} . 7{2} > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(#5:Nonce,#6:Skey)), 
+   -(senc(#2:Skey, #6:Skey)), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh,#7:Fresh,#8:Fresh,#9:Fresh ::
+[ nil, 
+   +(h(n(a, #7:Fresh),sKey(a, #4:Fresh))) | 
+   +(h(n(a, #8:Fresh),sKey(a, #9:Fresh))), nil] )
+| 
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#3:Nonce,sKey(a, #4:Fresh)) inI,
+h(#5:Nonce,#6:Skey) inI,(
+#3:Nonce != n(#0:Name, #1:Fresh)),(
+#5:Nonce != n(#0:Name, #1:Fresh)),(
+#2:Skey != sKey(a, #4:Fresh)),(
+#6:Skey != sKey(a, #4:Fresh)),(
+h(#3:Nonce,sKey(a, #4:Fresh)) != h(#5:Nonce,#6:Skey)),
+h(#3:Nonce,sKey(a, #4:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)
+| 
+-(h(#5:Nonce,#6:Skey)), 
+-(senc(#2:Skey, #6:Skey)), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
++(h(n(a, #8:Fresh),sKey(a, #9:Fresh))), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#2:Skey),
+ghost(senc(#2:Skey, #6:Skey)))
+(< 1 . 2 . 2{1} . 5{2} . 4{4} > (
+:: nil ::
+[ nil | 
+   -(h(#5:Nonce,#6:Skey)), 
+   -(h(#7:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #6:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(#0:Nonce,#1:Skey)), 
+   -(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #1:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #1:Skey)), 
+   -(#1:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #3:Fresh ::
+[ nil | 
+   -(h(#5:Nonce,#6:Skey)), 
+   -(senc(sKey(a, #4:Fresh), #6:Skey)), 
+   +(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), nil]  & 
+:: #4:Fresh,#9:Fresh,#10:Fresh,#11:Fresh ::
+[ nil, 
+   +(h(n(a, #9:Fresh),sKey(a, #4:Fresh))), 
+   +(h(n(a, #10:Fresh),sKey(a, #11:Fresh))) | nil] )
+| 
+h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh)) !inI,
+senc(sKey(a, #4:Fresh), #1:Skey) !inI,
+senc(sKey(a, #4:Fresh), #6:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#5:Nonce,#6:Skey) inI,
+h(#0:Nonce,#1:Skey) inI,
+h(#7:Nonce,sKey(a, #4:Fresh)) inI,(
+#5:Nonce != n(#2:Name, #3:Fresh)),(
+#0:Nonce != n(#2:Name, #3:Fresh)),(
+#7:Nonce != n(#2:Name, #3:Fresh)),(
+#1:Skey != sKey(a, #4:Fresh)),(
+#6:Skey != sKey(a, #4:Fresh)),(
+h(#5:Nonce,#6:Skey) != h(#0:Nonce,#1:Skey)),(
+h(#5:Nonce,#6:Skey) != h(#7:Nonce,sKey(a, #4:Fresh))),(
+h(#0:Nonce,#1:Skey) != h(#7:Nonce,sKey(a, #4:Fresh))),
+h(#0:Nonce,#1:Skey) != h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))
+| 
+-(h(#5:Nonce,#6:Skey)), 
+-(h(#7:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #6:Skey)), 
+-(h(#5:Nonce,#6:Skey)), 
+-(senc(sKey(a, #4:Fresh), #6:Skey)), 
++(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+-(h(#0:Nonce,#1:Skey)), 
+-(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(#1:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#1:Skey))
+(< 1 . 2 . 2{1} . 5{2} . 7{1} > (
+:: nil ::
+[ nil | 
+   -(h(#0:Nonce,#1:Skey)), 
+   -(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #1:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #1:Skey)), 
+   -(#1:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #3:Fresh ::
+[ nil | 
+   -(h(n(#5:Name, #6:Fresh),#7:Skey)), 
+   -(senc(sKey(a, #4:Fresh), #7:Skey)), 
+   +(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), nil]  & 
+:: #6:Fresh ::
+[ nil | 
+   -(h(#0:Nonce,#1:Skey)), 
+   -(senc(#7:Skey, #1:Skey)), 
+   +(h(n(#5:Name, #6:Fresh),#7:Skey)), nil]  & 
+:: #4:Fresh,#10:Fresh,#11:Fresh,#12:Fresh ::
+[ nil, 
+   +(h(n(a, #10:Fresh),sKey(a, #4:Fresh))), 
+   +(h(n(a, #11:Fresh),sKey(a, #12:Fresh))) | nil] )
+| 
+h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh)) !inI,
+h(n(#5:Name, #6:Fresh),#7:Skey) !inI,
+senc(sKey(a, #4:Fresh), #1:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#0:Nonce,#1:Skey) inI,
+senc(sKey(a, #4:Fresh), #7:Skey) inI,
+n(#2:Name, #3:Fresh) != n(#5:Name, #6:Fresh)
+| 
+-(h(#0:Nonce,#1:Skey)), 
+-(senc(#7:Skey, #1:Skey)), 
++(h(n(#5:Name, #6:Fresh),#7:Skey)), 
+-(h(n(#5:Name, #6:Fresh),#7:Skey)), 
+-(senc(sKey(a, #4:Fresh), #7:Skey)), 
++(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+-(h(#0:Nonce,#1:Skey)), 
+-(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(#1:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(senc(#7:Skey, #1:Skey)),
+ghost(#1:Skey))
+(< 1 . 2 . 2{1} . 5{2} . 10{1} > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   +(senc(sKey(a, #5:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #5:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #5:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(#6:Nonce,#7:Skey)), 
+   -(senc(#2:Skey, #7:Skey)), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh ::
+[ nil | 
+   -(h(#6:Nonce,#7:Skey)), 
+   -(senc(sKey(a, #5:Fresh), #7:Skey)), 
+   +(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), nil]  & 
+:: #5:Fresh,#10:Fresh,#11:Fresh,#12:Fresh ::
+[ nil, 
+   +(h(n(a, #10:Fresh),sKey(a, #5:Fresh))), 
+   +(h(n(a, #11:Fresh),sKey(a, #12:Fresh))) | nil] )
+| 
+h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh)) !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #5:Fresh), #2:Skey) !inI,
+sKey(a, #5:Fresh) !inI,
+h(#6:Nonce,#7:Skey) inI,
+senc(sKey(a, #5:Fresh), #7:Skey) inI,(
+h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)),
+n(#3:Name, #4:Fresh) != n(#0:Name, #1:Fresh)
+| 
+-(h(#6:Nonce,#7:Skey)), 
+-(senc(#2:Skey, #7:Skey)), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#6:Nonce,#7:Skey)), 
+-(senc(sKey(a, #5:Fresh), #7:Skey)), 
++(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
++(senc(sKey(a, #5:Fresh), #2:Skey)), 
+-(senc(sKey(a, #5:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #5:Fresh))
+| ghost(#2:Skey),
+ghost(senc(#2:Skey, #7:Skey)))
+(< 1 . 2 . 2{1} . 6{1} . 3{1} > (
+:: nil ::
+[ nil | 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   -(#2:Skey), 
+   +(senc(#2:Skey, sKey(a, #4:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   -(senc(#2:Skey, sKey(a, #4:Fresh))), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh,#6:Fresh,#7:Fresh,#8:Fresh ::
+[ nil, 
+   +(h(n(a, #6:Fresh),sKey(a, #4:Fresh))), 
+   +(h(n(a, #7:Fresh),sKey(a, #8:Fresh))) | nil] )
+| 
+#2:Skey !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(#2:Skey, sKey(a, #4:Fresh)) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#3:Nonce,sKey(a, #4:Fresh)) inI,(
+#3:Nonce != n(#0:Name, #1:Fresh)),(
+#2:Skey != sKey(a, #4:Fresh)),
+h(#3:Nonce,sKey(a, #4:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)
+| 
+generatedByIntruder(#2:Skey), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
+-(#2:Skey), 
++(senc(#2:Skey, sKey(a, #4:Fresh))), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
+-(senc(#2:Skey, sKey(a, #4:Fresh))), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| 
+nil)
+(< 1 . 2 . 2{1} . 6{1} . 7{1} > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   +(senc(sKey(a, #5:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #5:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #5:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   -(senc(#2:Skey, sKey(a, #5:Fresh))), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh ::
+[ nil | 
+   -(h(#6:Nonce,#7:Skey)), 
+   -(senc(sKey(a, #5:Fresh), #7:Skey)), 
+   +(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), nil]  & 
+:: #5:Fresh,#8:Fresh,#9:Fresh,#10:Fresh ::
+[ nil, 
+   +(h(n(a, #8:Fresh),sKey(a, #5:Fresh))), 
+   +(h(n(a, #9:Fresh),sKey(a, #10:Fresh))) | nil] )
+| 
+h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh)) !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #5:Fresh), #2:Skey) !inI,
+sKey(a, #5:Fresh) !inI,
+h(#6:Nonce,#7:Skey) inI,
+senc(#2:Skey, sKey(a, #5:Fresh)) inI,
+senc(sKey(a, #5:Fresh), #7:Skey) inI,(
+h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)),
+n(#3:Name, #4:Fresh) != n(#0:Name, #1:Fresh)
+| 
+-(h(#6:Nonce,#7:Skey)), 
+-(senc(sKey(a, #5:Fresh), #7:Skey)), 
++(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+-(senc(#2:Skey, sKey(a, #5:Fresh))), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
++(senc(sKey(a, #5:Fresh), #2:Skey)), 
+-(senc(sKey(a, #5:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #5:Fresh))
+| ghost(#2:Skey))
+(< 1 . 2 . 2{1} . 6{2} . 3{1} > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(n(#5:Name, #6:Fresh),#7:Skey)), 
+   -(senc(#2:Skey, #7:Skey)), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #6:Fresh ::
+[ nil | 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   -(senc(#7:Skey, sKey(a, #4:Fresh))), 
+   +(h(n(#5:Name, #6:Fresh),#7:Skey)), nil]  & 
+:: #4:Fresh,#10:Fresh,#11:Fresh,#12:Fresh ::
+[ nil, 
+   +(h(n(a, #10:Fresh),sKey(a, #4:Fresh))), 
+   +(h(n(a, #11:Fresh),sKey(a, #12:Fresh))) | nil] )
+| 
+h(n(#5:Name, #6:Fresh),#7:Skey) !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#3:Nonce,sKey(a, #4:Fresh)) inI,
+senc(#7:Skey, sKey(a, #4:Fresh)) inI,
+n(#5:Name, #6:Fresh) != n(#0:Name, #1:Fresh)
+| 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
+-(senc(#7:Skey, sKey(a, #4:Fresh))), 
++(h(n(#5:Name, #6:Fresh),#7:Skey)), 
+-(h(n(#5:Name, #6:Fresh),#7:Skey)), 
+-(senc(#2:Skey, #7:Skey)), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#2:Skey),
+ghost(senc(#2:Skey, #7:Skey)))
+< 1 . 2 . 2{1} . 6{2} . 3{2} > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(n(#5:Name, #6:Fresh),#7:Skey)), 
+   -(senc(#2:Skey, #7:Skey)), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #6:Fresh ::
+[ nil | 
+   -(h(#8:Nonce,#9:Skey)), 
+   -(senc(#7:Skey, #9:Skey)), 
+   +(h(n(#5:Name, #6:Fresh),#7:Skey)), nil]  & 
+:: #4:Fresh,#10:Fresh,#11:Fresh,#12:Fresh ::
+[ nil, 
+   +(h(n(a, #10:Fresh),sKey(a, #4:Fresh))), 
+   +(h(n(a, #11:Fresh),sKey(a, #12:Fresh))) | nil] )
+| 
+h(n(#5:Name, #6:Fresh),#7:Skey) !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#3:Nonce,sKey(a, #4:Fresh)) inI,
+h(#8:Nonce,#9:Skey) inI,
+n(#5:Name, #6:Fresh) != n(#0:Name, #1:Fresh)
+| 
+-(h(#8:Nonce,#9:Skey)), 
+-(senc(#7:Skey, #9:Skey)), 
++(h(n(#5:Name, #6:Fresh),#7:Skey)), 
+-(h(n(#5:Name, #6:Fresh),#7:Skey)), 
+-(senc(#2:Skey, #7:Skey)), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#2:Skey),
+ghost(senc(#2:Skey, #7:Skey)),
+ghost(senc(#7:Skey, #9:Skey))
+==========================================
+reduce in MAUDE-NPA : run(5) .
+rewrites: 587 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 1 . 2{1} . 2 . 1 > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(n(a, #3:Fresh),sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(#5:Nonce,#6:Skey)), 
+   -(senc(#2:Skey, #6:Skey)), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #3:Fresh,#4:Fresh,#7:Fresh,#8:Fresh ::
+[ nil | 
+   +(h(n(a, #3:Fresh),sKey(a, #4:Fresh))), 
+   +(h(n(a, #7:Fresh),sKey(a, #8:Fresh))), nil] )
+| 
+h(n(a, #3:Fresh),sKey(a, #4:Fresh)) !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#5:Nonce,#6:Skey) inI,(
+h(n(a, #3:Fresh),sKey(a, #4:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)),
+n(a, #3:Fresh) != n(#0:Name, #1:Fresh)
+| 
+-(h(#5:Nonce,#6:Skey)), 
+-(senc(#2:Skey, #6:Skey)), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
++(h(n(a, #3:Fresh),sKey(a, #4:Fresh))), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(a, #3:Fresh),sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
++(h(n(a, #7:Fresh),sKey(a, #8:Fresh))), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#2:Skey),
+ghost(senc(#2:Skey, #6:Skey)))
+(< 1 . 2 . 1 . 2{1} . 6{2} . 4{4} > (
+:: nil ::
+[ nil | 
+   -(h(#5:Nonce,#6:Skey)), 
+   -(h(#7:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #6:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(#0:Nonce,#1:Skey)), 
+   -(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #1:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #1:Skey)), 
+   -(#1:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #3:Fresh ::
+[ nil | 
+   -(h(#5:Nonce,#6:Skey)), 
+   -(senc(sKey(a, #4:Fresh), #6:Skey)), 
+   +(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), nil]  & 
+:: #4:Fresh,#9:Fresh,#10:Fresh,#11:Fresh ::
+[ nil, 
+   +(h(n(a, #9:Fresh),sKey(a, #4:Fresh))) | 
+   +(h(n(a, #10:Fresh),sKey(a, #11:Fresh))), nil] )
+| 
+h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh)) !inI,
+senc(sKey(a, #4:Fresh), #1:Skey) !inI,
+senc(sKey(a, #4:Fresh), #6:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#5:Nonce,#6:Skey) inI,
+h(#0:Nonce,#1:Skey) inI,
+h(#7:Nonce,sKey(a, #4:Fresh)) inI,(
+#5:Nonce != n(#2:Name, #3:Fresh)),(
+#0:Nonce != n(#2:Name, #3:Fresh)),(
+#7:Nonce != n(#2:Name, #3:Fresh)),(
+#1:Skey != sKey(a, #4:Fresh)),(
+#6:Skey != sKey(a, #4:Fresh)),(
+h(#5:Nonce,#6:Skey) != h(#0:Nonce,#1:Skey)),(
+h(#5:Nonce,#6:Skey) != h(#7:Nonce,sKey(a, #4:Fresh))),(
+h(#0:Nonce,#1:Skey) != h(#7:Nonce,sKey(a, #4:Fresh))),
+h(#0:Nonce,#1:Skey) != h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))
+| 
+-(h(#5:Nonce,#6:Skey)), 
+-(h(#7:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #6:Skey)), 
+-(h(#5:Nonce,#6:Skey)), 
+-(senc(sKey(a, #4:Fresh), #6:Skey)), 
++(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+-(h(#0:Nonce,#1:Skey)), 
+-(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #1:Skey)), 
++(h(n(a, #10:Fresh),sKey(a, #11:Fresh))), 
+-(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(#1:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#1:Skey))
+(< 1 . 2 . 1 . 2{1} . 7{1} . 4{1} > (
+:: nil ::
+[ nil | 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   -(#2:Skey), 
+   +(senc(#2:Skey, sKey(a, #4:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   -(senc(#2:Skey, sKey(a, #4:Fresh))), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh,#6:Fresh,#7:Fresh,#8:Fresh ::
+[ nil, 
+   +(h(n(a, #6:Fresh),sKey(a, #4:Fresh))) | 
+   +(h(n(a, #7:Fresh),sKey(a, #8:Fresh))), nil] )
+| 
+#2:Skey !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(#2:Skey, sKey(a, #4:Fresh)) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#3:Nonce,sKey(a, #4:Fresh)) inI,(
+#3:Nonce != n(#0:Name, #1:Fresh)),(
+#2:Skey != sKey(a, #4:Fresh)),
+h(#3:Nonce,sKey(a, #4:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)
+| 
+generatedByIntruder(#2:Skey), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
+-(#2:Skey), 
++(senc(#2:Skey, sKey(a, #4:Fresh))), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
+-(senc(#2:Skey, sKey(a, #4:Fresh))), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
++(h(n(a, #7:Fresh),sKey(a, #8:Fresh))), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| 
+nil)
+(< 1 . 2 . 1 . 2{1} . 7{1} . 8{1} > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   +(senc(sKey(a, #5:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #5:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #5:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   -(senc(#2:Skey, sKey(a, #5:Fresh))), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh ::
+[ nil | 
+   -(h(#6:Nonce,#7:Skey)), 
+   -(senc(sKey(a, #5:Fresh), #7:Skey)), 
+   +(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), nil]  & 
+:: #5:Fresh,#8:Fresh,#9:Fresh,#10:Fresh ::
+[ nil, 
+   +(h(n(a, #8:Fresh),sKey(a, #5:Fresh))) | 
+   +(h(n(a, #9:Fresh),sKey(a, #10:Fresh))), nil] )
+| 
+h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh)) !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #5:Fresh), #2:Skey) !inI,
+sKey(a, #5:Fresh) !inI,
+h(#6:Nonce,#7:Skey) inI,
+senc(#2:Skey, sKey(a, #5:Fresh)) inI,
+senc(sKey(a, #5:Fresh), #7:Skey) inI,(
+h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)),
+n(#3:Name, #4:Fresh) != n(#0:Name, #1:Fresh)
+| 
+-(h(#6:Nonce,#7:Skey)), 
+-(senc(sKey(a, #5:Fresh), #7:Skey)), 
++(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+-(senc(#2:Skey, sKey(a, #5:Fresh))), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
++(senc(sKey(a, #5:Fresh), #2:Skey)), 
++(h(n(a, #9:Fresh),sKey(a, #10:Fresh))), 
+-(senc(sKey(a, #5:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #5:Fresh))
+| ghost(#2:Skey))
+(< 1 . 2 . 1 . 2{1} . 7{2} . 4{1} > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(n(#5:Name, #6:Fresh),#7:Skey)), 
+   -(senc(#2:Skey, #7:Skey)), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #6:Fresh ::
+[ nil | 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   -(senc(#7:Skey, sKey(a, #4:Fresh))), 
+   +(h(n(#5:Name, #6:Fresh),#7:Skey)), nil]  & 
+:: #4:Fresh,#10:Fresh,#11:Fresh,#12:Fresh ::
+[ nil, 
+   +(h(n(a, #10:Fresh),sKey(a, #4:Fresh))) | 
+   +(h(n(a, #11:Fresh),sKey(a, #12:Fresh))), nil] )
+| 
+h(n(#5:Name, #6:Fresh),#7:Skey) !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#3:Nonce,sKey(a, #4:Fresh)) inI,
+senc(#7:Skey, sKey(a, #4:Fresh)) inI,
+n(#5:Name, #6:Fresh) != n(#0:Name, #1:Fresh)
+| 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
+-(senc(#7:Skey, sKey(a, #4:Fresh))), 
++(h(n(#5:Name, #6:Fresh),#7:Skey)), 
+-(h(n(#5:Name, #6:Fresh),#7:Skey)), 
+-(senc(#2:Skey, #7:Skey)), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
++(h(n(a, #11:Fresh),sKey(a, #12:Fresh))), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#2:Skey),
+ghost(senc(#2:Skey, #7:Skey)))
+(< 1 . 2 . 2{1} . 5{2} . 4{4} . 3{1} > (
+:: nil ::
+[ nil | 
+   -(h(#0:Nonce,#1:Skey)), 
+   -(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #1:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), 
+   -(h(#7:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), sKey(a, #6:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #1:Skey)), 
+   -(#1:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #3:Fresh ::
+[ nil | 
+   -(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), 
+   -(senc(sKey(a, #4:Fresh), sKey(a, #6:Fresh))), 
+   +(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), nil]  & 
+:: #4:Fresh,#5:Fresh,#6:Fresh,#8:Fresh ::
+[ nil, 
+   +(h(n(a, #8:Fresh),sKey(a, #4:Fresh))) | 
+   +(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), nil] )
+| 
+h(n(a, #5:Fresh),sKey(a, #6:Fresh)) !inI,
+h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh)) !inI,
+senc(sKey(a, #4:Fresh), #1:Skey) !inI,
+senc(sKey(a, #4:Fresh), sKey(a, #6:Fresh)) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#0:Nonce,#1:Skey) inI,
+h(#7:Nonce,sKey(a, #4:Fresh)) inI,(
+h(#7:Nonce,sKey(a, #4:Fresh)) != h(n(a, #5:Fresh),sKey(a, #6:Fresh))),(
+n(a, #5:Fresh) != n(#2:Name, #3:Fresh)),
+sKey(a, #4:Fresh) != sKey(a, #6:Fresh)
+| 
++(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), 
+-(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), 
+-(h(#7:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), sKey(a, #6:Fresh))), 
+-(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), 
+-(senc(sKey(a, #4:Fresh), sKey(a, #6:Fresh))), 
++(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+-(h(#0:Nonce,#1:Skey)), 
+-(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(#1:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#1:Skey))
+(< 1 . 2 . 2{1} . 5{2} . 4{4} . 6{5} > (
+:: nil ::
+[ nil | 
+   -(h(#5:Nonce,#6:Skey)), 
+   -(h(n(#7:Name, #8:Fresh),sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #6:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(#0:Nonce,#1:Skey)), 
+   -(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #1:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #6:Skey)), 
+   -(#6:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #3:Fresh ::
+[ nil | 
+   -(h(#9:Nonce,#10:Skey)), 
+   -(senc(sKey(a, #4:Fresh), #10:Skey)), 
+   +(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), nil]  & 
+:: #8:Fresh ::
+[ nil | 
+   -(h(#0:Nonce,#1:Skey)), 
+   -(senc(sKey(a, #4:Fresh), #1:Skey)), 
+   +(h(n(#7:Name, #8:Fresh),sKey(a, #4:Fresh))), nil]  & 
+:: #4:Fresh,#11:Fresh,#12:Fresh,#13:Fresh ::
+[ nil, 
+   +(h(n(a, #11:Fresh),sKey(a, #4:Fresh))), 
+   +(h(n(a, #12:Fresh),sKey(a, #13:Fresh))) | nil] )
+| 
+h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh)) !inI,
+h(n(#7:Name, #8:Fresh),sKey(a, #4:Fresh)) !inI,
+senc(sKey(a, #4:Fresh), #1:Skey) !inI,
+senc(sKey(a, #4:Fresh), #6:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#5:Nonce,#6:Skey) inI,
+h(#0:Nonce,#1:Skey) inI,
+h(#9:Nonce,#10:Skey) inI,
+senc(sKey(a, #4:Fresh), #10:Skey) inI,
+n(#2:Name, #3:Fresh) != n(#7:Name, #8:Fresh)
+| 
+-(h(#9:Nonce,#10:Skey)), 
+-(senc(sKey(a, #4:Fresh), #10:Skey)), 
++(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+-(h(#0:Nonce,#1:Skey)), 
+-(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(h(#0:Nonce,#1:Skey)), 
+-(senc(sKey(a, #4:Fresh), #1:Skey)), 
++(h(n(#7:Name, #8:Fresh),sKey(a, #4:Fresh))), 
+-(h(#5:Nonce,#6:Skey)), 
+-(h(n(#7:Name, #8:Fresh),sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #6:Skey)), 
+-(senc(sKey(a, #4:Fresh), #6:Skey)), 
+-(#6:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#6:Skey))
+(< 1 . 2 . 2{1} . 6{1} . 3{1} . 4 > (
+:: nil ::
+[ nil | 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   -(#2:Skey), 
+   +(senc(#2:Skey, sKey(a, #5:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   +(senc(sKey(a, #5:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #5:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #5:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   -(senc(#2:Skey, sKey(a, #5:Fresh))), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh ::
+[ nil | 
+   -(h(#6:Nonce,#7:Skey)), 
+   -(senc(sKey(a, #5:Fresh), #7:Skey)), 
+   +(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), nil]  & 
+:: #5:Fresh,#8:Fresh,#9:Fresh,#10:Fresh ::
+[ nil, 
+   +(h(n(a, #8:Fresh),sKey(a, #5:Fresh))), 
+   +(h(n(a, #9:Fresh),sKey(a, #10:Fresh))) | nil] )
+| 
+#2:Skey !inI,
+h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh)) !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(#2:Skey, sKey(a, #5:Fresh)) !inI,
+senc(sKey(a, #5:Fresh), #2:Skey) !inI,
+sKey(a, #5:Fresh) !inI,
+h(#6:Nonce,#7:Skey) inI,
+senc(sKey(a, #5:Fresh), #7:Skey) inI,(
+h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)),
+n(#3:Name, #4:Fresh) != n(#0:Name, #1:Fresh)
+| 
+-(h(#6:Nonce,#7:Skey)), 
+-(senc(sKey(a, #5:Fresh), #7:Skey)), 
++(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+generatedByIntruder(#2:Skey), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+-(#2:Skey), 
++(senc(#2:Skey, sKey(a, #5:Fresh))), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+-(senc(#2:Skey, sKey(a, #5:Fresh))), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
++(senc(sKey(a, #5:Fresh), #2:Skey)), 
+-(senc(sKey(a, #5:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #5:Fresh))
+| 
+nil)
+(< 1 . 2 . 2{1} . 6{2} . 3{1} . 3{1} > (
+:: nil ::
+[ nil | 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   -(#6:Skey), 
+   +(senc(#6:Skey, sKey(a, #4:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(n(#7:Name, #8:Fresh),#6:Skey)), 
+   -(senc(#2:Skey, #6:Skey)), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #8:Fresh ::
+[ nil | 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   -(senc(#6:Skey, sKey(a, #4:Fresh))), 
+   +(h(n(#7:Name, #8:Fresh),#6:Skey)), nil]  & 
+:: #4:Fresh,#9:Fresh,#10:Fresh,#11:Fresh ::
+[ nil, 
+   +(h(n(a, #9:Fresh),sKey(a, #4:Fresh))), 
+   +(h(n(a, #10:Fresh),sKey(a, #11:Fresh))) | nil] )
+| 
+#2:Skey !inI,
+#6:Skey !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+h(n(#7:Name, #8:Fresh),#6:Skey) !inI,
+senc(#2:Skey, #6:Skey) !inI,
+senc(#6:Skey, sKey(a, #4:Fresh)) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#3:Nonce,sKey(a, #4:Fresh)) inI,
+n(#0:Name, #1:Fresh) != n(#7:Name, #8:Fresh)
+| 
+generatedByIntruder(senc(#2:Skey, #6:Skey)), 
+generatedByIntruder(#2:Skey), 
+generatedByIntruder(#6:Skey), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
+-(#6:Skey), 
++(senc(#6:Skey, sKey(a, #4:Fresh))), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
+-(senc(#6:Skey, sKey(a, #4:Fresh))), 
++(h(n(#7:Name, #8:Fresh),#6:Skey)), 
+-(h(n(#7:Name, #8:Fresh),#6:Skey)), 
+-(senc(#2:Skey, #6:Skey)), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| 
+nil)
+(< 1 . 2 . 1 . 2{1} . 7{2} . 2 . 0{1} > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(n(a, #5:Fresh),sKey(a, #4:Fresh))), 
+   -(senc(#2:Skey, sKey(a, #4:Fresh))), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh,#5:Fresh,#6:Fresh,#7:Fresh ::
+[ nil, 
+   +(h(n(a, #5:Fresh),sKey(a, #4:Fresh))) | 
+   +(h(n(a, #6:Fresh),sKey(a, #7:Fresh))), nil] )
+| 
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#3:Nonce,sKey(a, #4:Fresh)) inI,
+h(n(a, #5:Fresh),sKey(a, #4:Fresh)) inI,
+senc(#2:Skey, sKey(a, #4:Fresh)) inI
+| 
+resuscitated(senc(#2:Skey, sKey(a, #4:Fresh))), 
+-(h(n(a, #5:Fresh),sKey(a, #4:Fresh))), 
+-(senc(#2:Skey, sKey(a, #4:Fresh))), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
++(h(n(a, #6:Fresh),sKey(a, #7:Fresh))), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| 
+nil)
+< 1 . 2 . 1 . 2{1} . 7{2} . 2 . 0{2} > (
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(n(a, #5:Fresh),sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(n(a, #5:Fresh),sKey(a, #4:Fresh))), 
+   -(senc(#2:Skey, sKey(a, #4:Fresh))), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh,#5:Fresh,#6:Fresh,#7:Fresh ::
+[ nil, 
+   +(h(n(a, #5:Fresh),sKey(a, #4:Fresh))) | 
+   +(h(n(a, #6:Fresh),sKey(a, #7:Fresh))), nil] )
+| 
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(n(a, #5:Fresh),sKey(a, #4:Fresh)) inI,
+senc(#2:Skey, sKey(a, #4:Fresh)) inI,(
+h(n(a, #5:Fresh),sKey(a, #4:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)),
+n(a, #5:Fresh) != n(#0:Name, #1:Fresh)
+| 
+resuscitated(senc(#2:Skey, sKey(a, #4:Fresh))), 
+-(h(n(a, #5:Fresh),sKey(a, #4:Fresh))), 
+-(senc(#2:Skey, sKey(a, #4:Fresh))), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(a, #5:Fresh),sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
++(h(n(a, #6:Fresh),sKey(a, #7:Fresh))), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(6) .
+rewrites: 725 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 1 . 2{1} . 7{1} . 4{1} . 2 > (
+:: nil ::
+[ nil | 
+   -(h(n(a, #0:Fresh),sKey(a, #1:Fresh))), 
+   -(#2:Skey), 
+   +(senc(#2:Skey, sKey(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(n(#3:Name, #4:Fresh),#2:Skey)), 
+   -(h(n(a, #0:Fresh),sKey(a, #1:Fresh))), 
+   +(senc(sKey(a, #1:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #1:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #1:Fresh)), nil]  & 
+:: #4:Fresh ::
+[ nil | 
+   -(h(n(a, #0:Fresh),sKey(a, #1:Fresh))), 
+   -(senc(#2:Skey, sKey(a, #1:Fresh))), 
+   +(h(n(#3:Name, #4:Fresh),#2:Skey)), nil]  & 
+:: #1:Fresh,#5:Fresh,#0:Fresh,#6:Fresh ::
+[ nil | 
+   +(h(n(a, #0:Fresh),sKey(a, #1:Fresh))), 
+   +(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), nil] )
+| 
+#2:Skey !inI,
+h(n(a, #0:Fresh),sKey(a, #1:Fresh)) !inI,
+h(n(#3:Name, #4:Fresh),#2:Skey) !inI,
+senc(#2:Skey, sKey(a, #1:Fresh)) !inI,
+senc(sKey(a, #1:Fresh), #2:Skey) !inI,
+sKey(a, #1:Fresh) !inI,(
+h(n(a, #0:Fresh),sKey(a, #1:Fresh)) != h(n(#3:Name, #4:Fresh),#2:Skey)),
+n(a, #0:Fresh) != n(#3:Name, #4:Fresh)
+| 
++(h(n(a, #0:Fresh),sKey(a, #1:Fresh))), 
+generatedByIntruder(#2:Skey), 
+-(h(n(a, #0:Fresh),sKey(a, #1:Fresh))), 
+-(#2:Skey), 
++(senc(#2:Skey, sKey(a, #1:Fresh))), 
+-(h(n(a, #0:Fresh),sKey(a, #1:Fresh))), 
+-(senc(#2:Skey, sKey(a, #1:Fresh))), 
++(h(n(#3:Name, #4:Fresh),#2:Skey)), 
+-(h(n(#3:Name, #4:Fresh),#2:Skey)), 
+-(h(n(a, #0:Fresh),sKey(a, #1:Fresh))), 
++(senc(sKey(a, #1:Fresh), #2:Skey)), 
++(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), 
+-(senc(sKey(a, #1:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #1:Fresh))
+| 
+nil)
+(< 1 . 2 . 1 . 2{1} . 7{1} . 4{1} . 5 > (
+:: nil ::
+[ nil | 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   -(#2:Skey), 
+   +(senc(#2:Skey, sKey(a, #5:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   +(senc(sKey(a, #5:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #5:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #5:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   -(senc(#2:Skey, sKey(a, #5:Fresh))), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh ::
+[ nil | 
+   -(h(#6:Nonce,#7:Skey)), 
+   -(senc(sKey(a, #5:Fresh), #7:Skey)), 
+   +(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), nil]  & 
+:: #5:Fresh,#8:Fresh,#9:Fresh,#10:Fresh ::
+[ nil, 
+   +(h(n(a, #8:Fresh),sKey(a, #5:Fresh))) | 
+   +(h(n(a, #9:Fresh),sKey(a, #10:Fresh))), nil] )
+| 
+#2:Skey !inI,
+h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh)) !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+senc(#2:Skey, sKey(a, #5:Fresh)) !inI,
+senc(sKey(a, #5:Fresh), #2:Skey) !inI,
+sKey(a, #5:Fresh) !inI,
+h(#6:Nonce,#7:Skey) inI,
+senc(sKey(a, #5:Fresh), #7:Skey) inI,(
+h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh)) != h(n(#0:Name, #1:Fresh),#2:Skey)),
+n(#3:Name, #4:Fresh) != n(#0:Name, #1:Fresh)
+| 
+-(h(#6:Nonce,#7:Skey)), 
+-(senc(sKey(a, #5:Fresh), #7:Skey)), 
++(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+generatedByIntruder(#2:Skey), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+-(#2:Skey), 
++(senc(#2:Skey, sKey(a, #5:Fresh))), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+-(senc(#2:Skey, sKey(a, #5:Fresh))), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
++(senc(sKey(a, #5:Fresh), #2:Skey)), 
++(h(n(a, #9:Fresh),sKey(a, #10:Fresh))), 
+-(senc(sKey(a, #5:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #5:Fresh))
+| 
+nil)
+(< 1 . 2 . 1 . 2{1} . 7{2} . 4{1} . 4{1} > (
+:: nil ::
+[ nil | 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   -(#6:Skey), 
+   +(senc(#6:Skey, sKey(a, #4:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(n(#7:Name, #8:Fresh),#6:Skey)), 
+   -(senc(#2:Skey, #6:Skey)), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #8:Fresh ::
+[ nil | 
+   -(h(#3:Nonce,sKey(a, #4:Fresh))), 
+   -(senc(#6:Skey, sKey(a, #4:Fresh))), 
+   +(h(n(#7:Name, #8:Fresh),#6:Skey)), nil]  & 
+:: #4:Fresh,#9:Fresh,#10:Fresh,#11:Fresh ::
+[ nil, 
+   +(h(n(a, #9:Fresh),sKey(a, #4:Fresh))) | 
+   +(h(n(a, #10:Fresh),sKey(a, #11:Fresh))), nil] )
+| 
+#2:Skey !inI,
+#6:Skey !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+h(n(#7:Name, #8:Fresh),#6:Skey) !inI,
+senc(#2:Skey, #6:Skey) !inI,
+senc(#6:Skey, sKey(a, #4:Fresh)) !inI,
+senc(sKey(a, #4:Fresh), #2:Skey) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#3:Nonce,sKey(a, #4:Fresh)) inI,
+n(#0:Name, #1:Fresh) != n(#7:Name, #8:Fresh)
+| 
+generatedByIntruder(senc(#2:Skey, #6:Skey)), 
+generatedByIntruder(#2:Skey), 
+generatedByIntruder(#6:Skey), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
+-(#6:Skey), 
++(senc(#6:Skey, sKey(a, #4:Fresh))), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
+-(senc(#6:Skey, sKey(a, #4:Fresh))), 
++(h(n(#7:Name, #8:Fresh),#6:Skey)), 
+-(h(n(#7:Name, #8:Fresh),#6:Skey)), 
+-(senc(#2:Skey, #6:Skey)), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(#3:Nonce,sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #2:Skey)), 
++(h(n(a, #10:Fresh),sKey(a, #11:Fresh))), 
+-(senc(sKey(a, #4:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #4:Fresh))
+| 
+nil)
+(< 1 . 2 . 2{1} . 5{2} . 4{4} . 3{1} . 2 > (
+:: nil ::
+[ nil | 
+   -(h(#0:Nonce,#1:Skey)), 
+   -(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), #1:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), 
+   -(h(n(a, #7:Fresh),sKey(a, #4:Fresh))), 
+   +(senc(sKey(a, #4:Fresh), sKey(a, #6:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #4:Fresh), #1:Skey)), 
+   -(#1:Skey), 
+   +(sKey(a, #4:Fresh)), nil]  & 
+:: #3:Fresh ::
+[ nil | 
+   -(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), 
+   -(senc(sKey(a, #4:Fresh), sKey(a, #6:Fresh))), 
+   +(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), nil]  & 
+:: #4:Fresh,#5:Fresh,#6:Fresh,#7:Fresh ::
+[ nil | 
+   +(h(n(a, #7:Fresh),sKey(a, #4:Fresh))), 
+   +(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), nil] )
+| 
+h(n(a, #5:Fresh),sKey(a, #6:Fresh)) !inI,
+h(n(a, #7:Fresh),sKey(a, #4:Fresh)) !inI,
+h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh)) !inI,
+senc(sKey(a, #4:Fresh), #1:Skey) !inI,
+senc(sKey(a, #4:Fresh), sKey(a, #6:Fresh)) !inI,
+sKey(a, #4:Fresh) !inI,
+h(#0:Nonce,#1:Skey) inI,(
+h(n(a, #5:Fresh),sKey(a, #6:Fresh)) != h(n(a, #7:Fresh),sKey(a, #4:Fresh))),(
+n(a, #5:Fresh) != n(#2:Name, #3:Fresh)),
+sKey(a, #4:Fresh) != sKey(a, #6:Fresh)
+| 
++(h(n(a, #7:Fresh),sKey(a, #4:Fresh))), 
++(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), 
+-(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), 
+-(h(n(a, #7:Fresh),sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), sKey(a, #6:Fresh))), 
+-(h(n(a, #5:Fresh),sKey(a, #6:Fresh))), 
+-(senc(sKey(a, #4:Fresh), sKey(a, #6:Fresh))), 
++(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
+-(h(#0:Nonce,#1:Skey)), 
+-(h(n(#2:Name, #3:Fresh),sKey(a, #4:Fresh))), 
++(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(senc(sKey(a, #4:Fresh), #1:Skey)), 
+-(#1:Skey), 
++(sKey(a, #4:Fresh))
+| ghost(#1:Skey))
+< 1 . 2 . 2{1} . 6{2} . 3{1} . 3{1} . 4 > (
+:: nil ::
+[ nil | 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   -(#6:Skey), 
+   +(senc(#6:Skey, sKey(a, #5:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   +(senc(sKey(a, #5:Fresh), #2:Skey)), nil]  & 
+:: nil ::
+[ nil | 
+   -(senc(sKey(a, #5:Fresh), #2:Skey)), 
+   -(#2:Skey), 
+   +(sKey(a, #5:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(h(n(#7:Name, #8:Fresh),#6:Skey)), 
+   -(senc(#2:Skey, #6:Skey)), 
+   +(h(n(#0:Name, #1:Fresh),#2:Skey)), nil]  & 
+:: #4:Fresh ::
+[ nil | 
+   -(h(#9:Nonce,#10:Skey)), 
+   -(senc(sKey(a, #5:Fresh), #10:Skey)), 
+   +(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), nil]  & 
+:: #8:Fresh ::
+[ nil | 
+   -(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+   -(senc(#6:Skey, sKey(a, #5:Fresh))), 
+   +(h(n(#7:Name, #8:Fresh),#6:Skey)), nil]  & 
+:: #5:Fresh,#11:Fresh,#12:Fresh,#13:Fresh ::
+[ nil, 
+   +(h(n(a, #11:Fresh),sKey(a, #5:Fresh))), 
+   +(h(n(a, #12:Fresh),sKey(a, #13:Fresh))) | nil] )
+| 
+#2:Skey !inI,
+#6:Skey !inI,
+h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh)) !inI,
+h(n(#0:Name, #1:Fresh),#2:Skey) !inI,
+h(n(#7:Name, #8:Fresh),#6:Skey) !inI,
+senc(#2:Skey, #6:Skey) !inI,
+senc(#6:Skey, sKey(a, #5:Fresh)) !inI,
+senc(sKey(a, #5:Fresh), #2:Skey) !inI,
+sKey(a, #5:Fresh) !inI,
+h(#9:Nonce,#10:Skey) inI,
+senc(sKey(a, #5:Fresh), #10:Skey) inI,
+n(#0:Name, #1:Fresh) != n(#7:Name, #8:Fresh)
+| 
+-(h(#9:Nonce,#10:Skey)), 
+-(senc(sKey(a, #5:Fresh), #10:Skey)), 
++(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+generatedByIntruder(senc(#2:Skey, #6:Skey)), 
+generatedByIntruder(#2:Skey), 
+generatedByIntruder(#6:Skey), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+-(#6:Skey), 
++(senc(#6:Skey, sKey(a, #5:Fresh))), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
+-(senc(#6:Skey, sKey(a, #5:Fresh))), 
++(h(n(#7:Name, #8:Fresh),#6:Skey)), 
+-(h(n(#7:Name, #8:Fresh),#6:Skey)), 
+-(senc(#2:Skey, #6:Skey)), 
++(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#0:Name, #1:Fresh),#2:Skey)), 
+-(h(n(#3:Name, #4:Fresh),sKey(a, #5:Fresh))), 
++(senc(sKey(a, #5:Fresh), #2:Skey)), 
+-(senc(sKey(a, #5:Fresh), #2:Skey)), 
+-(#2:Skey), 
++(sKey(a, #5:Fresh))
+| 
+nil
+Bye.
+Tue Jun  2 19:28:46 CEST 2020

@@ -1,0 +1,329 @@
+Tue Jun  2 19:21:58 CEST 2020
+		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	     Maude alpha128 built: Mar 10 2020 14:45:05
+	     Copyright 1997-2020 SRI International
+		   Tue Jun  2 19:21:58 2020
+
+	    Maude-NPA Version: 3.1.4 (June 2nd 2020)
+	    with direct composition, irreducibility constraints and time
+	    (To be run with Maude alpha 121 or above)
+	    Copyright (c) 2020, University of Illinois
+	    All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern
+    X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : genGrammars .
+rewrites: 12957646 in 29432ms cpu (109121ms real) (440257 rewrites/second)
+result GrammarList: (errorInconsistentExceptionsInGrammarRule
+grl (#1:IMsg * #0:IMsg) notInI,
+   (#0:IMsg notLeq #2:Name),
+   (#0:IMsg notLeq c(#3:Nonce)),
+   (#0:IMsg notLeq pair(#4:Vector, rc4(#4:Vector, k(#5:Name, #6:Name)) * [n(
+    #5:Name, #7:Fresh),c(n(#5:Name, #7:Fresh))])),
+   (#0:IMsg notLeq k(#8:Name, i)),
+   (#0:IMsg notLeq rc4(#9:Vector, k(#10:Name, #11:Name))),
+   (#0:IMsg notLeq [n(#2:Name, #3:Fresh),c(n(#2:Name, #3:Fresh))]),
+   (#1:IMsg * #0:IMsg) notLeq #1:IMsg * #2:IMsg => #0:IMsg inL .  inGrammar
+grl #14:IMsg inL => pair(#14:IMsg, #13:IMsg) inL .  ;
+grl #16:IMsg inL => (#3:IMsg * #16:IMsg) inL .  ;
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL .  ;
+grl #0:Nonce inL => [#0:Nonce,c(#1:Nonce)] inL .  ;
+grl #0:IMsg notInI,
+   (#0:IMsg notLeq #1:Name),
+   (#0:IMsg notLeq c(#2:Nonce)),
+   (#0:IMsg notLeq pair(#3:Vector, rc4(#3:Vector, k(#4:Name, #5:Name)) * [n(
+    #4:Name, #6:Fresh),c(n(#4:Name, #6:Fresh))])),
+   (#0:IMsg notLeq k(#7:Name, i)),
+   (#0:IMsg notLeq rc4(#8:Vector, k(#9:Name, #10:Name))),
+   (#0:IMsg notLeq [n(#2:Name, #3:Fresh),c(n(#2:Name, #3:Fresh))]),
+   #0:IMsg notLeq #1:IMsg * #2:IMsg => (#11:IMsg * #0:IMsg) inL .  ;
+grl (#1:IMsg * #0:IMsg) notInI,
+   (#0:IMsg notLeq #2:Name),
+   (#0:IMsg notLeq c(#3:Nonce)),
+   (#0:IMsg notLeq pair(#4:Vector, rc4(#4:Vector, k(#5:Name, #6:Name)) * [n(
+    #5:Name, #7:Fresh),c(n(#5:Name, #7:Fresh))])),
+   (#0:IMsg notLeq k(#8:Name, i)),
+   (#0:IMsg notLeq rc4(#9:Vector, k(#10:Name, #11:Name))),
+   (#0:IMsg notLeq [n(#2:Name, #3:Fresh),c(n(#2:Name, #3:Fresh))]),
+   (#1:IMsg * #0:IMsg) notLeq #1:IMsg * #2:IMsg => #0:IMsg inL . )
+| (errorNoHeuristicApplied {
+grl empty => (#1:IMsg * #2:IMsg) inL . ,none,
+grl empty => (#1:IMsg,#2:IMsg) inL . ,none,
+grl empty => (#1:IMsg,#2:IMsg) inL . } usingGrammar
+grl empty => (#1:IMsg * #2:IMsg) inL . )
+| (
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#1:IMsg * #0:IMsg) inL .  ;
+grl #0:Nonce notInI,
+   #0:Nonce notLeq n(#1:Name, #2:Fresh) => [#0:Nonce,#3:CheckNonce] inL . )
+| (
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#1:IMsg * #0:IMsg) inL .  ;
+grl #0:CheckNonce notInI,
+   #0:CheckNonce notLeq c(n(#1:Name, #2:Fresh)) => [#3:Nonce,#0:CheckNonce] inL
+    . )
+| (
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#1:IMsg * #0:IMsg) inL .  ;
+grl [#0:Nonce,#1:CheckNonce] notLeq [n(#2:Name, #3:Fresh),c(n(#2:Name,
+    #3:Fresh))] => [#0:Nonce,#1:CheckNonce] inL . )
+| (
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#1:IMsg * #0:IMsg) inL .  ;
+grl #0:Nonce notInI => c(#0:Nonce) inL . )
+| (errorNoHeuristicApplied {
+grl empty => c(#1:Nonce) inL . ,none,
+grl empty => #1:Nonce inL . ,none,
+grl empty => #1:Nonce inL . } usingGrammar
+grl empty => c(#1:Nonce) inL . )
+| (
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#1:IMsg * #0:IMsg) inL .  ;
+grl k(#0:Name, #1:Name) notLeq k(#2:Name, i) => k(#0:Name, #1:Name) inL . )
+| (errorInconsistentExceptionsInGrammarRule
+grl n(#0:Name, #1:Fresh) notLeq n(#3:Name, #4:Fresh) => n(#0:Name, #1:Fresh)
+    inL .  inGrammar
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#1:IMsg * #0:IMsg) inL .  ;
+grl #0:Nonce inL => [#0:Nonce,c(#1:Nonce)] inL .  ;
+grl n(#0:Name, #1:Fresh) notLeq n(#3:Name, #4:Fresh) => n(#0:Name, #1:Fresh)
+    inL . )
+| (errorNoHeuristicApplied {
+grl #50:Vector notInI => pair(#50:Vector, #60:IMsg) inL . ,
+  '#60:IMsg <- '_*_['`[_`,_`]['n['#62:Name,'#64:Fresh],'c['n['#62:Name,
+    '#64:Fresh]]],'rc4['#50:Vector,'k['#62:Name,'#63:Name]]],
+grl #50:Vector notInI => emptyMsgSet inL . ,none,
+grl #50:Vector notInI => emptyMsgSet inL . } usingGrammar
+grl #50:Vector notInI => pair(#50:Vector, #60:IMsg) inL . )
+| (
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#1:IMsg * #0:IMsg) inL .  ;
+grl #0:IMsg notInI,
+   #0:IMsg notLeq rc4(#1:Vector, k(#2:Name, #3:Name)) * [n(#2:Name, #4:Fresh),c(
+    n(#2:Name, #4:Fresh))] => pair(#5:Vector, #0:IMsg) inL . )
+| (
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#1:IMsg * #0:IMsg) inL .  ;
+grl pair(#0:Vector, #1:IMsg) notLeq pair(#2:Vector, rc4(#2:Vector, k(#3:Name,
+    #4:Name)) * [n(#3:Name, #5:Fresh),c(n(#3:Name, #5:Fresh))]) => pair(
+    #0:Vector, #1:IMsg) inL . )
+| (errorNoHeuristicApplied {
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL . ,
+  '#0:IMsg <- '_*_['`[_`,_`]['n['#3:Name,'#5:Fresh],'c['n['#3:Name,'#5:Fresh]]],
+    'rc4['#1:Vector,'k['#3:Name,'#4:Name]]],
+grl (rc4(#1:Vector, k(#3:Name, #4:Name)) * [n(#3:Name, #5:Fresh),c(n(#3:Name,
+    #5:Fresh))]) inL => emptyMsgSet inL . ,none,
+grl #1:Vector notInI => emptyMsgSet inL . } usingGrammar
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#1:IMsg * #0:IMsg) inL .  ;
+grl #0:Vector notInI => rc4(#0:Vector, #1:Key) inL . )
+| (
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#1:IMsg * #0:IMsg) inL .  ;
+grl #0:Key notInI,
+   #0:Key notLeq k(#1:Name, #2:Name) => rc4(#3:Vector, #0:Key) inL . )
+|
+grl #0:IMsg inL => pair(#1:Vector, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#1:IMsg * #0:IMsg) inL .  ;
+grl rc4(#0:Vector, #1:Key) notLeq rc4(#2:Vector, k(#3:Name, #4:Name)) => rc4(
+    #0:Vector, #1:Key) inL .
+==========================================
+reduce in MAUDE-NPA : run(0) .
+rewrites: 3846 in 132ms cpu (397ms real) (29136 rewrites/second)
+result ShortIdSystem: < 1 >
+:: r:Fresh ::
+[ nil,
+   +(pair(v, rc4(v, k(a, b)) * [n(a, r:Fresh),c(n(a, r:Fresh))])) | nil]
+|
+n(a, r:Fresh) inI
+|
+nil
+|
+nil
+==========================================
+reduce in MAUDE-NPA : summary(1) .
+rewrites: 153294 in 312ms cpu (1010ms real) (491326 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2) .
+rewrites: 4122209 in 5720ms cpu (18466ms real) (720665 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3) .
+rewrites: 5892816 in 7096ms cpu (24331ms real) (830441 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(4) .
+rewrites: 376285 in 732ms cpu (2405ms real) (514050 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(5) .
+rewrites: 11541721 in 12172ms cpu (42526ms real) (948218 rewrites/second)
+result Summary: States>> 0 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(6) .
+rewrites: 244 in 0ms cpu (0ms real) (~ rewrites/second)
+result Summary: States>> 0 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : run(1) .
+rewrites: 115 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 > (
+:: nil ::
+[ nil |
+   -([n(a, #0:Fresh),c(#1:Nonce)]),
+   +(n(a, #0:Fresh)), nil]  &
+:: #0:Fresh ::
+[ nil,
+   +(pair(v, rc4(v, k(a, b)) * [n(a, #0:Fresh),c(n(a, #0:Fresh))])) | nil] )
+|
+n(a, #0:Fresh) !inI,
+[n(a, #0:Fresh),c(#1:Nonce)] inI
+|
+-([n(a, #0:Fresh),c(#1:Nonce)]),
++(n(a, #0:Fresh))
+|
+nil)
+< 1 . 4 > (
+:: nil ::
+[ nil |
+   -(#0:IMsg),
+   -(#0:IMsg * n(a, #1:Fresh)),
+   +(n(a, #1:Fresh)), nil]  &
+:: #1:Fresh ::
+[ nil,
+   +(pair(v, rc4(v, k(a, b)) * [n(a, #1:Fresh),c(n(a, #1:Fresh))])) | nil] )
+|
+n(a, #1:Fresh) !inI,
+(#0:IMsg * n(a, #1:Fresh)) inI
+|
+-(#0:IMsg),
+-(#0:IMsg * n(a, #1:Fresh)),
++(n(a, #1:Fresh))
+| ghost(#0:IMsg)
+==========================================
+reduce in MAUDE-NPA : run(2) .
+rewrites: 154 in 0ms cpu (0ms real) (~ rewrites/second)
+result ShortIdSystem: < 1 . 2 . 4 > (
+:: nil ::
+[ nil |
+   -(#2:IMsg),
+   -(#2:IMsg * [n(a, #0:Fresh),c(#1:Nonce)]),
+   +([n(a, #0:Fresh),c(#1:Nonce)]), nil]  &
+:: nil ::
+[ nil |
+   -([n(a, #0:Fresh),c(#1:Nonce)]),
+   +(n(a, #0:Fresh)), nil]  &
+:: #0:Fresh ::
+[ nil,
+   +(pair(v, rc4(v, k(a, b)) * [n(a, #0:Fresh),c(n(a, #0:Fresh))])) | nil] )
+|
+[n(a, #0:Fresh),c(#1:Nonce)] !inI,
+n(a, #0:Fresh) !inI,
+(#2:IMsg * [n(a, #0:Fresh),c(#1:Nonce)]) inI
+|
+-(#2:IMsg),
+-(#2:IMsg * [n(a, #0:Fresh),c(#1:Nonce)]),
++([n(a, #0:Fresh),c(#1:Nonce)]),
+-([n(a, #0:Fresh),c(#1:Nonce)]),
++(n(a, #0:Fresh))
+| ghost(#2:IMsg)
+==========================================
+reduce in MAUDE-NPA : run(3) .
+rewrites: 184 in 0ms cpu (0ms real) (~ rewrites/second)
+result ShortIdSystem: < 1 . 2 . 4 . 11 > (
+:: nil ::
+[ nil |
+   -(#0:IMsg),
+   -(#0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)]),
+   +([n(a, #1:Fresh),c(#2:Nonce)]), nil]  &
+:: nil ::
+[ nil |
+   -(pair(#3:Vector, #0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)])),
+   +(#0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)]), nil]  &
+:: nil ::
+[ nil |
+   -([n(a, #1:Fresh),c(#2:Nonce)]),
+   +(n(a, #1:Fresh)), nil]  &
+:: #1:Fresh ::
+[ nil,
+   +(pair(v, rc4(v, k(a, b)) * [n(a, #1:Fresh),c(n(a, #1:Fresh))])) | nil] )
+|
+[n(a, #1:Fresh),c(#2:Nonce)] !inI,
+n(a, #1:Fresh) !inI,
+(#0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)]) !inI,
+pair(#3:Vector, #0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)]) inI
+|
+-(pair(#3:Vector, #0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)])),
++(#0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)]),
+-(#0:IMsg),
+-(#0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)]),
++([n(a, #1:Fresh),c(#2:Nonce)]),
+-([n(a, #1:Fresh),c(#2:Nonce)]),
++(n(a, #1:Fresh))
+| ghost(#0:IMsg)
+==========================================
+reduce in MAUDE-NPA : run(4) .
+rewrites: 216 in 0ms cpu (0ms real) (~ rewrites/second)
+result ShortIdSystem: < 1 . 2 . 4 . 11 . 5 > (
+:: nil ::
+[ nil |
+   -(#4:IMsg),
+   -(#4:IMsg * pair(#3:Vector, #0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)])),
+   +(pair(#3:Vector, #0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)])), nil]  &
+:: nil ::
+[ nil |
+   -(#0:IMsg),
+   -(#0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)]),
+   +([n(a, #1:Fresh),c(#2:Nonce)]), nil]  &
+:: nil ::
+[ nil |
+   -(pair(#3:Vector, #0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)])),
+   +(#0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)]), nil]  &
+:: nil ::
+[ nil |
+   -([n(a, #1:Fresh),c(#2:Nonce)]),
+   +(n(a, #1:Fresh)), nil]  &
+:: #1:Fresh ::
+[ nil,
+   +(pair(v, rc4(v, k(a, b)) * [n(a, #1:Fresh),c(n(a, #1:Fresh))])) | nil] )
+|
+pair(#3:Vector, #0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)]) !inI,
+[n(a, #1:Fresh),c(#2:Nonce)] !inI,
+n(a, #1:Fresh) !inI,
+(#0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)]) !inI,
+(#4:IMsg * pair(#3:Vector, #0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)])) inI
+|
+-(#4:IMsg),
+-(#4:IMsg * pair(#3:Vector, #0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)])),
++(pair(#3:Vector, #0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)])),
+-(pair(#3:Vector, #0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)])),
++(#0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)]),
+-(#0:IMsg),
+-(#0:IMsg * [n(a, #1:Fresh),c(#2:Nonce)]),
++([n(a, #1:Fresh),c(#2:Nonce)]),
+-([n(a, #1:Fresh),c(#2:Nonce)]),
++(n(a, #1:Fresh))
+| ghost(#4:IMsg),
+ghost(#0:IMsg)
+==========================================
+reduce in MAUDE-NPA : run(5) .
+rewrites: 238 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (empty).IdSystemSet
+==========================================
+reduce in MAUDE-NPA : run(6) .
+rewrites: 239 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (empty).IdSystemSet
+Bye.
+Tue Jun  2 19:25:21 CEST 2020

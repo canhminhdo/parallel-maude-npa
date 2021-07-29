@@ -1,0 +1,419 @@
+Tue Jun  2 19:21:58 CEST 2020
+		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	     Maude alpha128 built: Mar 10 2020 14:45:05
+	     Copyright 1997-2020 SRI International
+		   Tue Jun  2 19:21:58 2020
+
+	    Maude-NPA Version: 3.1.4 (June 2nd 2020)
+	    with direct composition, irreducibility constraints and time
+	    (To be run with Maude alpha 121 or above)
+	    Copyright (c) 2020, University of Illinois
+	    All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern
+    X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : genGrammars .
+rewrites: 2727158 in 6668ms cpu (25515ms real) (408991 rewrites/second)
+result GrammarList: (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg notInI => (#0:Msg ; #1:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg notInI => (#1:Msg ; #0:Msg) inL . )
+| (errorNoHeuristicApplied {
+grl empty => (#1:Msg ; #2:Msg) inL . ,none,
+grl empty => (#1:Msg,#2:Msg) inL . ,none,
+grl empty => (#1:Msg,#2:Msg) inL . } usingGrammar 
+grl empty => (#1:Msg ; #2:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Key notInI => d(#0:Key, #1:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg notInI => d(#1:Key, #0:Msg) inL . )
+| (errorNoHeuristicApplied {
+grl empty => d(#1:Key, #2:Msg) inL . ,none,
+grl empty => (#2:Msg,#1:Key) inL . ,none,
+grl empty => (#2:Msg,#1:Key) inL . } usingGrammar 
+grl empty => d(#1:Key, #2:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Key notInI,
+   #0:Key notLeq mkey(#1:UName, s) => e(#0:Key, #2:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg notInI,
+   #0:Msg notLeq #1:UName ; #2:Msg => e(#3:Key, #0:Msg) inL . )
+| (errorNoHeuristicApplied {
+grl empty => e(#1:Key, #2:Msg) inL . ,none,
+grl empty => (#2:Msg,#1:Key) inL . ,none,
+grl empty => (#2:Msg,#1:Key) inL . } usingGrammar 
+grl empty => e(#1:Key, #2:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl (mkey(#0:Name, #1:Name) notLeq mkey(i, s)),
+   (mkey(#0:Name, #1:Name) notLeq mkey(i, #2:UName)),
+   mkey(#0:Name, #1:Name) notLeq mkey(#3:UName, i) => mkey(#0:Name, #1:Name)
+    inL . )
+| (
+grl empty => mr(#0:Name, #1:Fresh) inL .  ; 
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl n(#0:Name, #1:Fresh) notLeq n(#2:UName, #3:Fresh) => n(#0:Name, #1:Fresh)
+    inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Nonce notInI => seskey(#1:Name, #2:Name, #0:Nonce) inL . )
+| (
+grl empty => seskey(#0:Name, #1:Name, #2:Nonce) inL .  ; 
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Nonce notInI => txt(#1:Name, #2:Name, #0:Nonce) inL . )
+| 
+grl empty => txt(#0:Name, #1:Name, #2:Nonce) inL .  ; 
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL . 
+==========================================
+reduce in MAUDE-NPA : run(0) .
+rewrites: 3824 in 136ms cpu (463ms real) (28117 rewrites/second)
+result ShortIdSystem: < 1 > 
+:: r:Fresh ::
+[ nil, 
+   -(a), 
+   +(n(b, r:Fresh)), 
+   -(MA:Msg), 
+   +(e(mkey(b, s), a ; MA:Msg)) | 
+   -(e(mkey(b, s), n(b, r:Fresh))), nil] 
+| 
+e(mkey(b, s), n(b, r:Fresh)) inI
+| 
+-(e(mkey(b, s), n(b, r:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : summary(1) .
+rewrites: 147128 in 400ms cpu (1428ms real) (367820 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2) .
+rewrites: 183788 in 572ms cpu (2083ms real) (321307 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3) .
+rewrites: 148863 in 404ms cpu (1368ms real) (368472 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(4) .
+rewrites: 76521 in 300ms cpu (1059ms real) (255070 rewrites/second)
+result Summary: States>> 1 Solutions>> 1
+==========================================
+reduce in MAUDE-NPA : summary(5) .
+rewrites: 329 in 0ms cpu (0ms real) (~ rewrites/second)
+result Summary: States>> 1 Solutions>> 1
+==========================================
+reduce in MAUDE-NPA : summary(6) .
+rewrites: 284 in 0ms cpu (0ms real) (~ rewrites/second)
+result Summary: States>> 1 Solutions>> 1
+==========================================
+reduce in MAUDE-NPA : run(1) .
+rewrites: 115 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 3 > (
+:: nil ::
+[ nil, 
+   +(b) | 
+   -(n(b, #0:Fresh)), 
+   +(e(mkey(b, s), n(b, #0:Fresh))), nil]  & 
+:: #0:Fresh ::
+[ nil, 
+   -(a), 
+   +(n(b, #0:Fresh)), 
+   -(#1:Msg), 
+   +(e(mkey(b, s), a ; #1:Msg)) | 
+   -(e(mkey(b, s), n(b, #0:Fresh))), nil] )
+| 
+e(mkey(b, s), n(b, #0:Fresh)) !inI,
+n(b, #0:Fresh) inI
+| 
+-(n(b, #0:Fresh)), 
++(e(mkey(b, s), n(b, #0:Fresh))), 
+-(e(mkey(b, s), n(b, #0:Fresh)))
+| 
+nil)
+< 1 . 8 > 
+:: #0:Fresh ::
+[ nil, 
+   -(a), 
+   +(n(b, #0:Fresh)) | 
+   -(#1:Msg), 
+   +(e(mkey(b, s), a ; #1:Msg)), 
+   -(e(mkey(b, s), n(b, #0:Fresh))), nil] 
+| 
+#1:Msg !inI,
+e(mkey(b, s), n(b, #0:Fresh)) inI
+| 
+generatedByIntruder(#1:Msg), 
+-(#1:Msg), 
++(e(mkey(b, s), a ; #1:Msg)), 
+-(e(mkey(b, s), n(b, #0:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(2) .
+rewrites: 158 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 3 . 1 > (
+:: nil ::
+[ nil | 
+   +(b), 
+   -(n(b, #0:Fresh)), 
+   +(e(mkey(b, s), n(b, #0:Fresh))), nil]  & 
+:: #0:Fresh ::
+[ nil, 
+   -(a), 
+   +(n(b, #0:Fresh)), 
+   -(#1:Msg), 
+   +(e(mkey(b, s), a ; #1:Msg)) | 
+   -(e(mkey(b, s), n(b, #0:Fresh))), nil] )
+| 
+e(mkey(b, s), n(b, #0:Fresh)) !inI,
+n(b, #0:Fresh) inI
+| 
++(b), 
+-(n(b, #0:Fresh)), 
++(e(mkey(b, s), n(b, #0:Fresh))), 
+-(e(mkey(b, s), n(b, #0:Fresh)))
+| 
+nil)
+< 1 . 3 . 2 > (
+:: nil ::
+[ nil, 
+   +(b) | 
+   -(n(b, #0:Fresh)), 
+   +(e(mkey(b, s), n(b, #0:Fresh))), nil]  & 
+:: #0:Fresh ::
+[ nil, 
+   -(a), 
+   +(n(b, #0:Fresh)) | 
+   -(#1:Msg), 
+   +(e(mkey(b, s), a ; #1:Msg)), 
+   -(e(mkey(b, s), n(b, #0:Fresh))), nil] )
+| 
+#1:Msg !inI,
+e(mkey(b, s), n(b, #0:Fresh)) !inI,
+n(b, #0:Fresh) inI
+| 
+generatedByIntruder(#1:Msg), 
+-(#1:Msg), 
++(e(mkey(b, s), a ; #1:Msg)), 
+-(n(b, #0:Fresh)), 
++(e(mkey(b, s), n(b, #0:Fresh))), 
+-(e(mkey(b, s), n(b, #0:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(3) .
+rewrites: 200 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 3 . 1 . 1 > (
+:: nil ::
+[ nil | 
+   +(b), 
+   -(n(b, #0:Fresh)), 
+   +(e(mkey(b, s), n(b, #0:Fresh))), nil]  & 
+:: #0:Fresh ::
+[ nil, 
+   -(a), 
+   +(n(b, #0:Fresh)) | 
+   -(#1:Msg), 
+   +(e(mkey(b, s), a ; #1:Msg)), 
+   -(e(mkey(b, s), n(b, #0:Fresh))), nil] )
+| 
+#1:Msg !inI,
+e(mkey(b, s), n(b, #0:Fresh)) !inI,
+n(b, #0:Fresh) inI
+| 
+generatedByIntruder(#1:Msg), 
+-(#1:Msg), 
++(e(mkey(b, s), a ; #1:Msg)), 
++(b), 
+-(n(b, #0:Fresh)), 
++(e(mkey(b, s), n(b, #0:Fresh))), 
+-(e(mkey(b, s), n(b, #0:Fresh)))
+| 
+nil)
+< 1 . 3 . 2 . 2 > (
+:: nil ::
+[ nil, 
+   +(b) | 
+   -(n(b, #0:Fresh)), 
+   +(e(mkey(b, s), n(b, #0:Fresh))), nil]  & 
+:: #0:Fresh ::
+[ nil | 
+   -(a), 
+   +(n(b, #0:Fresh)), 
+   -(#1:Msg), 
+   +(e(mkey(b, s), a ; #1:Msg)), 
+   -(e(mkey(b, s), n(b, #0:Fresh))), nil] )
+| 
+#1:Msg !inI,
+n(b, #0:Fresh) !inI,
+e(mkey(b, s), n(b, #0:Fresh)) !inI
+| 
+-(a), 
++(n(b, #0:Fresh)), 
+generatedByIntruder(#1:Msg), 
+-(#1:Msg), 
++(e(mkey(b, s), a ; #1:Msg)), 
+-(n(b, #0:Fresh)), 
++(e(mkey(b, s), n(b, #0:Fresh))), 
+-(e(mkey(b, s), n(b, #0:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(4) .
+rewrites: 236 in 0ms cpu (0ms real) (~ rewrites/second)
+result ShortIdSystem: < 1 . 3 . 1 . 1 . 1 > (
+:: nil ::
+[ nil | 
+   +(b), 
+   -(n(b, #0:Fresh)), 
+   +(e(mkey(b, s), n(b, #0:Fresh))), nil]  & 
+:: #0:Fresh ::
+[ nil | 
+   -(a), 
+   +(n(b, #0:Fresh)), 
+   -(#1:Msg), 
+   +(e(mkey(b, s), a ; #1:Msg)), 
+   -(e(mkey(b, s), n(b, #0:Fresh))), nil] )
+| 
+#1:Msg !inI,
+n(b, #0:Fresh) !inI,
+e(mkey(b, s), n(b, #0:Fresh)) !inI
+| 
+-(a), 
++(n(b, #0:Fresh)), 
+generatedByIntruder(#1:Msg), 
+-(#1:Msg), 
++(e(mkey(b, s), a ; #1:Msg)), 
++(b), 
+-(n(b, #0:Fresh)), 
++(e(mkey(b, s), n(b, #0:Fresh))), 
+-(e(mkey(b, s), n(b, #0:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(5) .
+rewrites: 264 in 4ms cpu (12ms real) (66000 rewrites/second)
+result ShortIdSystem: < 1 . 3 . 1 . 1 . 1 > (
+:: nil ::
+[ nil | 
+   +(b), 
+   -(n(b, #0:Fresh)), 
+   +(e(mkey(b, s), n(b, #0:Fresh))), nil]  & 
+:: #0:Fresh ::
+[ nil | 
+   -(a), 
+   +(n(b, #0:Fresh)), 
+   -(#1:Msg), 
+   +(e(mkey(b, s), a ; #1:Msg)), 
+   -(e(mkey(b, s), n(b, #0:Fresh))), nil] )
+| 
+#1:Msg !inI,
+n(b, #0:Fresh) !inI,
+e(mkey(b, s), n(b, #0:Fresh)) !inI
+| 
+-(a), 
++(n(b, #0:Fresh)), 
+generatedByIntruder(#1:Msg), 
+-(#1:Msg), 
++(e(mkey(b, s), a ; #1:Msg)), 
++(b), 
+-(n(b, #0:Fresh)), 
++(e(mkey(b, s), n(b, #0:Fresh))), 
+-(e(mkey(b, s), n(b, #0:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(6) .
+rewrites: 265 in 0ms cpu (0ms real) (~ rewrites/second)
+result ShortIdSystem: < 1 . 3 . 1 . 1 . 1 > (
+:: nil ::
+[ nil | 
+   +(b), 
+   -(n(b, #0:Fresh)), 
+   +(e(mkey(b, s), n(b, #0:Fresh))), nil]  & 
+:: #0:Fresh ::
+[ nil | 
+   -(a), 
+   +(n(b, #0:Fresh)), 
+   -(#1:Msg), 
+   +(e(mkey(b, s), a ; #1:Msg)), 
+   -(e(mkey(b, s), n(b, #0:Fresh))), nil] )
+| 
+#1:Msg !inI,
+n(b, #0:Fresh) !inI,
+e(mkey(b, s), n(b, #0:Fresh)) !inI
+| 
+-(a), 
++(n(b, #0:Fresh)), 
+generatedByIntruder(#1:Msg), 
+-(#1:Msg), 
++(e(mkey(b, s), a ; #1:Msg)), 
++(b), 
+-(n(b, #0:Fresh)), 
++(e(mkey(b, s), n(b, #0:Fresh))), 
+-(e(mkey(b, s), n(b, #0:Fresh)))
+| 
+nil
+Bye.
+Tue Jun  2 19:22:36 CEST 2020
