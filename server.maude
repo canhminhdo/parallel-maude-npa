@@ -150,7 +150,8 @@ mod PARALLEL-MAUDE-NPA is
         depth : D,
         A >
     => < O : Server |
-        status : suspending,
+        status : (if N > 0 then stopping else suspending fi),
+        --- status : suspending,
         workers : SW,
         waitingWorkers : W,
         m : M,
@@ -167,13 +168,14 @@ mod PARALLEL-MAUDE-NPA is
         history : (HistoryIST IST''),
         depth : D',
         A >
+        (if N > 0 then StopWorking(O, O) else none fi)
     if qsize(W) == | SW |
     /\ IST =/= empty
     /\ < INIT', IST' > := searchState-CheckInit(M, Sess, HistoryIST, < empty, empty >, IST) --- filter initial and other states
     /\ IST'' := filterStates(F, HistoryIST, IST') --- filter sucessor states with history states
     /\ C' := #jobs(IST'')
     /\ D' := D + Step
-    /\ N := #jobs(INIT INIT')
+    /\ N := #jobs(INIT')
     [print "<================= [Switch at Depth " D' " #jobs = " C' " #init = " N "] =================>"] .
 
     rl [Resuming] : < O : Server |
@@ -273,8 +275,8 @@ mod PARALLEL-MAUDE-NPA is
         [print "[ShowResult]"] .
 endm
 
-load examples/Needham_Schroeder.maude
+load examples/Symmetric-Key-Protocols/Yahalom/Yahalom.maude
 select PARALLEL-MAUDE-NPA .
 load debug.maude
-erew <> < aServer : Server | status : idle, attack : 0, bStep : unbounded, step : 1, #workers : 1 >
-        CreateServerTcpSocket(socketManager, aServer, 9000, 10) .
+erew <> < aServer : Server | status : idle, attack : 0, bStep : unbounded, step : 1, #workers : 8 >
+        CreateServerTcpSocket(socketManager, aServer, 9001, 10) .

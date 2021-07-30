@@ -5,20 +5,20 @@
 ---------------------------------------------------
 
 fmod PROTOCOL-EXAMPLE-SYMBOLS is
-  --- Importing sorts Msg, Fresh, Public
+  --- Importing sorts IMsg, Fresh, Public
   protecting DEFINITION-PROTOCOL-RULES .
 
   ----------------------------------------------------------
   --- Overwrite this module with the syntax of your protocol
   --- Notes:
-  --- * Sort Msg and Fresh are special and imported
-  --- * Every sort must be a subsort of Msg
-  --- * No sort can be a supersort of Msg
+  --- * Sort IMsg and Fresh are special and imported
+  --- * Every sort must be a subsort of IMsg
+  --- * No sort can be a supersort of IMsg
   ----------------------------------------------------------
 
   --- Sort Information
   sorts  UName SName Name Key Nonce  Masterkey Sessionkey Text .
-  subsort Name Nonce  Key Text < Msg .
+  subsort Name Nonce  Key Text < IMsg .
   subsort Masterkey  Sessionkey < Key .
   subsort SName UName < Name .
   subsort Name < Public . --- This is quite relevant and necessary
@@ -42,14 +42,14 @@ fmod PROTOCOL-EXAMPLE-SYMBOLS is
   op seskey : Name Name Nonce -> Sessionkey [frozen] .
 
   ---encrypt
-  op e  : Key Msg -> Msg [frozen] .
-  op d : Key Msg -> Msg  [frozen] .
+  op e  : Key IMsg -> IMsg [frozen] .
+  op d : Key IMsg -> IMsg  [frozen] .
 
   --- successor
-  op p : Msg -> Msg [frozen] .
+  op p : IMsg -> IMsg [frozen] .
 
   --- Concatenation
-  op _;_ : Msg Msg -> Msg [frozen gather (e E)] .
+  op _;_ : IMsg IMsg -> IMsg [frozen gather (e E)] .
 
 endfm
 
@@ -61,8 +61,8 @@ fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
   --- of your protocol
   ----------------------------------------------------------
 
- eq d(K:Key, e (K:Key, Z:Msg )) = Z:Msg [variant] .
- eq e(K:Key, d (K:Key, Z:Msg )) = Z:Msg [variant] .
+ eq d(K:Key, e (K:Key, Z:IMsg )) = Z:IMsg [variant] .
+ eq e(K:Key, d (K:Key, Z:IMsg )) = Z:IMsg [variant] .
 
 
 endfm
@@ -80,7 +80,7 @@ fmod PROTOCOL-SPECIFICATION is
   var A B S  : UName .
   vars r r' r'' r''' r# r## r1 rM : Fresh .
   var TS NA NMA NB NMB NMS NB1 : Nonce .
-  vars M1 M2 MA MB MS N M : Msg .
+  vars M1 M2 MA MB MS N M : IMsg .
   var K : Key .
   var SK : Sessionkey .
 

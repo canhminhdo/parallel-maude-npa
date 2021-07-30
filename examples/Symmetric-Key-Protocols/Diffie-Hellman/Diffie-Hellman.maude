@@ -7,36 +7,36 @@ A --> B: enc(exp(exp(g,N_B),N_A),secret(A,B))
 
 where N_A and N_B are nonces, exp(x,y) means x raised to y, enc(x,y) means
 message y encripted using key x, and secret(A,B) is a secret shared between
-A and B. Moreover, exponentiation and encription/decription have the following 
+A and B. Moreover, exponentiation and encription/decription have the following
 algebraic properties:
 
   exp(exp(X,Y),Z) = exp(X, Y * Z)
   e(K,d(K,M)) = M .
   d(K,e(K,M)) = M .
 
-where * is the xor operator, though no algebraic property is given, since 
-they are not necessary for this protocol. However, note that the property 
+where * is the xor operator, though no algebraic property is given, since
+they are not necessary for this protocol. However, note that the property
 for exponentiation is restricted below by using appopriate sorts
 in such a way that variable X can be only the generator g. This is necessary
 to have a finitary unification procedure based on narrowing.
 )***
 
 fmod PROTOCOL-EXAMPLE-SYMBOLS is
-  --- Importing sorts Msg, Fresh, Public
+  --- Importing sorts IMsg, Fresh, Public
   protecting DEFINITION-PROTOCOL-RULES .
-  
+
   ----------------------------------------------------------
   --- Overwrite this module with the syntax of your protocol
   --- Notes:
-  --- * Sort Msg and Fresh are special and imported
-  --- * Every sort must be a subsort of Msg
-  --- * No sort can be a supersort of Msg
+  --- * Sort IMsg and Fresh are special and imported
+  --- * Every sort must be a subsort of IMsg
+  --- * No sort can be a supersort of IMsg
   ----------------------------------------------------------
 
-  --- Sort Information 
+  --- Sort Information
   sorts Name Nonce NeNonceSet Gen Exp Key GenvExp Secret .
   subsort Gen Exp < GenvExp .
-  subsort Name NeNonceSet GenvExp Secret Key < Msg .
+  subsort Name NeNonceSet GenvExp Secret Key < IMsg .
   subsort Exp < Key .
   subsort Name < Public . --- This is quite relevant and necessary
   subsort Gen < Public . --- This is quite relevant and necessary
@@ -51,8 +51,8 @@ fmod PROTOCOL-EXAMPLE-SYMBOLS is
   ops a b i : -> Name .
 
   --- Encryption
-  op e : Key Msg -> Msg [frozen] .
-  op d : Key Msg -> Msg [frozen] .
+  op e : Key IMsg -> IMsg [frozen] .
+  op d : Key IMsg -> IMsg [frozen] .
 
   --- Exp
   op exp : GenvExp NeNonceSet -> Exp [frozen] .
@@ -65,22 +65,22 @@ fmod PROTOCOL-EXAMPLE-SYMBOLS is
   op _*_ : NeNonceSet NeNonceSet -> NeNonceSet [frozen assoc comm] .
 
   --- Concatenation
-  op _;_ : Msg Msg -> Msg [frozen gather (e E)] .
+  op _;_ : IMsg IMsg -> IMsg [frozen gather (e E)] .
 
 endfm
 
 fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
   protecting PROTOCOL-EXAMPLE-SYMBOLS .
-  
+
   ----------------------------------------------------------
-  --- Overwrite this module with the algebraic properties 
+  --- Overwrite this module with the algebraic properties
   --- of your protocol
   ----------------------------------------------------------
-  
-  eq exp(exp(W:Gen,Y:NeNonceSet),Z:NeNonceSet) 
+
+  eq exp(exp(W:Gen,Y:NeNonceSet),Z:NeNonceSet)
    = exp(W:Gen, Y:NeNonceSet * Z:NeNonceSet) [variant] .
-  eq e(K:Key,d(K:Key,M:Msg)) = M:Msg [variant] .
-  eq d(K:Key,e(K:Key,M:Msg)) = M:Msg [variant] .
+  eq e(K:Key,d(K:Key,M:IMsg)) = M:IMsg [variant] .
+  eq d(K:Key,e(K:Key,M:IMsg)) = M:IMsg [variant] .
 
 endfm
 
@@ -90,10 +90,10 @@ fmod PROTOCOL-SPECIFICATION is
   protecting DEFINITION-CONSTRAINTS-INPUT .
 
   ----------------------------------------------------------
-  --- Overwrite this module with the strands 
+  --- Overwrite this module with the strands
   --- of your protocol
   ----------------------------------------------------------
-  
+
   vars NS1 NS2 NS3 NS : NeNonceSet .
   var NA NB N : Nonce .
   var GE : GenvExp .
@@ -102,10 +102,10 @@ fmod PROTOCOL-SPECIFICATION is
   vars r r' r1 r2 r3 : Fresh .
   var Ke : Key .
   vars XE YE : Exp .
-  vars M M1 M2 : Msg .
+  vars M M1 M2 : IMsg .
   var Sr : Secret .
 
-  eq STRANDS-DOLEVYAO = 
+  eq STRANDS-DOLEVYAO =
      :: nil :: [ nil | -(M1 ; M2), +(M1), nil ] &
      :: nil :: [ nil | -(M1 ; M2), +(M2), nil ] &
      :: nil :: [ nil | -(M1), -(M2), +(M1 ; M2), nil ] &
@@ -118,14 +118,14 @@ fmod PROTOCOL-SPECIFICATION is
      :: nil :: [ nil | +(A), nil ]
   [nonexec] .
 
-  eq STRANDS-PROTOCOL = 
-     :: r,r' :: 
-     [nil | +(A ; B ; exp(g,n(A,r))), 
-            -(A ; B ; XE), 
+  eq STRANDS-PROTOCOL =
+     :: r,r' ::
+     [nil | +(A ; B ; exp(g,n(A,r))),
+            -(A ; B ; XE),
             +(e(exp(XE,n(A,r)),sec(A,r'))), nil] &
-     :: r :: 
-     [nil | -(A ; B ; XE), 
-            +(A ; B ; exp(g,n(B,r))), 
+     :: r ::
+     [nil | -(A ; B ; XE),
+            +(A ; B ; exp(g,n(B,r))),
             -(e(exp(XE,n(B,r)),Sr)), nil]
   [nonexec] .
 
@@ -133,14 +133,14 @@ fmod PROTOCOL-SPECIFICATION is
    = (grl empty => (NS * n(a,r)) inL . ;
       grl empty => n(a,r) inL . ;
       grl empty => (NS * n(b,r)) inL . ;
-      grl empty => n(b,r) inL .  
+      grl empty => n(b,r) inL .
       ! S2 )
   [nonexec] .
 
   eq ATTACK-STATE(0)
-   = :: r :: 
-     [nil, -(a ; b ; XE), 
-           +(a ; b ; exp(g,n(b,r))), 
+   = :: r ::
+     [nil, -(a ; b ; XE),
+           +(a ; b ; exp(g,n(b,r))),
            -(e(exp(XE,n(b,r)),sec(a,r'))) | nil]
      || empty
      || nil
@@ -148,16 +148,16 @@ fmod PROTOCOL-SPECIFICATION is
      || never
      *** Pattern for authentication
      (:: R:FreshSet ::
-     [nil | +(a ; b ; XE), 
-            -(a ; b ; exp(g,n(b,r))), 
+     [nil | +(a ; b ; XE),
+            -(a ; b ; exp(g,n(b,r))),
             +(e(YE,sec(a,r'))), nil]
       & S:StrandSet || K:IntruderKnowledge)
   [nonexec] .
 
   eq ATTACK-STATE(1)
-   = :: r :: 
-     [nil, -(a ; b ; XE), 
-           +(a ; b ; exp(g,n(b,r))), 
+   = :: r ::
+     [nil, -(a ; b ; XE),
+           +(a ; b ; exp(g,n(b,r))),
            -(e(exp(XE,n(b,r)),sec(a,r'))) | nil]
      || sec(a,r') inI
      || nil
@@ -166,33 +166,33 @@ fmod PROTOCOL-SPECIFICATION is
   [nonexec] .
 
   eq ATTACK-STATE(2)
-   = :: r :: 
-     [nil, -(a ; b ; XE), 
-           +(a ; b ; exp(g,n(b,r))), 
+   = :: r ::
+     [nil, -(a ; b ; XE),
+           +(a ; b ; exp(g,n(b,r))),
            -(e(exp(XE,n(b,r)),sec(a,r'))) | nil]
      || sec(a,r') inI
      || nil
      || nil
      || never(
      *** Avoid infinite useless path
-      (:: nil :: 
-      [ nil | -(exp(GE,NS1 * NS2)), -(NS3), 
-          +(exp(GE,NS1 * NS2 * NS3)), nil ] 
+      (:: nil ::
+      [ nil | -(exp(GE,NS1 * NS2)), -(NS3),
+          +(exp(GE,NS1 * NS2 * NS3)), nil ]
       & S:StrandSet || K:IntruderKnowledge)
      *** Pattern to avoid unreachable states
-     (:: nil :: 
-      [nil | -(exp(#1:Exp, N1:Nonce)), 
-             -(sec(A:Name, #2:Fresh)), 
-             +(e(exp(#1:Exp, N2:Nonce), sec(A:Name, #2:Fresh))), nil] 
+     (:: nil ::
+      [nil | -(exp(#1:Exp, N1:Nonce)),
+             -(sec(A:Name, #2:Fresh)),
+             +(e(exp(#1:Exp, N2:Nonce), sec(A:Name, #2:Fresh))), nil]
       & S:StrandSet || K:IntruderKnowledge)
      *** Pattern to avoid unreachable states
-     (:: nil :: 
-      [nil | -(exp(#1:Exp, N1:Nonce)), 
-          -(e(exp(#1:Exp, N1:Nonce), S:Secret)), 
+     (:: nil ::
+      [nil | -(exp(#1:Exp, N1:Nonce)),
+          -(e(exp(#1:Exp, N1:Nonce), S:Secret)),
           +(S:Secret), nil]
       & S:StrandSet || K:IntruderKnowledge)
      *** Pattern to avoid unreachable states
-     (S:StrandSet 
+     (S:StrandSet
       || (#4:Gen != #0:Gen), K:IntruderKnowledge)
      )
   [nonexec] .

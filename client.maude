@@ -121,9 +121,9 @@ mod PARALLEL-MAUDE-NPA is
     => < O : Client | none > [print "[ClosedSocket]"] .
 endm
 
-load examples/Needham_Schroeder.maude
+load examples/Symmetric-Key-Protocols/Yahalom/Yahalom.maude
 select PARALLEL-MAUDE-NPA .
 load debug.maude
 erew <> p-run(0, unbounded, aClient)
         < aClient : Client | status : idle >
-        CreateClientTcpSocket(socketManager, aClient, "localhost", 9000) .
+        CreateClientTcpSocket(socketManager, aClient, "localhost", 9001) .
