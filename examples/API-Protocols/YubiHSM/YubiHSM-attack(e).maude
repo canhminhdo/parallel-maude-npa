@@ -191,3 +191,7 @@ eq ATTACK-STATE(0) =
        || nil
  [nonexec] .
 
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .

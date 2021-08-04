@@ -25,7 +25,7 @@ subsort Event < EventList .
 op nil : -> EventList .
 op _++_ : EventList EventList -> EventList [assoc id: nil prec 40] .
 
---- Events 
+--- Events
 op MasterKey : FrNonce -> Event .
 op SEnc : FrNonce CounterMode -> Event .
 op GenerateAEAD : StdMsg StdMsg -> Event .
@@ -101,7 +101,7 @@ eq STRANDS-DOLEVYAO =
    :: nil :: [ nil | -(X:ElemXOR), -(Y:XOR), +(X:ElemXOR * Y:XOR), nil ] &
    :: nil :: [ nil | -(X:ElemConc), -(Y:ElemConc), +(X:ElemConc ; Y:ElemConc), nil ] &
    :: nil :: [ nil | -(X:ElemConc ; Y:ElemConc), +(X:ElemConc), nil ] &
-   :: nil :: [ nil | -(X:ElemConc ; Y:ElemConc), +(Y:ElemConc), nil ] 
+   :: nil :: [ nil | -(X:ElemConc ; Y:ElemConc), +(Y:ElemConc), nil ]
 [nonexec] .
 
 eq STRANDS-PROTOCOL =
@@ -110,17 +110,17 @@ eq STRANDS-PROTOCOL =
 [nil |
       +(Fr(kh:Fresh)),
 
-      {YubiHSM -> YubiHSM ;; 1-1 ;;  
-       HSM(Fr(kh:Fresh),Fr(k:Fresh)) @ YSM-AEAD-GENERATE(Fr(kh:Fresh)) 
+      {YubiHSM -> YubiHSM ;; 1-1 ;;
+       HSM(Fr(kh:Fresh),Fr(k:Fresh)) @ YSM-AEAD-GENERATE(Fr(kh:Fresh))
        |>  MasterKey(Fr(k:Fresh))},
        nil ]
  &
 ----------------------------------------------------------
 --- rule YSM-AEAD-GENERATE:
-:: data:Fresh :: 
+:: data:Fresh ::
 
 [nil | {YubiHSM -> YubiHSM ;; 1-1 ;;
-        HSM(kh:FrNonce,k:FrNonce) @ YSM-AEAD-GENERATE(kh:FrNonce) @ 
+        HSM(kh:FrNonce,k:FrNonce) @ YSM-AEAD-GENERATE(kh:FrNonce) @
         mem:GlobalMsg
 	|> EL:EventList },
 
@@ -143,11 +143,11 @@ eq STRANDS-PROTOCOL =
 :: nil ::
 
 [nil | {YubiHSM -> YubiHSM ;; 1-1 ;;
-        HSM(kh:FrNonce,k:FrNonce) @ 
+        HSM(kh:FrNonce,k:FrNonce) @
         mem:GlobalMsg
         |> EL:EventList },
 
-       -(kh:FrNonce), 
+       -(kh:FrNonce),
        -(nonce:FrNonce),
        +(senc(cmode(nonce:FrNonce),k:FrNonce)), --- OutHSM
 
@@ -167,18 +167,18 @@ eq STRANDS-PROTOCOL =
 
 
 eq ATTACK-STATE(0) =
-:: kh:Fresh, k:Fresh :: 
+:: kh:Fresh, k:Fresh ::
 [nil,
       +(Fr(kh:Fresh)),
 
-      {YubiHSM -> YubiHSM ;; 1-1 ;;  
-       HSM(Fr(kh:Fresh),Fr(k:Fresh)) @ YSM-AEAD-GENERATE(Fr(kh:Fresh)) 
+      {YubiHSM -> YubiHSM ;; 1-1 ;;
+       HSM(Fr(kh:Fresh),Fr(k:Fresh)) @ YSM-AEAD-GENERATE(Fr(kh:Fresh))
        |>  MasterKey(Fr(k:Fresh))}
 | nil ]
  &
-:: data:Fresh :: 
+:: data:Fresh ::
 [nil,  {YubiHSM -> YubiHSM ;; 1-1 ;;
-        HSM(Fr(kh:Fresh),Fr(k:Fresh)) @ YSM-AEAD-GENERATE(Fr(kh:Fresh)) 
+        HSM(Fr(kh:Fresh),Fr(k:Fresh)) @ YSM-AEAD-GENERATE(Fr(kh:Fresh))
 	|> MasterKey(Fr(k:Fresh)) ++ SEnc(Fr(kh:Fresh),cmode(nonce:FrNonce)) },
 
        -(Fr(kh:Fresh)), --- in HSM
@@ -191,3 +191,7 @@ eq ATTACK-STATE(0) =
        || nil
  [nonexec] .
 
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .
