@@ -275,8 +275,8 @@ mod PARALLEL-MAUDE-NPA is
         [print "[ShowResult]"] .
 endm
 
-load examples/Symmetric-Key-Protocols/Yahalom/Yahalom.maude
+load examples/API-Protocols/YubiKey/YubiKey.maude
 select PARALLEL-MAUDE-NPA .
 load debug.maude
-erew <> < aServer : Server | status : idle, attack : 0, bStep : unbounded, step : 1, #workers : 8 >
-        CreateServerTcpSocket(socketManager, aServer, 9001, 10) .
+erew <> < aServer : Server | status : idle, attack : 21, bStep : unbounded, step : 1, #workers : 8 >
+        CreateServerTcpSocket(socketManager, aServer, 9003, 10) .
