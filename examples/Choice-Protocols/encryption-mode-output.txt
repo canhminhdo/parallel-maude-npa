@@ -71,150 +71,150 @@ reduce in MAUDE-NPA : initials(0,10) .
 rewrites: 842 in 0ms cpu (0ms real) (~ rewrites/second)
 result IdSystemSet: (< 1 . 8 . 2 . 1 . 1 > (
 :: #1:Fresh ::
-[ nil | 
-   +(a ; b ; shkey), 
-   -(she(key(a, b), skey(b, #0:Fresh))), 
-   +(she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
-   -(she(key(a, b), n(a, #1:Fresh))), nil]  & 
+[ nil |
+   +(a ; b ; shkey),
+   -(she(key(a, b), skey(b, #0:Fresh))),
+   +(she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh))),
+   -(she(key(a, b), n(a, #1:Fresh))), nil]  &
 :: #0:Fresh ::
-[ nil | 
-   -(a ; b ; shkey), 
-   +(she(key(a, b), skey(b, #0:Fresh))), 
-   -(she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
+[ nil |
+   -(a ; b ; shkey),
+   +(she(key(a, b), skey(b, #0:Fresh))),
+   -(she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh))),
    +(she(key(a, b), n(a, #1:Fresh))), nil] )
-| 
+|
 (a ; b ; shkey) !inI,
 she(key(a, b), n(a, #1:Fresh)) !inI,
 she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh)) !inI,
 she(key(a, b), skey(b, #0:Fresh)) !inI
-| 
-+(a ; b ; shkey), 
--(a ; b ; shkey), 
-+(she(key(a, b), skey(b, #0:Fresh))), 
--(she(key(a, b), skey(b, #0:Fresh))), 
-+(she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
--(she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
-+(she(key(a, b), n(a, #1:Fresh))), 
+|
++(a ; b ; shkey),
+-(a ; b ; shkey),
++(she(key(a, b), skey(b, #0:Fresh))),
+-(she(key(a, b), skey(b, #0:Fresh))),
++(she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh))),
+-(she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh))),
++(she(key(a, b), n(a, #1:Fresh))),
 -(she(key(a, b), n(a, #1:Fresh)))
-| 
+|
 nil)
 (< 1 . 8 . 2 . 1 . 2 . 8 > (
 :: #1:Fresh ::
-[ nil | 
-   -(a ; b ; shkey), 
-   +(she(key(a, b), skey(b, #1:Fresh))), 
-   -(she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
-   +(she(key(a, b), n(a, #0:Fresh))), nil]  & 
+[ nil |
+   -(a ; b ; shkey),
+   +(she(key(a, b), skey(b, #1:Fresh))),
+   -(she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh))),
+   +(she(key(a, b), n(a, #0:Fresh))), nil]  &
 :: #2:Fresh ::
-[ nil | 
-   +(a ; b ; shkey), nil]  & 
+[ nil |
+   +(a ; b ; shkey), nil]  &
 :: #0:Fresh ::
-[ nil | 
-   +(a ; b ; shkey), 
-   -(she(key(a, b), skey(b, #1:Fresh))), 
-   +(she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
+[ nil |
+   +(a ; b ; shkey),
+   -(she(key(a, b), skey(b, #1:Fresh))),
+   +(she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh))),
    -(she(key(a, b), n(a, #0:Fresh))), nil] )
-| 
+|
 (a ; b ; shkey) !inI,
 she(key(a, b), n(a, #0:Fresh)) !inI,
 she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh)) !inI,
 she(key(a, b), skey(b, #1:Fresh)) !inI
-| 
-+(a ; b ; shkey), 
-+(a ; b ; shkey), 
--(a ; b ; shkey), 
-+(she(key(a, b), skey(b, #1:Fresh))), 
--(she(key(a, b), skey(b, #1:Fresh))), 
-+(she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
--(she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
-+(she(key(a, b), n(a, #0:Fresh))), 
+|
++(a ; b ; shkey),
++(a ; b ; shkey),
+-(a ; b ; shkey),
++(she(key(a, b), skey(b, #1:Fresh))),
+-(she(key(a, b), skey(b, #1:Fresh))),
++(she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh))),
+-(she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh))),
++(she(key(a, b), n(a, #0:Fresh))),
 -(she(key(a, b), n(a, #0:Fresh)))
-| 
+|
 nil)
 (< 1 . 8 . 2 . 1 . 2 . 5 . 1 . 8 > (
 :: nil ::
-[ nil | 
-   -(a), 
-   -(b ; shkey), 
-   +(a ; b ; shkey), nil]  & 
+[ nil |
+   -(a),
+   -(b ; shkey),
+   +(a ; b ; shkey), nil]  &
 :: nil ::
-[ nil | 
-   -(#0:Name ; b ; shkey), 
-   +(b ; shkey), nil]  & 
+[ nil |
+   -(#0:Name ; b ; shkey),
+   +(b ; shkey), nil]  &
 :: #1:Fresh ::
-[ nil | 
-   -(a ; b ; shkey), 
-   +(she(key(a, b), skey(b, #1:Fresh))), 
-   -(she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
-   +(she(key(a, b), n(a, #2:Fresh))), nil]  & 
+[ nil |
+   -(a ; b ; shkey),
+   +(she(key(a, b), skey(b, #1:Fresh))),
+   -(she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh))),
+   +(she(key(a, b), n(a, #2:Fresh))), nil]  &
 :: #2:Fresh ::
-[ nil | 
-   +(a ; b ; shkey), 
-   -(she(key(a, b), skey(b, #1:Fresh))), 
-   +(she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
-   -(she(key(a, b), n(a, #2:Fresh))), nil]  & 
+[ nil |
+   +(a ; b ; shkey),
+   -(she(key(a, b), skey(b, #1:Fresh))),
+   +(she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh))),
+   -(she(key(a, b), n(a, #2:Fresh))), nil]  &
 :: #3:Fresh ::
-[ nil | 
+[ nil |
    +(#0:Name ; b ; shkey), nil] )
-| 
+|
 (a ; b ; shkey) !inI,
 (b ; shkey) !inI,
 (#0:Name ; b ; shkey) !inI,
 she(key(a, b), n(a, #2:Fresh)) !inI,
 she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh)) !inI,
 she(key(a, b), skey(b, #1:Fresh)) !inI
-| 
-+(#0:Name ; b ; shkey), 
--(#0:Name ; b ; shkey), 
-+(b ; shkey), 
--(a), 
--(b ; shkey), 
-+(a ; b ; shkey), 
-+(a ; b ; shkey), 
--(a ; b ; shkey), 
-+(she(key(a, b), skey(b, #1:Fresh))), 
--(she(key(a, b), skey(b, #1:Fresh))), 
-+(she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
--(she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
-+(she(key(a, b), n(a, #2:Fresh))), 
+|
++(#0:Name ; b ; shkey),
+-(#0:Name ; b ; shkey),
++(b ; shkey),
+-(a),
+-(b ; shkey),
++(a ; b ; shkey),
++(a ; b ; shkey),
+-(a ; b ; shkey),
++(she(key(a, b), skey(b, #1:Fresh))),
+-(she(key(a, b), skey(b, #1:Fresh))),
++(she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh))),
+-(she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh))),
++(she(key(a, b), n(a, #2:Fresh))),
 -(she(key(a, b), n(a, #2:Fresh)))
-| 
+|
 nil)
 < 1 . 8 . 2 . 1 . 2 . 5 . 5 . 2 . 1 . 8 > (
 :: nil ::
-[ nil | 
-   -(a), 
-   -(b ; shkey), 
-   +(a ; b ; shkey), nil]  & 
+[ nil |
+   -(a),
+   -(b ; shkey),
+   +(a ; b ; shkey), nil]  &
 :: nil ::
-[ nil | 
-   -(b), 
-   -(shkey), 
-   +(b ; shkey), nil]  & 
+[ nil |
+   -(b),
+   -(shkey),
+   +(b ; shkey), nil]  &
 :: nil ::
-[ nil | 
-   -(#1:Name ; shkey), 
-   +(shkey), nil]  & 
+[ nil |
+   -(#1:Name ; shkey),
+   +(shkey), nil]  &
 :: nil ::
-[ nil | 
-   -(#0:Name ; #1:Name ; shkey), 
-   +(#1:Name ; shkey), nil]  & 
+[ nil |
+   -(#0:Name ; #1:Name ; shkey),
+   +(#1:Name ; shkey), nil]  &
 :: #2:Fresh ::
-[ nil | 
-   +(#0:Name ; #1:Name ; shkey), nil]  & 
+[ nil |
+   +(#0:Name ; #1:Name ; shkey), nil]  &
 :: #3:Fresh ::
-[ nil | 
-   +(a ; b ; shkey), 
-   -(she(key(a, b), skey(b, #4:Fresh))), 
-   +(she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
-   -(she(key(a, b), n(a, #3:Fresh))), nil]  & 
+[ nil |
+   +(a ; b ; shkey),
+   -(she(key(a, b), skey(b, #4:Fresh))),
+   +(she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh))),
+   -(she(key(a, b), n(a, #3:Fresh))), nil]  &
 :: #4:Fresh ::
-[ nil | 
-   -(a ; b ; shkey), 
-   +(she(key(a, b), skey(b, #4:Fresh))), 
-   -(she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
+[ nil |
+   -(a ; b ; shkey),
+   +(she(key(a, b), skey(b, #4:Fresh))),
+   -(she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh))),
    +(she(key(a, b), n(a, #3:Fresh))), nil] )
-| 
+|
 shkey !inI,
 (a ; b ; shkey) !inI,
 (b ; shkey) !inI,
@@ -223,27 +223,27 @@ shkey !inI,
 she(key(a, b), n(a, #3:Fresh)) !inI,
 she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh)) !inI,
 she(key(a, b), skey(b, #4:Fresh)) !inI
-| 
-+(#0:Name ; #1:Name ; shkey), 
--(#0:Name ; #1:Name ; shkey), 
-+(#1:Name ; shkey), 
--(#1:Name ; shkey), 
-+(shkey), 
--(b), 
--(shkey), 
-+(b ; shkey), 
--(a), 
--(b ; shkey), 
-+(a ; b ; shkey), 
-+(a ; b ; shkey), 
--(a ; b ; shkey), 
-+(she(key(a, b), skey(b, #4:Fresh))), 
--(she(key(a, b), skey(b, #4:Fresh))), 
-+(she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
--(she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
-+(she(key(a, b), n(a, #3:Fresh))), 
+|
++(#0:Name ; #1:Name ; shkey),
+-(#0:Name ; #1:Name ; shkey),
++(#1:Name ; shkey),
+-(#1:Name ; shkey),
++(shkey),
+-(b),
+-(shkey),
++(b ; shkey),
+-(a),
+-(b ; shkey),
++(a ; b ; shkey),
++(a ; b ; shkey),
+-(a ; b ; shkey),
++(she(key(a, b), skey(b, #4:Fresh))),
+-(she(key(a, b), skey(b, #4:Fresh))),
++(she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh))),
+-(she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh))),
++(she(key(a, b), n(a, #3:Fresh))),
 -(she(key(a, b), n(a, #3:Fresh)))
-| 
+|
 nil
 ==========================================
 reduce in MAUDE-NPA : summary(1, 0) .
@@ -302,150 +302,150 @@ reduce in MAUDE-NPA : initials(1,12) .
 rewrites: 1692 in 0ms cpu (0ms real) (~ rewrites/second)
 result IdSystemSet: (< 1 . 8 . 2 . 1 . 1 > (
 :: #1:Fresh ::
-[ nil | 
-   +(a ; b ; pubkey), 
-   -(pk(a, b ; skey(b, #0:Fresh))), 
-   +(pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
-   -(pk(a, b ; n(a, #1:Fresh))), nil]  & 
+[ nil |
+   +(a ; b ; pubkey),
+   -(pk(a, b ; skey(b, #0:Fresh))),
+   +(pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh))),
+   -(pk(a, b ; n(a, #1:Fresh))), nil]  &
 :: #0:Fresh ::
-[ nil | 
-   -(a ; b ; pubkey), 
-   +(pk(a, b ; skey(b, #0:Fresh))), 
-   -(pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
+[ nil |
+   -(a ; b ; pubkey),
+   +(pk(a, b ; skey(b, #0:Fresh))),
+   -(pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh))),
    +(pk(a, b ; n(a, #1:Fresh))), nil] )
-| 
+|
 (a ; b ; pubkey) !inI,
 pk(a, b ; n(a, #1:Fresh)) !inI,
 pk(a, b ; skey(b, #0:Fresh)) !inI,
 pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh)) !inI
-| 
-+(a ; b ; pubkey), 
--(a ; b ; pubkey), 
-+(pk(a, b ; skey(b, #0:Fresh))), 
--(pk(a, b ; skey(b, #0:Fresh))), 
-+(pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
--(pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
-+(pk(a, b ; n(a, #1:Fresh))), 
+|
++(a ; b ; pubkey),
+-(a ; b ; pubkey),
++(pk(a, b ; skey(b, #0:Fresh))),
+-(pk(a, b ; skey(b, #0:Fresh))),
++(pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh))),
+-(pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh))),
++(pk(a, b ; n(a, #1:Fresh))),
 -(pk(a, b ; n(a, #1:Fresh)))
-| 
+|
 nil)
 (< 1 . 8 . 2 . 1 . 2 . 8 > (
 :: #1:Fresh ::
-[ nil | 
-   -(a ; b ; pubkey), 
-   +(pk(a, b ; skey(b, #1:Fresh))), 
-   -(pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
-   +(pk(a, b ; n(a, #0:Fresh))), nil]  & 
+[ nil |
+   -(a ; b ; pubkey),
+   +(pk(a, b ; skey(b, #1:Fresh))),
+   -(pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh))),
+   +(pk(a, b ; n(a, #0:Fresh))), nil]  &
 :: #2:Fresh ::
-[ nil | 
-   +(a ; b ; pubkey), nil]  & 
+[ nil |
+   +(a ; b ; pubkey), nil]  &
 :: #0:Fresh ::
-[ nil | 
-   +(a ; b ; pubkey), 
-   -(pk(a, b ; skey(b, #1:Fresh))), 
-   +(pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
+[ nil |
+   +(a ; b ; pubkey),
+   -(pk(a, b ; skey(b, #1:Fresh))),
+   +(pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh))),
    -(pk(a, b ; n(a, #0:Fresh))), nil] )
-| 
+|
 (a ; b ; pubkey) !inI,
 pk(a, b ; n(a, #0:Fresh)) !inI,
 pk(a, b ; skey(b, #1:Fresh)) !inI,
 pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh)) !inI
-| 
-+(a ; b ; pubkey), 
-+(a ; b ; pubkey), 
--(a ; b ; pubkey), 
-+(pk(a, b ; skey(b, #1:Fresh))), 
--(pk(a, b ; skey(b, #1:Fresh))), 
-+(pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
--(pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
-+(pk(a, b ; n(a, #0:Fresh))), 
+|
++(a ; b ; pubkey),
++(a ; b ; pubkey),
+-(a ; b ; pubkey),
++(pk(a, b ; skey(b, #1:Fresh))),
+-(pk(a, b ; skey(b, #1:Fresh))),
++(pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh))),
+-(pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh))),
++(pk(a, b ; n(a, #0:Fresh))),
 -(pk(a, b ; n(a, #0:Fresh)))
-| 
+|
 nil)
 (< 1 . 8 . 2 . 1 . 2 . 5 . 1 . 8 > (
 :: nil ::
-[ nil | 
-   -(a), 
-   -(b ; pubkey), 
-   +(a ; b ; pubkey), nil]  & 
+[ nil |
+   -(a),
+   -(b ; pubkey),
+   +(a ; b ; pubkey), nil]  &
 :: nil ::
-[ nil | 
-   -(#0:Name ; b ; pubkey), 
-   +(b ; pubkey), nil]  & 
+[ nil |
+   -(#0:Name ; b ; pubkey),
+   +(b ; pubkey), nil]  &
 :: #1:Fresh ::
-[ nil | 
-   -(a ; b ; pubkey), 
-   +(pk(a, b ; skey(b, #1:Fresh))), 
-   -(pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
-   +(pk(a, b ; n(a, #2:Fresh))), nil]  & 
+[ nil |
+   -(a ; b ; pubkey),
+   +(pk(a, b ; skey(b, #1:Fresh))),
+   -(pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh))),
+   +(pk(a, b ; n(a, #2:Fresh))), nil]  &
 :: #2:Fresh ::
-[ nil | 
-   +(a ; b ; pubkey), 
-   -(pk(a, b ; skey(b, #1:Fresh))), 
-   +(pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
-   -(pk(a, b ; n(a, #2:Fresh))), nil]  & 
+[ nil |
+   +(a ; b ; pubkey),
+   -(pk(a, b ; skey(b, #1:Fresh))),
+   +(pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh))),
+   -(pk(a, b ; n(a, #2:Fresh))), nil]  &
 :: #3:Fresh ::
-[ nil | 
+[ nil |
    +(#0:Name ; b ; pubkey), nil] )
-| 
+|
 (a ; b ; pubkey) !inI,
 (b ; pubkey) !inI,
 (#0:Name ; b ; pubkey) !inI,
 pk(a, b ; n(a, #2:Fresh)) !inI,
 pk(a, b ; skey(b, #1:Fresh)) !inI,
 pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh)) !inI
-| 
-+(#0:Name ; b ; pubkey), 
--(#0:Name ; b ; pubkey), 
-+(b ; pubkey), 
--(a), 
--(b ; pubkey), 
-+(a ; b ; pubkey), 
-+(a ; b ; pubkey), 
--(a ; b ; pubkey), 
-+(pk(a, b ; skey(b, #1:Fresh))), 
--(pk(a, b ; skey(b, #1:Fresh))), 
-+(pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
--(pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
-+(pk(a, b ; n(a, #2:Fresh))), 
+|
++(#0:Name ; b ; pubkey),
+-(#0:Name ; b ; pubkey),
++(b ; pubkey),
+-(a),
+-(b ; pubkey),
++(a ; b ; pubkey),
++(a ; b ; pubkey),
+-(a ; b ; pubkey),
++(pk(a, b ; skey(b, #1:Fresh))),
+-(pk(a, b ; skey(b, #1:Fresh))),
++(pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh))),
+-(pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh))),
++(pk(a, b ; n(a, #2:Fresh))),
 -(pk(a, b ; n(a, #2:Fresh)))
-| 
+|
 nil)
 < 1 . 8 . 2 . 1 . 2 . 5 . 5 . 2 . 1 . 8 > (
 :: nil ::
-[ nil | 
-   -(a), 
-   -(b ; pubkey), 
-   +(a ; b ; pubkey), nil]  & 
+[ nil |
+   -(a),
+   -(b ; pubkey),
+   +(a ; b ; pubkey), nil]  &
 :: nil ::
-[ nil | 
-   -(b), 
-   -(pubkey), 
-   +(b ; pubkey), nil]  & 
+[ nil |
+   -(b),
+   -(pubkey),
+   +(b ; pubkey), nil]  &
 :: nil ::
-[ nil | 
-   -(#1:Name ; pubkey), 
-   +(pubkey), nil]  & 
+[ nil |
+   -(#1:Name ; pubkey),
+   +(pubkey), nil]  &
 :: nil ::
-[ nil | 
-   -(#0:Name ; #1:Name ; pubkey), 
-   +(#1:Name ; pubkey), nil]  & 
+[ nil |
+   -(#0:Name ; #1:Name ; pubkey),
+   +(#1:Name ; pubkey), nil]  &
 :: #2:Fresh ::
-[ nil | 
-   +(#0:Name ; #1:Name ; pubkey), nil]  & 
+[ nil |
+   +(#0:Name ; #1:Name ; pubkey), nil]  &
 :: #3:Fresh ::
-[ nil | 
-   +(a ; b ; pubkey), 
-   -(pk(a, b ; skey(b, #4:Fresh))), 
-   +(pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
-   -(pk(a, b ; n(a, #3:Fresh))), nil]  & 
+[ nil |
+   +(a ; b ; pubkey),
+   -(pk(a, b ; skey(b, #4:Fresh))),
+   +(pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh))),
+   -(pk(a, b ; n(a, #3:Fresh))), nil]  &
 :: #4:Fresh ::
-[ nil | 
-   -(a ; b ; pubkey), 
-   +(pk(a, b ; skey(b, #4:Fresh))), 
-   -(pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
+[ nil |
+   -(a ; b ; pubkey),
+   +(pk(a, b ; skey(b, #4:Fresh))),
+   -(pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh))),
    +(pk(a, b ; n(a, #3:Fresh))), nil] )
-| 
+|
 pubkey !inI,
 (a ; b ; pubkey) !inI,
 (b ; pubkey) !inI,
@@ -454,27 +454,27 @@ pubkey !inI,
 pk(a, b ; n(a, #3:Fresh)) !inI,
 pk(a, b ; skey(b, #4:Fresh)) !inI,
 pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh)) !inI
-| 
-+(#0:Name ; #1:Name ; pubkey), 
--(#0:Name ; #1:Name ; pubkey), 
-+(#1:Name ; pubkey), 
--(#1:Name ; pubkey), 
-+(pubkey), 
--(b), 
--(pubkey), 
-+(b ; pubkey), 
--(a), 
--(b ; pubkey), 
-+(a ; b ; pubkey), 
-+(a ; b ; pubkey), 
--(a ; b ; pubkey), 
-+(pk(a, b ; skey(b, #4:Fresh))), 
--(pk(a, b ; skey(b, #4:Fresh))), 
-+(pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
--(pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
-+(pk(a, b ; n(a, #3:Fresh))), 
+|
++(#0:Name ; #1:Name ; pubkey),
+-(#0:Name ; #1:Name ; pubkey),
++(#1:Name ; pubkey),
+-(#1:Name ; pubkey),
++(pubkey),
+-(b),
+-(pubkey),
++(b ; pubkey),
+-(a),
+-(b ; pubkey),
++(a ; b ; pubkey),
++(a ; b ; pubkey),
+-(a ; b ; pubkey),
++(pk(a, b ; skey(b, #4:Fresh))),
+-(pk(a, b ; skey(b, #4:Fresh))),
++(pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh))),
+-(pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh))),
++(pk(a, b ; n(a, #3:Fresh))),
 -(pk(a, b ; n(a, #3:Fresh)))
-| 
+|
 nil
 ==========================================
 reduce in MAUDE-NPA : summary(2, 0) .

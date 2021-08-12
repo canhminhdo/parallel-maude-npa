@@ -43,12 +43,12 @@ reduce in MAUDE-NPA : initials(0,3) .
 rewrites: 180 in 0ms cpu (0ms real) (~ rewrites/second)
 result ShortIdSystem: < 1 . 1 . 2 . 1 > (
 :: #1:Fresh,#0:Fresh ::
-[ nil | 
+[ nil |
    +(hs ;
      n(client, #0:Fresh) ;
      g1 ;
      gen(g1) ;
-     exp(g1, gen(g1), n(client, #1:Fresh))), 
+     exp(g1, gen(g1), n(client, #1:Fresh))),
    -(hs ;
      n(server, #2:Fresh) ;
      g1 ;
@@ -73,8 +73,8 @@ result ShortIdSystem: < 1 . 1 . 2 . 1 > (
            gen(g1) ;
            exp(g1, gen(g1), n(client, #1:Fresh)) ;
            exp(g1, gen(g1), n(server, #3:Fresh)) ;
-           authreq) ) ), 
-   authreq eq authreq, 
+           authreq) ) ),
+   authreq eq authreq,
    +(e(exp(g1, gen(g1), n(server, #3:Fresh) * n(client, #1:Fresh)),
        sig(client,
            hs ;
@@ -129,14 +129,14 @@ result ShortIdSystem: < 1 . 1 . 2 . 1 > (
                gen(g1) ;
                exp(g1, gen(g1), n(client, #1:Fresh)) ;
                exp(g1, gen(g1), n(server, #3:Fresh)) ;
-               authreq) ) ) ), nil]  & 
+               authreq) ) ) ), nil]  &
 :: #2:Fresh,#3:Fresh ::
-[ nil | 
+[ nil |
    -(hs ;
      n(client, #0:Fresh) ;
      g1 ;
      gen(g1) ;
-     exp(g1, gen(g1), n(client, #1:Fresh))), 
+     exp(g1, gen(g1), n(client, #1:Fresh))),
    +(hs ;
      n(server, #2:Fresh) ;
      g1 ;
@@ -161,8 +161,8 @@ result ShortIdSystem: < 1 . 1 . 2 . 1 > (
            gen(g1) ;
            exp(g1, gen(g1), n(client, #1:Fresh)) ;
            exp(g1, gen(g1), n(server, #3:Fresh)) ;
-           authreq) ) ), 
-   authreq eq authreq, 
+           authreq) ) ),
+   authreq eq authreq,
    -(e(exp(g1, gen(g1), n(server, #3:Fresh) * n(client, #1:Fresh)),
        sig(client,
            hs ;
@@ -218,7 +218,7 @@ result ShortIdSystem: < 1 . 1 . 2 . 1 > (
                exp(g1, gen(g1), n(client, #1:Fresh)) ;
                exp(g1, gen(g1), n(server, #3:Fresh)) ;
                authreq) ) ) ), nil] )
-| 
+|
 e(exp(g1, gen(g1), n(server, #3:Fresh) * n(client, #1:Fresh)),
   sig(client,
       hs ;
@@ -304,17 +304,17 @@ n(client, #0:Fresh) ;
 g1 ;
 gen(g1) ;
 exp(g1, gen(g1), n(client, #1:Fresh))) !inI
-| 
+|
 +(hs ;
   n(client, #0:Fresh) ;
   g1 ;
   gen(g1) ;
-  exp(g1, gen(g1), n(client, #1:Fresh))), 
+  exp(g1, gen(g1), n(client, #1:Fresh))),
 -(hs ;
   n(client, #0:Fresh) ;
   g1 ;
   gen(g1) ;
-  exp(g1, gen(g1), n(client, #1:Fresh))), 
+  exp(g1, gen(g1), n(client, #1:Fresh))),
 +(hs ;
   n(server, #2:Fresh) ;
   g1 ;
@@ -339,7 +339,7 @@ exp(g1, gen(g1), n(client, #1:Fresh))) !inI
         gen(g1) ;
         exp(g1, gen(g1), n(client, #1:Fresh)) ;
         exp(g1, gen(g1), n(server, #3:Fresh)) ;
-        authreq) ) ), 
+        authreq) ) ),
 -(hs ;
   n(server, #2:Fresh) ;
   g1 ;
@@ -364,7 +364,7 @@ exp(g1, gen(g1), n(client, #1:Fresh))) !inI
         gen(g1) ;
         exp(g1, gen(g1), n(client, #1:Fresh)) ;
         exp(g1, gen(g1), n(server, #3:Fresh)) ;
-        authreq) ) ), 
+        authreq) ) ),
 +(e(exp(g1, gen(g1), n(server, #3:Fresh) * n(client, #1:Fresh)),
     sig(client,
         hs ;
@@ -419,7 +419,7 @@ exp(g1, gen(g1), n(client, #1:Fresh))) !inI
             gen(g1) ;
             exp(g1, gen(g1), n(client, #1:Fresh)) ;
             exp(g1, gen(g1), n(server, #3:Fresh)) ;
-            authreq) ) ) ), 
+            authreq) ) ) ),
 -(e(exp(g1, gen(g1), n(server, #3:Fresh) * n(client, #1:Fresh)),
     sig(client,
         hs ;
@@ -475,6 +475,6 @@ exp(g1, gen(g1), n(client, #1:Fresh))) !inI
             exp(g1, gen(g1), n(client, #1:Fresh)) ;
             exp(g1, gen(g1), n(server, #3:Fresh)) ;
             authreq) ) ) )
-| 
+|
 nil
 Bye.
