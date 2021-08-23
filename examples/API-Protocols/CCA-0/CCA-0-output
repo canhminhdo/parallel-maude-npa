@@ -1,0 +1,246 @@
+Tue Jun  2 19:21:58 CEST 2020
+		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	     Maude alpha128 built: Mar 10 2020 14:45:05
+	     Copyright 1997-2020 SRI International
+		   Tue Jun  2 19:21:58 2020
+
+	    Maude-NPA Version: 3.1.4 (June 2nd 2020)
+	    with direct composition, irreducibility constraints and time
+	    (To be run with Maude alpha 121 or above)
+	    Copyright (c) 2020, University of Illinois
+	    All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern
+    X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : genGrammars .
+rewrites: 102625247 in 203524ms cpu (584861ms real) (504241 rewrites/second)
+result GrammarList: (errorNoHeuristicApplied {
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL . ,
+  '#0:IMsg <- '_*_['EXP.KExp,'Km1.KKek,'Km2.KKek,'Km3.KKek,'PIN.KPin] ;
+  '#1:Key <- '_*_['IMP.KImp,'KM.KMaster],
+grl (PIN * EXP * Km1 * Km2 * Km3) inL => emptyMsgSet inL . ,none,
+grl (PIN * EXP * Km1 * Km2 * Km3 * #2:Key) notInI,
+   ((PIN * EXP * Km1 * Km2 * Km3) notLeq PIN),
+   ((PIN * EXP * Km1 * Km2 * Km3) notLeq EXP),
+   ((PIN * EXP * Km1 * Km2 * Km3) notLeq IMP),
+   (PIN * EXP * Km1 * Km2 * Km3) notLeq Km3 => emptyMsgSet inL . } usingGrammar
+
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:IMsg notInI,
+   (#0:IMsg notLeq PIN),
+   (#0:IMsg notLeq EXP),
+   (#0:IMsg notLeq IMP),
+   #0:IMsg notLeq Km3 => (#0:IMsg * #1:IMsg) inL .  ;
+grl (#0:Key * #1:Key) notInI,
+   (#0:Key notLeq PIN),
+   (#0:Key notLeq EXP),
+   (#0:Key notLeq IMP),
+   #0:Key notLeq Km3 => #0:Key inL . )
+| (errorNoHeuristicApplied {
+grl empty => (#1:Key * #2:Key) inL . ,none,
+grl empty => ((#6:IMsg * #1:Key),#6:IMsg * #2:Key) inL . ,none,
+grl empty => ((#6:IMsg * #1:Key),#6:IMsg * #2:Key) inL . } usingGrammar
+grl empty => (#1:Key * #2:Key) inL . )
+| (errorNoHeuristicApplied {
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL . ,
+  '#0:IMsg <- '_*_['EXP.KExp,'Km1.KKek,'Km2.KKek,'Km3.KKek,'PIN.KPin] ;
+  '#1:Key <- '_*_['IMP.KImp,'KM.KMaster],
+grl (PIN * EXP * Km1 * Km2 * Km3) inL => emptyMsgSet inL . ,none,
+grl (PIN * EXP * Km1 * Km2 * Km3 * #2:IMsg) notInI,
+   ((PIN * EXP * Km1 * Km2 * Km3) notLeq PIN),
+   ((PIN * EXP * Km1 * Km2 * Km3) notLeq EXP),
+   ((PIN * EXP * Km1 * Km2 * Km3) notLeq IMP),
+   ((PIN * EXP * Km1 * Km2 * Km3) notLeq Km3),
+   (PIN * EXP * Km1 * Km2 * Km3) notLeq e(#3:Key, #4:Key) => emptyMsgSet inL .
+    } usingGrammar
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg notInI,
+   (#0:IMsg notLeq PIN),
+   (#0:IMsg notLeq EXP),
+   (#0:IMsg notLeq IMP),
+   (#0:IMsg notLeq Km3),
+   #0:IMsg notLeq e(#1:Key, #2:Key) => (#0:IMsg * #3:IMsg) inL .  ;
+grl (#0:IMsg * #1:IMsg) notInI,
+   (#0:IMsg notLeq PIN),
+   (#0:IMsg notLeq EXP),
+   (#0:IMsg notLeq IMP),
+   (#0:IMsg notLeq Km3),
+   #0:IMsg notLeq e(#2:Key, #3:Key) => #0:IMsg inL . )
+| (errorNoHeuristicApplied {
+grl empty => (#1:IMsg * #2:IMsg) inL . ,none,
+grl empty => (#1:IMsg,#2:IMsg) inL . ,none,
+grl empty => (#1:IMsg,#2:IMsg) inL . } usingGrammar
+grl empty => (#1:IMsg * #2:IMsg) inL . )
+| (
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:Key notInI => d(#0:Key, #1:IMsg) inL . )
+| (
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:IMsg notInI => d(#1:Key, #0:IMsg) inL . )
+| (errorNoHeuristicApplied {
+grl empty => d(#1:Key, #2:IMsg) inL . ,none,
+grl empty => (#2:IMsg,#1:Key) inL . ,none,
+grl empty => (#2:IMsg,#1:Key) inL . } usingGrammar
+grl empty => d(#1:Key, #2:IMsg) inL . )
+| (
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:Key notInI => dk(#0:Key, #1:IMsg) inL . )
+| (
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:IMsg notInI => dk(#1:Key, #0:IMsg) inL . )
+| (
+grl empty => dk(#0:Key, #1:IMsg) inL .  ;
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL . )
+| (
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:Key notInI,
+   (#0:Key notLeq Km1),
+   (#0:Key notLeq Km2),
+   (#0:Key notLeq Km3),
+   #0:Key notLeq #1:Key * #2:Key => e(#0:Key, #3:IMsg) inL .  ;
+grl #0:IMsg notInI,
+   (#0:IMsg notLeq Km1),
+   (#0:IMsg notLeq Km2),
+   (#0:IMsg notLeq Km3),
+   (#0:IMsg notLeq #1:Key * #2:Key),
+   #0:IMsg notLeq #3:IMsg * #4:IMsg * #5:IMsg => (#0:IMsg * #6:Tipo) inL . )
+| (
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:IMsg notInI,
+   #0:IMsg notLeq #1:Key * #2:Key => e(#3:Key, #0:IMsg) inL . )
+| (errorNoHeuristicApplied {
+grl empty => e(#1:Key, #2:IMsg) inL . ,none,
+grl empty => (#2:IMsg,#1:Key) inL . ,none,
+grl empty => (#2:IMsg,#1:Key) inL . } usingGrammar
+grl empty => e(#1:Key, #2:IMsg) inL . )
+| (
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:Key notInI => ek(#0:Key, #1:IMsg) inL . )
+| (
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:IMsg notInI => ek(#1:Key, #0:IMsg) inL . )
+| (
+grl empty => ek(#0:Key, #1:IMsg) inL .  ;
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL . )
+| (
+grl empty => n(#0:Name, #1:Fresh) inL .  ;
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL . )
+| (
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:IMsg notInI,
+   (#0:IMsg notLeq Km1),
+   (#0:IMsg notLeq Km2),
+   (#0:IMsg notLeq Km3),
+   (#0:IMsg notLeq PIN * EXP),
+   (#0:IMsg notLeq PIN * Km1),
+   (#0:IMsg notLeq PIN * Km2),
+   (#0:IMsg notLeq PIN * Km3),
+   (#0:IMsg notLeq EXP * Km1),
+   (#0:IMsg notLeq EXP * Km2),
+   (#0:IMsg notLeq EXP * Km3),
+   (#0:IMsg notLeq Km1 * Km2),
+   (#0:IMsg notLeq Km1 * Km3),
+   (#0:IMsg notLeq Km2 * Km3),
+   #0:IMsg notLeq #1:IMsg * #2:IMsg * #3:IMsg => (#0:IMsg * #4:EKey) inL . )
+| (
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:Key notInI,
+   (#0:Key notLeq Km1),
+   (#0:Key notLeq Km2),
+   (#0:Key notLeq Km3),
+   #0:Key notLeq #1:Key * #2:Key => e(#0:Key, PDK) inL .  ;
+grl #0:IMsg notInI,
+   (#0:IMsg notLeq Km1),
+   (#0:IMsg notLeq Km2),
+   (#0:IMsg notLeq Km3),
+   (#0:IMsg notLeq #1:Key * #2:Key),
+   #0:IMsg notLeq #3:IMsg * #4:IMsg * #5:IMsg => (#0:IMsg * #6:Tipo) inL . )
+| (
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:EKey notInI,
+   (#0:EKey notLeq Km1),
+   (#0:EKey notLeq Km2),
+   #0:EKey notLeq Km3 => (#1:IMsg * #0:EKey) inL . )
+| (
+grl #0:IMsg inL => e(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => d(#1:Key, #0:IMsg) inL .  ;
+grl #0:IMsg inL => (#0:IMsg * #1:IMsg) inL .  ;
+grl #0:KPdk notLeq PDK => #0:KPdk inL . )
+| errorNoHeuristicApplied {
+grl empty => (IMP * KP * KM) inL . ,none,
+grl empty => ((KM * #4:IMsg),IMP * KP * #4:IMsg) inL . ,none,
+grl empty => ((KM * #4:IMsg),IMP * KP * #4:IMsg) inL . } usingGrammar
+grl empty => (IMP * KP * KM) inL .
+==========================================
+reduce in MAUDE-NPA : run(0) .
+rewrites: 5443 in 168ms cpu (511ms real) (32398 rewrites/second)
+result ShortIdSystem: < 1 > empty
+|
+e(PDK, PDK) inI
+|
+nil
+|
+nil
+==========================================
+reduce in MAUDE-NPA : summary(1) .
+rewrites: 341509 in 1652ms cpu (4324ms real) (206724 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2) .
+rewrites: 2076801 in 5232ms cpu (9720ms real) (396942 rewrites/second)
+result Summary: States>> 6 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3) .
+rewrites: 72270455 in 129144ms cpu (145522ms real) (559611 rewrites/second)
+result Summary: States>> 69 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(4) .
+rewrites: 4859480287 in 5198244ms cpu (5198462ms real) (934831 rewrites/second)
+result Summary: States>> 511 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(5) .
+Terminated
+Wed Jun  3 10:53:30 CEST 2020

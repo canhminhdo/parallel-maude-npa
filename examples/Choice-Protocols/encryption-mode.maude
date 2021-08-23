@@ -1,0 +1,232 @@
+***(
+NonDet Choice between public key encryption (denoted by pubKey)
+ 				1. A -> B: A, B, pubKey
+ 				2. B -> A: (B, SK)_pk(A)
+ 				3. A -> B: (A ,  SK, N_A)_pk(B)
+ 				4. B -> A: (B, N_A)_pk(A)
+ and shared key encryption (denoted by sharedKey)
+ 				1. A -> B: A, B, sharedKey
+ 				2. B -> A: (B, SK)_key(A,B)
+ 				3. A -> B: (A , SK, N_A)_key(A,B)
+ 				4. B -> A : (B, N_A)_key(A,B)
+)***
+
+fmod PROTOCOL-EXAMPLE-SYMBOLS is
+  --- Importing sorts IMsg, Fresh, Public, and GhostData
+  protecting DEFINITION-PROTOCOL-RULES .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the syntax of your protocol
+  --- Notes:
+  --- * Sort IMsg and Fresh are special and imported
+  --- * Every sort must be a subsort of IMsg
+  --- * No sort can be a supersort of IMsg
+  ----------------------------------------------------------
+
+  sort Name Nonce SKey Key Mode  .
+  subsort Name Nonce SKey Key Mode  < IMsg .
+  subsort Name < Public .
+
+  --- Principals
+  op a : -> Name . --- Alice
+  op b : -> Name . --- Bob
+  op i : -> Name . --- Intruder
+
+  --- Modes
+  ops pubkey shkey : -> Mode .
+
+  --- Nonce operator
+  op n : Name Fresh -> Nonce [frozen] .
+
+  --- Concatenation operator
+  op _;_ : IMsg  IMsg  -> IMsg [gather (e E) frozen] .
+
+  --- Key
+  op key : Name Name -> Key [frozen] .
+
+  --- Session Key
+  op skey : Name Fresh -> SKey [frozen] .
+
+  --- Public encryption
+  op pk : Name IMsg -> IMsg [frozen] .
+  op sk : Name IMsg -> IMsg [frozen] .
+
+  --- Shared key encryption
+  op she : Key IMsg -> IMsg [frozen] .
+  op shd : Key IMsg -> IMsg [frozen] .
+endfm
+
+
+fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+
+--- Variables
+  vars X Y Z : IMsg .
+  vars A B : Name .
+  var Ke : Key .
+
+  eq pk(A, sk(A, Z)) = Z [variant] .
+  eq sk(A, pk(A, Z)) = Z [variant] .
+
+  eq she(Ke, shd(Ke, Z)) = Z [variant] .
+  eq shd(Ke, she(Ke, Z)) = Z [variant] .
+
+endfm
+
+
+fmod PROTOCOL-SPECIFICATION is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  protecting DEFINITION-PROTOCOL-RULES .
+  protecting DEFINITION-CONSTRAINTS-INPUT .
+
+  vars X Y : IMsg .
+  var r r' : Fresh .
+  var A B : Name .
+  var N NA NB NA' NB'   : Nonce .
+  var Ke : Key .
+  var SK : SKey .
+
+  eq STRANDS-DOLEVYAO
+   =
+     :: nil :: [ nil | -(X), -(Y), +(X ; Y), nil ] &
+     :: nil :: [ nil | -(X ; Y), +(X), nil ] &
+     :: nil :: [ nil | -(X ; Y), +(Y), nil ] &
+     :: nil :: [ nil | -(X), +(pk(A, X)), nil ] &
+     :: nil :: [ nil | -(X), +(sk(i, X)), nil ] &
+     :: nil :: [ nil | -(Ke), -(X), +(she(Ke, X)), nil ] &
+     :: nil :: [ nil | -(Ke), -(X), +(shd(Ke, X)), nil ] &
+     :: nil :: [ nil | +(key(i, A)), nil ] &
+     :: nil :: [ nil | +(key(A, i)), nil ] &
+     :: r   :: [ nil | +(skey(i,r)), nil ] &
+     :: r   :: [ nil | +(n(i,r)), nil ] &
+     :: nil :: [ nil | +(A) , nil ]
+  [nonexec] .
+
+  eq PROCESSES-PROTOCOL
+  =
+      (
+          (-(A ; B ;  pubkey) .
+      	      +(pk(A, B ; skey(B, r))) .
+	      -(pk(B, A ; skey(B,r) ; N)) .
+	      +(pk(A, B ; N)) )
+ ?
+           ( -(A ; B ;  shkey) .
+            +(she(key(A, B), skey(B,r))) .
+            -(she(key(A, B), skey(B,r) ; N)) .
+            +(she(key(A,B), N)) )
+        )
+ &
+     (
+
+      ( +(A ; B ;  pubkey) .
+      	      -(pk(A, B ; SK)) .
+	      +(pk(B, A ; SK ; n(A,r))) .
+	      -(pk(A, B ; n(A,r)))
+      )
+?
+
+       ( +(A ; B ;  shkey) .
+	      -(she(key(A, B), SK )) .
+              +(she(key(A, B), SK ; n(A,r))) .
+              -(she(key(A,B), n(A,r))) )
+     )
+[nonexec] .
+
+
+--- regular execution with shared key encryption
+  eq ATTACK-PROCESS(0)
+    = +(a ; b ; shkey) .
+      -(she(key(a, b), SK )) .
+      +(she(key(a, b), SK ; n(a,r))) .
+      -(she(key(a, b), n(a,r)))
+      || empty
+      || nil
+ [nonexec] .
+
+--- regular execution with public key encryption
+  eq ATTACK-PROCESS(1)
+    = +(a ; b ; pubkey) .
+      -(pk(a, b ; SK)) .
+      +(pk(b, a ; SK ; n(a,r))) .
+      -(pk(a,  b ; n(a,r)))
+      || empty
+      || nil
+ [nonexec] .
+
+--- intruder learns the session key
+  eq ATTACK-PROCESS(2)
+    = -(a ; b ; shkey) .
+      +(she(key(a, b), skey(b,r))) .
+      -(she(key(a, b), skey(b,r) ; N)) .
+      +(she(key(a, b), N))
+      || skey(b,r) inI
+      || nil
+ [nonexec] .
+
+--- intruder learns the session key
+  eq ATTACK-PROCESS(3)
+    = -(a ; b ; pubkey) .
+      +(pk(a, b ; skey(b, r))) .
+      -(pk(b, a ; skey(b,r) ; N)) .
+      +(pk(a, b ; N))
+      || skey(b,r) inI
+      || nil
+ [nonexec] .
+
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .
+
+--- red summary(0,0) .
+--- red summary(0,1) .
+--- red summary(0,2) .
+--- red summary(0,3) .
+--- red summary(0,4) .
+--- red summary(0,5) .
+--- red summary(0,6) .
+--- red summary(0,7) .
+--- red summary(0,8) .
+--- red summary(0,9) .
+--- red summary(0,10) .
+--- red initials(0,10) .
+
+--- red summary(1,0) .
+--- red summary(1,1) .
+--- red summary(1,2) .
+--- red summary(1,3) .
+--- red summary(1,4) .
+--- red summary(1,5) .
+--- red summary(1,6) .
+--- red summary(1,7) .
+--- red summary(1,8) .
+--- red summary(1,9) .
+--- red summary(1,10) .
+--- red summary(1,11) .
+--- red summary(1,12) .
+--- red initials(1,12) .
+
+--- red summary(2,0) .
+--- red summary(2,1) .
+--- red summary(2,2) .
+--- red summary(2,3) .
+--- red summary(2,4) .
+--- red summary(2,5) .
+--- red summary(2,6) .
+--- red summary(2,7) .
+--- red summary(2,8) .
+--- red summary(2,9) .
+--- red summary(2,10) .
+
+--- red summary(3,0) .
+--- red summary(3,1) .
+--- red summary(3,2) .
+--- red summary(3,3) .
+--- red summary(3,4) .
+--- red summary(3,5) .
+--- red summary(3,6) .
+--- red summary(3,7) .
+--- red summary(3,8) .
+--- red summary(3,9) .
+--- red summary(3,10) .
+--- red summary(3,11) .

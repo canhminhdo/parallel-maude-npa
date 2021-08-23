@@ -1,0 +1,395 @@
+***(
+
+Swiss-Knife process specification
+
+
+(Verifier) :
+
++(n(V?,f1)@t1) ·
+-(NP@t2) ·
++(n(V?,f2)@t3) ·
+-(f(n(V?,f2) ; h(NP ; key(V?,P?)) ; (h(NP ; key(V?,P?)) ⊕ key(V?,P?)))@t4) ·
+if t4−t3 ≤ 2*d then -(h1(n(V?,f2) ; n(V?,f1) ; NP ; key(V?,P?)) ; n(V?,f2)@t5) ·
+		    +(ok@t6) else nilP
+
+(Prover) :
+
+-(NV@t1) ·
++(n(P?,f1)@t2) ·
+-(NV'@t3) ·
++(f(NV' ; h(n(P?,f1) ; key(V?,P?)) ; (h(n(P?,f1) ; key(V?,P?)) ⊕ key(V?,P?)))@t4) ·
++(h1(NV' ; NV ; n(P?,f1) ; key(V?,P?)) ; NA'@t5) ·
+-(ok@t6)
+
+  )***
+
+fmod PROTOCOL-EXAMPLE-SYMBOLS is
+  --- Importing sorts IMsg, Fresh, Public, and GhostData
+  protecting DEFINITION-PROTOCOL-RULES .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the syntax of your protocol
+  --- Notes:
+  --- * Sort IMsg and Fresh are special and imported
+  --- * Every sort must be a subsort of IMsg
+  --- * No sort can be a supersort of IMsg
+  ----------------------------------------------------------
+
+  --- Sort Information
+  sorts Name Nonce Key HonestA HonestB Honest Intruder TMsg NTMsg TimeInfo Mac NameTime NameTimeSet NNSet .
+  subsort Nonce Key < NTMsg .
+  subsort TMsg NTMsg Real < IMsg .
+  subsort Name < Key .
+  subsort Name < Public .
+  subsort Honest Intruder < Name .
+  subsort NameTime < NameTimeSet .
+---- XOR ----
+  subsort NNSet < NTMsg .
+  subsort Nonce Key < NNSet .
+
+  --- Nonce operator
+  op n : Name Fresh -> Nonce [frozen] .
+
+  op h : NTMsg -> NNSet .
+  op f : NTMsg -> NTMsg .
+  op key : Name Name -> Key [comm] .
+  op h1 : NTMsg -> NTMsg .
+  op _;_ : NTMsg  NTMsg  -> NTMsg [gather (e E) frozen prec 7] .
+
+
+  --- Ok operator
+  op ok : -> NTMsg .
+
+  --- Principals
+  ops a b : -> Honest .
+  op i : -> Intruder .
+
+  --- Time messages
+  op _@_ : NTMsg TimeInfo -> TMsg [metadata "grammar-arg-1" prec 50 format (d nis d d)] .
+
+
+
+ --- Time information
+  op _:_ : Name Real -> NameTime [prec 10] .
+  op mt : -> NameTimeSet .
+  op _#_ : NameTimeSet NameTimeSet -> NameTimeSet [assoc comm id: mt prec 20] .
+  op _->_ : NameTime NameTimeSet -> TimeInfo .
+
+
+  --- Distance
+  op d : Name Name -> Real [comm] .
+
+  --- Exclusive or
+
+  op _*_ : NNSet NNSet -> NNSet [assoc comm frozen prec 5] .
+  op null : -> NNSet .
+
+endfm
+
+fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the algebraic properties
+  --- of your protocol
+  ----------------------------------------------------------
+
+  eq d(A:Name,A:Name) = 0/1 . --- Simplify search
+
+  *** Exclusive or properties
+  vars XN YN : NNSet .
+  eq XN * XN = null    [variant] .
+  eq XN * XN * YN = YN [variant] .
+  eq XN * null = XN    [variant] .
+
+endfm
+
+fmod PROTOCOL-SPECIFICATION is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  protecting DEFINITION-PROTOCOL-RULES .
+  protecting DEFINITION-CONSTRAINTS-INPUT .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the strands
+  --- of your protocol
+  ----------------------------------------------------------
+
+  var Ke : Key .
+  vars X Y Z : NTMsg .
+  vars r r' rA rA' rB : Fresh .
+  vars A B C : Name .
+  vars AB AB1 AB2 : Honest .
+  var I : Intruder .
+  vars C1 C2 C3 C4 C5 C6 : Name .
+  vars N NA NA' NB : Nonce .
+  vars d t0 t1 t2 t3 t4 t5 t6 t7 t8 tA t9 t10 t11 : Real .
+  vars XN YN : NNSet .
+  vars t0' t1' t2' t3' t4' t5' t6' t7' t8' t9' t10' t11' t12' t13' : Real .
+  vars t0'' t1'' t2'' t3'' t4'' t5'' t6'' t7'' t8'' t9'' : Real .
+  vars AS1 AS2 AS3 AS4 AS5 AS6 : NameTimeSet .
+
+
+  eq STRANDS-DOLEVYAO
+   = :: nil :: [ nil | -(X @ AB1 : t1 -> AS1 # i : t2), --- Forward from honest participants
+                        (t2 === t1 +=+ d(AB1,i) and d(AB1,i) >= 0/1),
+                       +(X @ i : t2 -> AB2 : t3), nil ] &
+     :: nil :: [ nil | +(null @ i : t1 -> AS1), nil ] &
+     :: r ::   [ nil | +(n(i,r) @ i : t1 -> AS1), nil ] &
+     :: nil :: [ nil | -(X @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                       -(Y @ C2 : t3 -> AS2 # i : t4), (t4 === t3 +=+ d(C2,i) and d(C2,i) >= 0/1),
+                       (t5 >= t2 and t5 >= t4),
+                       +((X ; Y) @ i : t5 -> AS3), nil ] &
+     :: nil :: [ nil | -(X ; Y @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                       +(X @ i : t2 -> AS3), nil ] &
+     :: nil :: [ nil | -(X ; Y @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                       +(Y @ i : t2 -> AS3), nil ] &
+     :: nil :: [ nil | -(X @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                        (t5 >= t2),
+                       +(h(X) @ i : t5 -> AS3), nil ] &
+     :: nil :: [ nil | -(X @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                        (t5 >= t2),
+                       +(h1(X) @ i : t5 -> AS3), nil ] &
+    :: nil :: [ nil | -(X @ C1 : t1 -> AS1 # i : t2), (t2 === t1 +=+ d(C1,i) and d(C1,i) >= 0/1),
+                        (t5 >= t2),
+                       +(f(X) @ i : t5 -> AS3), nil ] &
+     :: nil :: [ nil | +(C @ i : t1 -> AS1), nil ] &
+     :: nil :: [ nil | +(key(i,AB) @ i : t1 -> AS1), nil ]
+  [nonexec] .
+
+  eq STRANDS-PROTOCOL
+   =  --- Alice --- Verifier
+     :: rA , rA' ::
+     [ nil | +(n(A,rA)                                                           @ A : t1 -> AS1),
+             -(NB                                                                @ C2 : t2 -> AS2 # A : t3), ((t3 === t2 +=+ d(C2,A)) and d(C2,A) > 0/1),
+             +(n(A,rA')                                                          @ A : t3 -> AS3),
+             -(f(n(A,rA') ; h(NB ; key(A,B)) ; (h(NB ; key(A,B)) * key(A,B)))    @ C4 : t5 -> AS4 # A : t6), ((t6 === t5 +=+ d(C4,A)) and d(C4,A) > 0/1),
+                                                                                  ((t6 -=- t3) <= (2/1 *=* d) and d > 0/1), --- roundtrip check
+             -(h1(n(A,rA') ; n(A,rA) ; NB ; key(A,B)) ; n(A,rA')                 @ C5 : t7 -> AS5 # A : t8), ((t8 === t7 +=+ d(C5,A)) and d(C5,A) > 0/1),
+             +(ok                                                                @ A : t8 -> AS6),  nil ]
+     &
+     ---Bob --- Prover
+     :: rB ::
+     [ nil | -(NA                                                                  @ C1 : t1 -> AS1 # B : t2), ((t2 === t1 +=+ d(C1,B)) and d(C1,B) > 0/1),
+             +(n(B,rB)                                                             @ B : t2 -> AS2),
+             -(NA'                                                                 @ C3 : t3 -> AS3 # B : t4), ((t4 === t3 +=+ d(C3,B)) and d(C3,B) > 0/1),
+             +(f(NA' ; h(n(B,rB) ; key(A,B)) ; (h(n(B,rB) ; key(A,B)) * key(A,B))) @ B : t4 -> AS4),
+             +(h1(NA' ; NA ; n(B,rB) ; key(A,B)) ; NA'                             @ B : t4 -> AS5),
+             -(ok                                                                  @ C6 : t5 -> AS6 # B : t7), ((t7 === t5 +=+ d(C6,B)) and d(C6,B) > 0/1),  nil ]
+  [nonexec] .
+
+
+eq ATTACK-STATE(1) =
+:: rA , rA' :: --- Verifier
+ [ nil ,     +(n(a,rA)
+              @ a : t0 -> i : t1),
+
+             -(n(b,rB)
+              @ i : t2 -> a : t3), ((t3 === t2 +=+ d(i,a)) and d(i,a) > 0/1),
+
+             +(n(a,rA')
+              @ a : t3 -> i : t4),
+
+             -(f(n(a,rA') ; h(n(b,rB) ; key(a,b)) ; (h(n(b,rB) ; key(a,b)) * key(a,b)))
+              @ i : t5 -> a : t6), (t6 >= t3), ((t6 === t5 +=+ d(i,a)) and d(i,a) > 0/1),
+              ((t6 -=- t3) <= (2/1 *=* d) and d > 0/1) |
+    nil]
+    &
+    :: rB ::
+     [ nil , -(n(a,rA)
+              @ i : t1' -> b : t2'), ((t2' === t1' +=+ d(i,b)) and d(i,b) > 0/1),
+
+             +(n(b,rB)
+              @ b : t2' -> i : t3'),
+
+             -(n(a,rA')
+              @ i : t4' -> b : t5'), ((t5' === t4' +=+ d(i,b)) and d(i,b) > 0/1),
+
+             +(f(n(a,rA') ; h(n(b,rB) ; key(a,b)) ; (h(n(b,rB) ; key(a,b)) * key(a,b)))
+              @ b : t5' -> i : t6')
+               | nil ]
+
+     || smt((d(a,i) +=+ d(b,i)) > d)
+     || nil
+     || nil
+     || nil
+  [nonexec] .
+***(
+maude maude-npa.maude Swiss-Knife.maude
+         \||||||||||||||||||/
+       --- Welcome to Maude ---
+         /||||||||||||||||||\
+       Maude 3.1 built: Oct 12 2020 20:12:31
+       Copyright 1997-2020 SRI International
+       Fri Oct 23 12:31:45 2020
+
+      Maude-NPA Version: 3.1.5 (August 9th 2020)
+      with direct composition, irreducibility constraints and time
+      (To be run with Maude 3.0 or above)
+      Copyright (c) 2020, University of Illinois
+      All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : displayGrammars .
+rewrites: 2654850 in 3156ms cpu (3156ms real) (841207 rewrites/second)
+result GrammarList: (
+grl #0:NTMsg inL => #1:NTMsg ; #0:NTMsg inL .  ;
+grl #0:NTMsg inL => #0:NTMsg ; #1:NTMsg inL .  ;
+grl #0:NNSet notInI,
+   (#0:NNSet notLeq #1:Name),
+   (#0:NNSet notLeq h(#2:NTMsg)),
+   (#0:NNSet notLeq n(#3:Name, #4:Fresh)),
+   #0:NNSet notLeq key(i, #5:Honest) => #6:NNSet * #0:NNSet inL .  ;
+grl #1:NNSet * #0:NNSet notInI,
+   (#1:NNSet notLeq #2:Name),
+   (#1:NNSet notLeq h(#3:NTMsg)),
+   (#1:NNSet notLeq n(#4:Name, #5:Fresh)),
+   #1:NNSet notLeq key(i, #6:Honest) => #1:NNSet inL . )
+| (
+grl empty => #1:NNSet * #0:NNSet inL .  ;
+grl #0:NTMsg inL => #1:NTMsg ; #0:NTMsg inL .  ;
+grl #0:NTMsg inL => #0:NTMsg ; #1:NTMsg inL . )
+| (
+grl #0:NTMsg inL => #1:NTMsg ; #0:NTMsg inL .  ;
+grl #0:NTMsg inL => #0:NTMsg ; #1:NTMsg inL .  ;
+grl #0:NTMsg notInI,
+   #0:NTMsg notLeq h1(#1:Nonce ; #2:Nonce ; n(#3:Name, #4:Fresh) ; key(#3:Name, #5:Name)) => #0:NTMsg ; #6:NTMsg inL . )
+| (
+grl #0:NTMsg inL => #1:NTMsg ; #0:NTMsg inL .  ;
+grl #0:NTMsg inL => #0:NTMsg ; #1:NTMsg inL .  ;
+grl #0:NTMsg notInI => #1:NTMsg ; #0:NTMsg inL . )
+|
+grl empty => d(#1:Name, #2:Name) inL .
+| (
+grl #0:NTMsg inL => #1:NTMsg ; #0:NTMsg inL .  ;
+grl #0:NTMsg inL => #0:NTMsg ; #1:NTMsg inL .  ;
+grl #0:NTMsg notInI,
+   #0:NTMsg notLeq #1:Nonce ; h(n(#2:Name, #3:Fresh) ; key(#2:Name, #4:Name)) ; h(n(#2:Name, #3:Fresh) ; key(#2:Name, #4:Name)) * key(#2:Name, #4:Name) => f(#0:NTMsg)
+    inL . )
+| (
+grl #0:NTMsg inL => #1:NTMsg ; #0:NTMsg inL .  ;
+grl #0:NTMsg inL => #0:NTMsg ; #1:NTMsg inL .  ;
+grl #0:NTMsg notInI => h(#0:NTMsg) inL . )
+| (
+grl #0:NTMsg inL => #1:NTMsg ; #0:NTMsg inL .  ;
+grl #0:NTMsg inL => #0:NTMsg ; #1:NTMsg inL .  ;
+grl #0:NTMsg notInI,
+   #0:NTMsg notLeq #1:Nonce ; #2:Nonce ; n(#3:Name, #4:Fresh) ; key(#3:Name, #5:Name) => h1(#0:NTMsg) inL . )
+|
+grl #0:NTMsg inL => #1:NTMsg ; #0:NTMsg inL .  ;
+grl #0:NTMsg inL => #0:NTMsg ; #1:NTMsg inL .  ;
+grl key(#1:Name, #0:Name) notLeq key(i, #2:Honest) => key(#1:Name, #0:Name) inL .
+==========================================
+reduce in MAUDE-NPA : summary(1, 0) .
+rewrites: 8960 in 88ms cpu (88ms real) (101818 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 1) .
+rewrites: 581760 in 688ms cpu (688ms real) (845581 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 2) .
+rewrites: 1075628 in 1468ms cpu (1467ms real) (732716 rewrites/second)
+result Summary: States>> 3 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 3) .
+rewrites: 1328640 in 1784ms cpu (1785ms real) (744753 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 4) .
+rewrites: 576781 in 832ms cpu (828ms real) (693246 rewrites/second)
+result Summary: States>> 0 Solutions>> 0
+==========================================
+
+)***
+
+eq ATTACK-STATE(2) =  --- Hijacking fraud
+:: rA , rA' :: ---Alice --- Verifier
+ [ nil ,     +(n(a,rA)
+               @ a : t1 -> b : t2 # i : t3),
+
+             -(n(b,rB)
+               @ b : t3 -> b : t4 # i : t5), ((t4 === t3 +=+ d(a,b)) and d(a,b) > 0/1),
+
+             +(n(a,rA')
+               @ a : t5 -> b : t6 # i : t7),
+
+             -(f(n(a,rA') ; h(n(b,rB) ; key(a,b)) ; (h(n(b,rB) ; key(a,b)) * key(a,b)))
+              @ b : t7 -> a : t8 # i : t9), ((t8 === t7 +=+ d(a,b)) and d(a,b) > 0/1),
+              ((t8 -=- t5) <= (2/1 *=* d) and d > 0/1),
+
+             -(h1(n(a,rA') ; n(a,rA) ; n(b,rB) ; key(a,b)) ; n(a,rA')
+               @ i : t10 -> a : t11), ((t11 === t10 +=+ d(i,a)) and d(i,a) > 0/1) |
+    nil]
+    &
+    :: rB :: --- Bob --- Prover
+     [ nil , -(n(a,rA)
+               @ a : t1' -> b : t2 # i : t3'), ((t2' === t1' +=+ d(a,b)) and d(a,b) > 0/1),
+
+             +(n(b,rB)
+               @ b : t3' -> b : t4' # i : t5'),
+
+             -(n(a,rA')
+               @ a : t5' -> b : t6' # i : t7), ((t6' === t5' +=+ d(a,b)) and d(a,b) > 0/1),
+
+             +(f(n(a,rA') ; h(n(b,rB) ; key(a,b)) ; (h(n(b,rB) ; key(a,b)) * key(a,b)))
+               @ b : t7' -> a : t8' # i : t9') |
+       nil ]
+     || empty
+     || nil
+     || nil
+     || nil
+  [nonexec] .
+
+***(
+reduce in MAUDE-NPA : summary(2, 0) .
+rewrites: 377 in 0ms cpu (2ms real) (~ rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 1) .
+rewrites: 1360590 in 1256ms cpu (1254ms real) (1083272 rewrites/second)
+result Summary: States>> 4 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 2) .
+rewrites: 5063377 in 6768ms cpu (6768ms real) (748134 rewrites/second)
+result Summary: States>> 5 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 3) .
+rewrites: 7753463 in 8828ms cpu (8827ms real) (878280 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 4) .
+rewrites: 5148842 in 7740ms cpu (7742ms real) (665225 rewrites/second)
+result Summary: States>> 0 Solutions>> 0
+
+  )***
+
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .
+
+--- red displayGrammars .
+
+--- red summary(1,0) .
+--- red summary(1,1) .
+--- red summary(1,2) .
+--- red summary(1,3) .
+--- red summary(1,4) .
+
+
+--- red summary(2,0) .
+--- red summary(2,1) .
+--- red summary(2,2) .
+--- red summary(2,3) .
+--- red summary(2,4) .
+

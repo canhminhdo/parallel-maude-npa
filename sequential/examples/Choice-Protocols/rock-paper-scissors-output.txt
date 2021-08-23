@@ -1,0 +1,232 @@
+		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	     Maude alpha128 built: Mar 10 2020 14:45:05
+	     Copyright 1997-2020 SRI International
+		   Mon Jul  6 00:09:59 2020
+
+	    Maude-NPA Version: 3.1.4 (June 2nd 2020)
+	    with direct composition, irreducibility constraints and time
+	    (To be run with Maude alpha 121 or above)
+	    Copyright (c) 2020, University of Illinois
+	    All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern
+    X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : genGrammars .
+rewrites: 8614999 in 8204ms cpu (8205ms real) (1050097 rewrites/second)
+result GrammarList: (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl #0:Msg notInI => (#0:Msg ; #1:Msg) inL . )
+| (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl #0:Msg notInI => (#1:Msg ; #0:Msg) inL . )
+| (errorNoHeuristicApplied {
+grl empty => (#1:Msg ; #2:Msg) inL . ,none,
+grl empty => (#1:Msg,#2:Msg) inL . ,none,
+grl empty => (#1:Msg,#2:Msg) inL . } usingGrammar 
+grl empty => (#1:Msg ; #2:Msg) inL . )
+| (
+grl empty => (#0:Item beats #1:Item) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL . )
+| (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl #0:Msg notInI => (#0:Msg beats #1:Msg) inL . )
+| (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl #0:Msg notInI => (#1:Msg beats #0:Msg) inL . )
+| (
+grl empty => (#0:Msg beats #1:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL . )
+| (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl #0:Nonce notInI => com(#0:Nonce, #1:Item) inL . )
+| (errorNoHeuristicApplied {
+grl empty => com(#1:Nonce, #2:Item) inL . ,none,
+grl empty => (#2:Item,#1:Nonce) inL . ,none,
+grl empty => (#2:Item,#1:Nonce) inL . } usingGrammar 
+grl empty => com(#1:Nonce, #2:Item) inL . )
+| (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl #0:Msg notInI => (item? #0:Msg) inL . )
+| (
+grl empty => (item? #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL . )
+| (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl n(#0:Name, #1:Fresh) notLeq n(i, #2:Fresh) => n(#0:Name, #1:Fresh) inL . )
+| (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl #0:Nonce notInI => open(#0:Nonce, #1:ComMsg) inL . )
+| (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl #0:ComMsg notInI => open(#1:Nonce, #0:ComMsg) inL . )
+| (errorNoHeuristicApplied {
+grl empty => open(#1:Nonce, #2:ComMsg) inL . ,none,
+grl empty => (#2:ComMsg,#1:Nonce) inL . ,none,
+grl empty => (#2:ComMsg,#1:Nonce) inL . } usingGrammar 
+grl empty => open(#1:Nonce, #2:ComMsg) inL . )
+| (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl #0:Msg notInI,
+   (#0:Msg notLeq sig(#1:Name, n(#2:Name, #3:Fresh))),
+   (#0:Msg notLeq sig(#4:Name, #5:Nonce ; n(#4:Name, #6:Fresh) ; #7:Result)),
+   (#0:Msg notLeq sig(#8:Name, n(#8:Name, #9:Fresh) ; #10:Nonce ; #11:Result)),
+   #0:Msg notLeq sig(#12:Name, com(n(#12:Name, #13:Fresh), #14:Item)) => pk(
+    #15:Name, #0:Msg) inL . )
+| (errorNoHeuristicApplied {
+grl empty => pk(#1:Name, #2:Msg) inL . ,none,
+grl empty => #2:Msg inL . ,none,
+grl empty => #2:Msg inL . } usingGrammar 
+grl empty => pk(#1:Name, #2:Msg) inL . )
+| (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg notInI,
+   (#0:Msg notLeq n(#1:Name, #2:Fresh)),
+   (#0:Msg notLeq #3:Nonce ; n(#4:Name, #5:Fresh) ; #6:Result),
+   (#0:Msg notLeq n(#7:Name, #8:Fresh) ; #9:Nonce ; #10:Result),
+   #0:Msg notLeq com(n(#11:Name, #12:Fresh), #13:Item) => sig(#14:Name, #0:Msg)
+    inL . )
+| (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl (sig(#0:Name, #1:Msg) notLeq sig(i, #2:Msg)),
+   (sig(#0:Name, #1:Msg) notLeq sig(#3:Name, n(i, #4:Fresh))),
+   (sig(#0:Name, #1:Msg) notLeq sig(#5:Name, n(#5:Name, #6:Fresh))),
+   (sig(#0:Name, #1:Msg) notLeq sig(#7:Name, #8:Nonce ; n(#7:Name, #9:Fresh) ;
+    #10:Result)),
+   (sig(#0:Name, #1:Msg) notLeq sig(#11:Name, n(#11:Name, #12:Fresh) ;
+    #13:Nonce ; #14:Result)),
+   sig(#0:Name, #1:Msg) notLeq sig(#15:Name, com(n(#15:Name, #16:Fresh),
+    #17:Item)) => sig(#0:Name, #1:Msg) inL . )
+| (
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl #0:Msg notInI => sk(#1:Name, #0:Msg) inL . )
+| 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg inL => sk(#1:Name, #0:Msg) inL .  ; 
+grl #0:Msg inL => pk(i, #0:Msg) inL .  ; 
+grl sk(#0:Name, #1:Msg) notLeq sk(i, #2:Msg) => sk(#0:Name, #1:Msg) inL . 
+==========================================
+reduce in MAUDE-NPA : summary(0, 0) .
+rewrites: 11840 in 92ms cpu (90ms real) (128695 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 1) .
+rewrites: 1683118 in 1176ms cpu (1177ms real) (1431222 rewrites/second)
+result Summary: States>> 8 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 2) .
+rewrites: 7510613 in 4524ms cpu (4522ms real) (1660170 rewrites/second)
+result Summary: States>> 16 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 3) .
+rewrites: 17262381 in 9920ms cpu (9919ms real) (1740159 rewrites/second)
+result Summary: States>> 24 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 4) .
+rewrites: 27931741 in 15732ms cpu (15730ms real) (1775472 rewrites/second)
+result Summary: States>> 27 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 5) .
+rewrites: 32781524 in 19256ms cpu (19255ms real) (1702405 rewrites/second)
+result Summary: States>> 24 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 6) .
+rewrites: 28657793 in 17660ms cpu (17659ms real) (1622751 rewrites/second)
+result Summary: States>> 18 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 7) .
+rewrites: 18623976 in 12664ms cpu (12664ms real) (1470623 rewrites/second)
+result Summary: States>> 9 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 8) .
+rewrites: 7890925 in 6120ms cpu (6122ms real) (1289366 rewrites/second)
+result Summary: States>> 3 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 9) .
+rewrites: 1759642 in 1616ms cpu (1614ms real) (1088887 rewrites/second)
+result Summary: States>> 0 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : initials(0,9) .
+rewrites: 2785 in 0ms cpu (1ms real) (~ rewrites/second)
+result IdSystemSet: (empty).IdSystemSet
+==========================================
+reduce in MAUDE-NPA : summary(1, 0) .
+rewrites: 512 in 8ms cpu (6ms real) (64000 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 1) .
+rewrites: 38466 in 112ms cpu (110ms real) (343446 rewrites/second)
+result Summary: States>> 0 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 0) .
+rewrites: 721 in 0ms cpu (0ms real) (~ rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 1) .
+rewrites: 585079 in 692ms cpu (691ms real) (845489 rewrites/second)
+result Summary: States>> 5 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 2) .
+rewrites: 8433 in 48ms cpu (47ms real) (175687 rewrites/second)
+result Summary: States>> 0 Solutions>> 0
+Bye.

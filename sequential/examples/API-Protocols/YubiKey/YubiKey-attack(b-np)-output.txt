@@ -1,0 +1,59 @@
+Tue Apr 24 18:57:04 CEST 2018
+		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	   Maude alpha116 built: Mar 16 2018 17:40:28
+	    Copyright 1997-2017 SRI International
+		   Tue Apr 24 18:57:04 2018
+
+	    Maude-NPA Version: 3.1.1 (April 24th 2018)
+	    with direct composition and irreducibility constraints
+	    (To be run with Maude alpha 115 or above)
+	    Copyright (c) 2018, University of Illinois
+	    All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern
+    X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : summary(21, (1).NzNat) .
+rewrites: 3758245 in 9848ms cpu (33622ms real) (381625 rewrites/second)
+result Summary: States>> 4 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(21, 2) .
+rewrites: 3370320 in 4744ms cpu (14984ms real) (710438 rewrites/second)
+result Summary: States>> 7 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(21, 3) .
+rewrites: 110386331 in 132828ms cpu (354715ms real) (831047 rewrites/second)
+result Summary: States>> 16 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(21, 4) .
+rewrites: 18444398 in 19812ms cpu (43230ms real) (930971 rewrites/second)
+result Summary: States>> 14 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(21, 5) .
+rewrites: 483679752 in 507984ms cpu (817190ms real) (952155 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(21, 6) .
+rewrites: 1550705 in 1632ms cpu (2684ms real) (950186 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(21, 7) .
+rewrites: 7837737 in 8248ms cpu (10332ms real) (950259 rewrites/second)
+result Summary: States>> 5 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(21, 8) .
+rewrites: 165017 in 284ms cpu (406ms real) (581045 rewrites/second)
+result Summary: States>> 0 Solutions>> 0
+Bye.
+Tue Apr 24 19:18:28 CEST 2018

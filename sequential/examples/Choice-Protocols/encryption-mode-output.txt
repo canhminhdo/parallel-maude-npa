@@ -1,0 +1,571 @@
+		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	     Maude alpha128 built: Mar 10 2020 14:45:05
+	     Copyright 1997-2020 SRI International
+		   Sun Jul  5 18:03:22 2020
+
+	    Maude-NPA Version: 3.1.4 (June 2nd 2020)
+	    with direct composition, irreducibility constraints and time
+	    (To be run with Maude alpha 121 or above)
+	    Copyright (c) 2020, University of Illinois
+	    All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern
+    X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : summary(0, 0) .
+rewrites: 41895720 in 32760ms cpu (32761ms real) (1278868 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 1) .
+rewrites: 755442 in 628ms cpu (625ms real) (1202933 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 2) .
+rewrites: 555653 in 572ms cpu (574ms real) (971421 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 3) .
+rewrites: 351309 in 360ms cpu (356ms real) (975858 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 4) .
+rewrites: 617707 in 548ms cpu (549ms real) (1127202 rewrites/second)
+result Summary: States>> 4 Solutions>> 1
+==========================================
+reduce in MAUDE-NPA : summary(0, 5) .
+rewrites: 317601 in 292ms cpu (290ms real) (1087674 rewrites/second)
+result Summary: States>> 4 Solutions>> 2
+==========================================
+reduce in MAUDE-NPA : summary(0, 6) .
+rewrites: 699249 in 556ms cpu (556ms real) (1257642 rewrites/second)
+result Summary: States>> 6 Solutions>> 2
+==========================================
+reduce in MAUDE-NPA : summary(0, 7) .
+rewrites: 1177985 in 1160ms cpu (1161ms real) (1015504 rewrites/second)
+result Summary: States>> 5 Solutions>> 3
+==========================================
+reduce in MAUDE-NPA : summary(0, 8) .
+rewrites: 714023 in 640ms cpu (638ms real) (1115660 rewrites/second)
+result Summary: States>> 5 Solutions>> 3
+==========================================
+reduce in MAUDE-NPA : summary(0, 9) .
+rewrites: 742781 in 752ms cpu (750ms real) (987740 rewrites/second)
+result Summary: States>> 4 Solutions>> 4
+==========================================
+reduce in MAUDE-NPA : summary(0, 10) .
+rewrites: 906 in 0ms cpu (0ms real) (~ rewrites/second)
+result Summary: States>> 4 Solutions>> 4
+==========================================
+reduce in MAUDE-NPA : initials(0,10) .
+rewrites: 842 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 8 . 2 . 1 . 1 > (
+:: #1:Fresh ::
+[ nil | 
+   +(a ; b ; shkey), 
+   -(she(key(a, b), skey(b, #0:Fresh))), 
+   +(she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
+   -(she(key(a, b), n(a, #1:Fresh))), nil]  & 
+:: #0:Fresh ::
+[ nil | 
+   -(a ; b ; shkey), 
+   +(she(key(a, b), skey(b, #0:Fresh))), 
+   -(she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
+   +(she(key(a, b), n(a, #1:Fresh))), nil] )
+| 
+(a ; b ; shkey) !inI,
+she(key(a, b), n(a, #1:Fresh)) !inI,
+she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh)) !inI,
+she(key(a, b), skey(b, #0:Fresh)) !inI
+| 
++(a ; b ; shkey), 
+-(a ; b ; shkey), 
++(she(key(a, b), skey(b, #0:Fresh))), 
+-(she(key(a, b), skey(b, #0:Fresh))), 
++(she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
+-(she(key(a, b), skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
++(she(key(a, b), n(a, #1:Fresh))), 
+-(she(key(a, b), n(a, #1:Fresh)))
+| 
+nil)
+(< 1 . 8 . 2 . 1 . 2 . 8 > (
+:: #1:Fresh ::
+[ nil | 
+   -(a ; b ; shkey), 
+   +(she(key(a, b), skey(b, #1:Fresh))), 
+   -(she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
+   +(she(key(a, b), n(a, #0:Fresh))), nil]  & 
+:: #2:Fresh ::
+[ nil | 
+   +(a ; b ; shkey), nil]  & 
+:: #0:Fresh ::
+[ nil | 
+   +(a ; b ; shkey), 
+   -(she(key(a, b), skey(b, #1:Fresh))), 
+   +(she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
+   -(she(key(a, b), n(a, #0:Fresh))), nil] )
+| 
+(a ; b ; shkey) !inI,
+she(key(a, b), n(a, #0:Fresh)) !inI,
+she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh)) !inI,
+she(key(a, b), skey(b, #1:Fresh)) !inI
+| 
++(a ; b ; shkey), 
++(a ; b ; shkey), 
+-(a ; b ; shkey), 
++(she(key(a, b), skey(b, #1:Fresh))), 
+-(she(key(a, b), skey(b, #1:Fresh))), 
++(she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
+-(she(key(a, b), skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
++(she(key(a, b), n(a, #0:Fresh))), 
+-(she(key(a, b), n(a, #0:Fresh)))
+| 
+nil)
+(< 1 . 8 . 2 . 1 . 2 . 5 . 1 . 8 > (
+:: nil ::
+[ nil | 
+   -(a), 
+   -(b ; shkey), 
+   +(a ; b ; shkey), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Name ; b ; shkey), 
+   +(b ; shkey), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(a ; b ; shkey), 
+   +(she(key(a, b), skey(b, #1:Fresh))), 
+   -(she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
+   +(she(key(a, b), n(a, #2:Fresh))), nil]  & 
+:: #2:Fresh ::
+[ nil | 
+   +(a ; b ; shkey), 
+   -(she(key(a, b), skey(b, #1:Fresh))), 
+   +(she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
+   -(she(key(a, b), n(a, #2:Fresh))), nil]  & 
+:: #3:Fresh ::
+[ nil | 
+   +(#0:Name ; b ; shkey), nil] )
+| 
+(a ; b ; shkey) !inI,
+(b ; shkey) !inI,
+(#0:Name ; b ; shkey) !inI,
+she(key(a, b), n(a, #2:Fresh)) !inI,
+she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh)) !inI,
+she(key(a, b), skey(b, #1:Fresh)) !inI
+| 
++(#0:Name ; b ; shkey), 
+-(#0:Name ; b ; shkey), 
++(b ; shkey), 
+-(a), 
+-(b ; shkey), 
++(a ; b ; shkey), 
++(a ; b ; shkey), 
+-(a ; b ; shkey), 
++(she(key(a, b), skey(b, #1:Fresh))), 
+-(she(key(a, b), skey(b, #1:Fresh))), 
++(she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
+-(she(key(a, b), skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
++(she(key(a, b), n(a, #2:Fresh))), 
+-(she(key(a, b), n(a, #2:Fresh)))
+| 
+nil)
+< 1 . 8 . 2 . 1 . 2 . 5 . 5 . 2 . 1 . 8 > (
+:: nil ::
+[ nil | 
+   -(a), 
+   -(b ; shkey), 
+   +(a ; b ; shkey), nil]  & 
+:: nil ::
+[ nil | 
+   -(b), 
+   -(shkey), 
+   +(b ; shkey), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Name ; shkey), 
+   +(shkey), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Name ; #1:Name ; shkey), 
+   +(#1:Name ; shkey), nil]  & 
+:: #2:Fresh ::
+[ nil | 
+   +(#0:Name ; #1:Name ; shkey), nil]  & 
+:: #3:Fresh ::
+[ nil | 
+   +(a ; b ; shkey), 
+   -(she(key(a, b), skey(b, #4:Fresh))), 
+   +(she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
+   -(she(key(a, b), n(a, #3:Fresh))), nil]  & 
+:: #4:Fresh ::
+[ nil | 
+   -(a ; b ; shkey), 
+   +(she(key(a, b), skey(b, #4:Fresh))), 
+   -(she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
+   +(she(key(a, b), n(a, #3:Fresh))), nil] )
+| 
+shkey !inI,
+(a ; b ; shkey) !inI,
+(b ; shkey) !inI,
+(#1:Name ; shkey) !inI,
+(#0:Name ; #1:Name ; shkey) !inI,
+she(key(a, b), n(a, #3:Fresh)) !inI,
+she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh)) !inI,
+she(key(a, b), skey(b, #4:Fresh)) !inI
+| 
++(#0:Name ; #1:Name ; shkey), 
+-(#0:Name ; #1:Name ; shkey), 
++(#1:Name ; shkey), 
+-(#1:Name ; shkey), 
++(shkey), 
+-(b), 
+-(shkey), 
++(b ; shkey), 
+-(a), 
+-(b ; shkey), 
++(a ; b ; shkey), 
++(a ; b ; shkey), 
+-(a ; b ; shkey), 
++(she(key(a, b), skey(b, #4:Fresh))), 
+-(she(key(a, b), skey(b, #4:Fresh))), 
++(she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
+-(she(key(a, b), skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
++(she(key(a, b), n(a, #3:Fresh))), 
+-(she(key(a, b), n(a, #3:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : summary(1, 0) .
+rewrites: 331 in 0ms cpu (0ms real) (~ rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 1) .
+rewrites: 763925 in 652ms cpu (651ms real) (1171664 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 2) .
+rewrites: 972205 in 1008ms cpu (1007ms real) (964489 rewrites/second)
+result Summary: States>> 4 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 3) .
+rewrites: 2052982 in 1884ms cpu (1885ms real) (1089693 rewrites/second)
+result Summary: States>> 8 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 4) .
+rewrites: 3798271 in 3316ms cpu (3314ms real) (1145437 rewrites/second)
+result Summary: States>> 10 Solutions>> 1
+==========================================
+reduce in MAUDE-NPA : summary(1, 5) .
+rewrites: 4582129 in 3724ms cpu (3724ms real) (1230432 rewrites/second)
+result Summary: States>> 12 Solutions>> 2
+==========================================
+reduce in MAUDE-NPA : summary(1, 6) .
+rewrites: 7040713 in 5716ms cpu (5713ms real) (1231755 rewrites/second)
+result Summary: States>> 12 Solutions>> 2
+==========================================
+reduce in MAUDE-NPA : summary(1, 7) .
+rewrites: 5017482 in 4176ms cpu (4175ms real) (1201504 rewrites/second)
+result Summary: States>> 10 Solutions>> 3
+==========================================
+reduce in MAUDE-NPA : summary(1, 8) .
+rewrites: 4146048 in 3544ms cpu (3544ms real) (1169878 rewrites/second)
+result Summary: States>> 8 Solutions>> 3
+==========================================
+reduce in MAUDE-NPA : summary(1, 9) .
+rewrites: 4315701 in 3572ms cpu (3571ms real) (1208202 rewrites/second)
+result Summary: States>> 8 Solutions>> 4
+==========================================
+reduce in MAUDE-NPA : summary(1, 10) .
+rewrites: 4274456 in 3188ms cpu (3186ms real) (1340795 rewrites/second)
+result Summary: States>> 8 Solutions>> 4
+==========================================
+reduce in MAUDE-NPA : summary(1, 11) .
+rewrites: 2323931 in 1560ms cpu (1559ms real) (1489699 rewrites/second)
+result Summary: States>> 6 Solutions>> 4
+==========================================
+reduce in MAUDE-NPA : summary(1, 12) .
+rewrites: 203810 in 168ms cpu (169ms real) (1213154 rewrites/second)
+result Summary: States>> 4 Solutions>> 4
+==========================================
+reduce in MAUDE-NPA : initials(1,12) .
+rewrites: 1692 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 8 . 2 . 1 . 1 > (
+:: #1:Fresh ::
+[ nil | 
+   +(a ; b ; pubkey), 
+   -(pk(a, b ; skey(b, #0:Fresh))), 
+   +(pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
+   -(pk(a, b ; n(a, #1:Fresh))), nil]  & 
+:: #0:Fresh ::
+[ nil | 
+   -(a ; b ; pubkey), 
+   +(pk(a, b ; skey(b, #0:Fresh))), 
+   -(pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
+   +(pk(a, b ; n(a, #1:Fresh))), nil] )
+| 
+(a ; b ; pubkey) !inI,
+pk(a, b ; n(a, #1:Fresh)) !inI,
+pk(a, b ; skey(b, #0:Fresh)) !inI,
+pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh)) !inI
+| 
++(a ; b ; pubkey), 
+-(a ; b ; pubkey), 
++(pk(a, b ; skey(b, #0:Fresh))), 
+-(pk(a, b ; skey(b, #0:Fresh))), 
++(pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
+-(pk(b, a ; skey(b, #0:Fresh) ; n(a, #1:Fresh))), 
++(pk(a, b ; n(a, #1:Fresh))), 
+-(pk(a, b ; n(a, #1:Fresh)))
+| 
+nil)
+(< 1 . 8 . 2 . 1 . 2 . 8 > (
+:: #1:Fresh ::
+[ nil | 
+   -(a ; b ; pubkey), 
+   +(pk(a, b ; skey(b, #1:Fresh))), 
+   -(pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
+   +(pk(a, b ; n(a, #0:Fresh))), nil]  & 
+:: #2:Fresh ::
+[ nil | 
+   +(a ; b ; pubkey), nil]  & 
+:: #0:Fresh ::
+[ nil | 
+   +(a ; b ; pubkey), 
+   -(pk(a, b ; skey(b, #1:Fresh))), 
+   +(pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
+   -(pk(a, b ; n(a, #0:Fresh))), nil] )
+| 
+(a ; b ; pubkey) !inI,
+pk(a, b ; n(a, #0:Fresh)) !inI,
+pk(a, b ; skey(b, #1:Fresh)) !inI,
+pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh)) !inI
+| 
++(a ; b ; pubkey), 
++(a ; b ; pubkey), 
+-(a ; b ; pubkey), 
++(pk(a, b ; skey(b, #1:Fresh))), 
+-(pk(a, b ; skey(b, #1:Fresh))), 
++(pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
+-(pk(b, a ; skey(b, #1:Fresh) ; n(a, #0:Fresh))), 
++(pk(a, b ; n(a, #0:Fresh))), 
+-(pk(a, b ; n(a, #0:Fresh)))
+| 
+nil)
+(< 1 . 8 . 2 . 1 . 2 . 5 . 1 . 8 > (
+:: nil ::
+[ nil | 
+   -(a), 
+   -(b ; pubkey), 
+   +(a ; b ; pubkey), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Name ; b ; pubkey), 
+   +(b ; pubkey), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   -(a ; b ; pubkey), 
+   +(pk(a, b ; skey(b, #1:Fresh))), 
+   -(pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
+   +(pk(a, b ; n(a, #2:Fresh))), nil]  & 
+:: #2:Fresh ::
+[ nil | 
+   +(a ; b ; pubkey), 
+   -(pk(a, b ; skey(b, #1:Fresh))), 
+   +(pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
+   -(pk(a, b ; n(a, #2:Fresh))), nil]  & 
+:: #3:Fresh ::
+[ nil | 
+   +(#0:Name ; b ; pubkey), nil] )
+| 
+(a ; b ; pubkey) !inI,
+(b ; pubkey) !inI,
+(#0:Name ; b ; pubkey) !inI,
+pk(a, b ; n(a, #2:Fresh)) !inI,
+pk(a, b ; skey(b, #1:Fresh)) !inI,
+pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh)) !inI
+| 
++(#0:Name ; b ; pubkey), 
+-(#0:Name ; b ; pubkey), 
++(b ; pubkey), 
+-(a), 
+-(b ; pubkey), 
++(a ; b ; pubkey), 
++(a ; b ; pubkey), 
+-(a ; b ; pubkey), 
++(pk(a, b ; skey(b, #1:Fresh))), 
+-(pk(a, b ; skey(b, #1:Fresh))), 
++(pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
+-(pk(b, a ; skey(b, #1:Fresh) ; n(a, #2:Fresh))), 
++(pk(a, b ; n(a, #2:Fresh))), 
+-(pk(a, b ; n(a, #2:Fresh)))
+| 
+nil)
+< 1 . 8 . 2 . 1 . 2 . 5 . 5 . 2 . 1 . 8 > (
+:: nil ::
+[ nil | 
+   -(a), 
+   -(b ; pubkey), 
+   +(a ; b ; pubkey), nil]  & 
+:: nil ::
+[ nil | 
+   -(b), 
+   -(pubkey), 
+   +(b ; pubkey), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Name ; pubkey), 
+   +(pubkey), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Name ; #1:Name ; pubkey), 
+   +(#1:Name ; pubkey), nil]  & 
+:: #2:Fresh ::
+[ nil | 
+   +(#0:Name ; #1:Name ; pubkey), nil]  & 
+:: #3:Fresh ::
+[ nil | 
+   +(a ; b ; pubkey), 
+   -(pk(a, b ; skey(b, #4:Fresh))), 
+   +(pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
+   -(pk(a, b ; n(a, #3:Fresh))), nil]  & 
+:: #4:Fresh ::
+[ nil | 
+   -(a ; b ; pubkey), 
+   +(pk(a, b ; skey(b, #4:Fresh))), 
+   -(pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
+   +(pk(a, b ; n(a, #3:Fresh))), nil] )
+| 
+pubkey !inI,
+(a ; b ; pubkey) !inI,
+(b ; pubkey) !inI,
+(#1:Name ; pubkey) !inI,
+(#0:Name ; #1:Name ; pubkey) !inI,
+pk(a, b ; n(a, #3:Fresh)) !inI,
+pk(a, b ; skey(b, #4:Fresh)) !inI,
+pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh)) !inI
+| 
++(#0:Name ; #1:Name ; pubkey), 
+-(#0:Name ; #1:Name ; pubkey), 
++(#1:Name ; pubkey), 
+-(#1:Name ; pubkey), 
++(pubkey), 
+-(b), 
+-(pubkey), 
++(b ; pubkey), 
+-(a), 
+-(b ; pubkey), 
++(a ; b ; pubkey), 
++(a ; b ; pubkey), 
+-(a ; b ; pubkey), 
++(pk(a, b ; skey(b, #4:Fresh))), 
+-(pk(a, b ; skey(b, #4:Fresh))), 
++(pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
+-(pk(b, a ; skey(b, #4:Fresh) ; n(a, #3:Fresh))), 
++(pk(a, b ; n(a, #3:Fresh))), 
+-(pk(a, b ; n(a, #3:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : summary(2, 0) .
+rewrites: 297 in 0ms cpu (0ms real) (~ rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 1) .
+rewrites: 461205 in 440ms cpu (440ms real) (1048193 rewrites/second)
+result Summary: States>> 4 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 2) .
+rewrites: 1747256 in 1720ms cpu (1717ms real) (1015846 rewrites/second)
+result Summary: States>> 9 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 3) .
+rewrites: 4032480 in 3964ms cpu (3963ms real) (1017275 rewrites/second)
+result Summary: States>> 12 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 4) .
+rewrites: 7698402 in 7080ms cpu (7082ms real) (1087344 rewrites/second)
+result Summary: States>> 15 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 5) .
+rewrites: 11907904 in 10252ms cpu (10250ms real) (1161520 rewrites/second)
+result Summary: States>> 16 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 6) .
+rewrites: 12808719 in 9988ms cpu (9988ms real) (1282410 rewrites/second)
+result Summary: States>> 13 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 7) .
+rewrites: 11811904 in 8916ms cpu (8916ms real) (1324798 rewrites/second)
+result Summary: States>> 10 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 8) .
+rewrites: 7878693 in 5792ms cpu (5791ms real) (1360271 rewrites/second)
+result Summary: States>> 6 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 9) .
+rewrites: 3062964 in 2296ms cpu (2295ms real) (1334043 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2, 10) .
+rewrites: 360685 in 252ms cpu (251ms real) (1431289 rewrites/second)
+result Summary: States>> 0 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3, 0) .
+rewrites: 275 in 0ms cpu (0ms real) (~ rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3, 1) .
+rewrites: 300248 in 292ms cpu (292ms real) (1028246 rewrites/second)
+result Summary: States>> 4 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3, 2) .
+rewrites: 1458536 in 1376ms cpu (1373ms real) (1059982 rewrites/second)
+result Summary: States>> 10 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3, 3) .
+rewrites: 5034362 in 4136ms cpu (4136ms real) (1217205 rewrites/second)
+result Summary: States>> 18 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3, 4) .
+rewrites: 15422086 in 12304ms cpu (12303ms real) (1253420 rewrites/second)
+result Summary: States>> 22 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3, 5) .
+rewrites: 22510554 in 15760ms cpu (15761ms real) (1428334 rewrites/second)
+result Summary: States>> 24 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3, 6) .
+rewrites: 27532585 in 18732ms cpu (18729ms real) (1469815 rewrites/second)
+result Summary: States>> 21 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3, 7) .
+rewrites: 28954916 in 19244ms cpu (19245ms real) (1504620 rewrites/second)
+result Summary: States>> 18 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3, 8) .
+rewrites: 24083788 in 15144ms cpu (15142ms real) (1590318 rewrites/second)
+result Summary: States>> 14 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3, 9) .
+rewrites: 14365631 in 9896ms cpu (9895ms real) (1451660 rewrites/second)
+result Summary: States>> 8 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3, 10) .
+rewrites: 3817650 in 2500ms cpu (2502ms real) (1527060 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3, 11) .
+rewrites: 196469 in 208ms cpu (207ms real) (944562 rewrites/second)
+result Summary: States>> 0 Solutions>> 0
+Bye.

@@ -1,0 +1,2452 @@
+Tue Jun  2 19:21:58 CEST 2020
+		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	     Maude alpha128 built: Mar 10 2020 14:45:05
+	     Copyright 1997-2020 SRI International
+		   Tue Jun  2 19:21:58 2020
+
+	    Maude-NPA Version: 3.1.4 (June 2nd 2020)
+	    with direct composition, irreducibility constraints and time
+	    (To be run with Maude alpha 121 or above)
+	    Copyright (c) 2020, University of Illinois
+	    All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern
+    X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : genGrammars .
+rewrites: 7142977 in 14220ms cpu (62154ms real) (502319 rewrites/second)
+result GrammarList: (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg notInI,
+   (#0:Msg notLeq t(s, #1:Fresh)),
+   #0:Msg notLeq seskey(#2:UName, #3:UName, n(s, #4:Fresh)) => (#0:Msg ;
+    #5:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg notInI,
+   (#0:Msg notLeq t(s, #1:Fresh)),
+   (#0:Msg notLeq e(mkey(#2:UName, s), #3:UName ; seskey(#3:UName, #2:UName, n(
+    s, #4:Fresh)) ; t(s, #5:Fresh))),
+   (#0:Msg notLeq t(s, #6:Fresh) ; e(mkey(#7:UName, s), #8:UName ; seskey(
+    #8:UName, #7:UName, n(s, #9:Fresh)) ; t(s, #6:Fresh))),
+   (#0:Msg notLeq seskey(#10:UName, #11:UName, n(s, #12:Fresh)) ; t(s,
+    #13:Fresh)),
+   #0:Msg notLeq seskey(#14:UName, #15:UName, n(s, #16:Fresh)) ; t(s,
+    #17:Fresh) ; e(mkey(#15:UName, s), #14:UName ; seskey(#14:UName, #15:UName,
+    n(s, #16:Fresh)) ; t(s, #17:Fresh)) => (#18:Msg ; #0:Msg) inL . )
+| (errorNoHeuristicApplied {
+grl empty => (#1:Msg ; #2:Msg) inL . ,none,
+grl empty => (#1:Msg,#2:Msg) inL . ,none,
+grl empty => (#1:Msg,#2:Msg) inL . } usingGrammar 
+grl empty => (#1:Msg ; #2:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Key notInI => d(#0:Key, #1:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg notInI => d(#1:Key, #0:Msg) inL . )
+| (errorNoHeuristicApplied {
+grl empty => d(#1:Key, #2:Msg) inL . ,none,
+grl empty => (#2:Msg,#1:Key) inL . ,none,
+grl empty => (#2:Msg,#1:Key) inL . } usingGrammar 
+grl empty => d(#1:Key, #2:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Key notInI,
+   #0:Key notLeq mkey(#1:UName, s) => e(#0:Key, #2:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Msg notInI,
+   (#0:Msg notLeq #1:UName ; seskey(#1:UName, #2:UName, n(s, #3:Fresh)) ; t(s,
+    #4:Fresh)),
+   #0:Msg notLeq #5:UName ; seskey(#6:UName, #5:UName, n(s, #7:Fresh)) ; t(s,
+    #8:Fresh) ; e(mkey(#5:UName, s), #6:UName ; seskey(#6:UName, #5:UName, n(s,
+    #7:Fresh)) ; t(s, #8:Fresh)) => e(#9:Key, #0:Msg) inL . )
+| (errorNoHeuristicApplied {
+grl empty => e(#1:Key, #2:Msg) inL . ,none,
+grl empty => (#2:Msg,#1:Key) inL . ,none,
+grl empty => (#2:Msg,#1:Key) inL . } usingGrammar 
+grl empty => e(#1:Key, #2:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl (mkey(#0:Name, #1:Name) notLeq mkey(i, #2:Name)),
+   mkey(#0:Name, #1:Name) notLeq mkey(#3:Name, i) => mkey(#0:Name, #1:Name) inL
+    . )
+| (
+grl empty => n(#0:Name, #1:Fresh) inL .  ; 
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl #0:Nonce notInI,
+   #0:Nonce notLeq n(s, #1:Fresh) => seskey(#2:Name, #3:Name, #0:Nonce) inL . )
+| (
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl seskey(#0:Name, #1:Name, #2:Nonce) notLeq seskey(#3:UName, #4:UName, n(s,
+    #5:Fresh)) => seskey(#0:Name, #1:Name, #2:Nonce) inL . )
+| 
+grl #0:Msg inL => e(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => d(#1:Key, #0:Msg) inL .  ; 
+grl #0:Msg inL => (#1:Msg ; #0:Msg) inL .  ; 
+grl #0:Msg inL => (#0:Msg ; #1:Msg) inL .  ; 
+grl t(#0:Name, #1:Fresh) notLeq t(s, #2:Fresh) => t(#0:Name, #1:Fresh) inL . 
+==========================================
+reduce in MAUDE-NPA : run(0) .
+rewrites: 3616 in 128ms cpu (513ms real) (28250 rewrites/second)
+result ShortIdSystem: < 1 > 
+:: r:Fresh,r':Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, r:Fresh)) ; t(s, r':Fresh) ; e(mkey(b,
+    s), a ; seskey(a, b, n(s, r:Fresh)) ; t(s, r':Fresh)))) | nil] 
+| 
+seskey(a, b, n(s, r:Fresh)) inI
+| 
+nil
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : summary(1) .
+rewrites: 325511 in 564ms cpu (2255ms real) (577147 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2) .
+rewrites: 566910 in 976ms cpu (3903ms real) (580850 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3) .
+rewrites: 1472582 in 2396ms cpu (9583ms real) (614600 rewrites/second)
+result Summary: States>> 3 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(4) .
+rewrites: 2594146 in 4116ms cpu (16006ms real) (630258 rewrites/second)
+result Summary: States>> 5 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(5) .
+rewrites: 5172274 in 7412ms cpu (25913ms real) (697824 rewrites/second)
+result Summary: States>> 7 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(6) .
+rewrites: 7808181 in 10484ms cpu (36071ms real) (744771 rewrites/second)
+result Summary: States>> 6 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(7) .
+rewrites: 8297189 in 11560ms cpu (40327ms real) (717749 rewrites/second)
+result Summary: States>> 5 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(8) .
+rewrites: 6699754 in 8860ms cpu (29234ms real) (756179 rewrites/second)
+result Summary: States>> 4 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(9) .
+rewrites: 6064236 in 7532ms cpu (24702ms real) (805129 rewrites/second)
+result Summary: States>> 3 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(10) .
+rewrites: 3287148 in 4096ms cpu (14196ms real) (802526 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(11) .
+rewrites: 607858 in 740ms cpu (2569ms real) (821429 rewrites/second)
+result Summary: States>> 0 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : run(1) .
+rewrites: 110 in 0ms cpu (0ms real) (~ rewrites/second)
+result ShortIdSystem: < 1 . 2 > (
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
+   +(seskey(a, b, n(s, #0:Fresh))), nil]  & 
+:: #2:Fresh,#0:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #0:Fresh)) ; t(s, #2:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #0:Fresh)) ; t(s, #2:Fresh)))) | nil] )
+| 
+seskey(a, b, n(s, #0:Fresh)) !inI,
+(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg) inI
+| 
+-(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
++(seskey(a, b, n(s, #0:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(2) .
+rewrites: 144 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 2 > (
+:: nil ::
+[ nil | 
+   -(#2:Msg ; seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
+   +(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
+   +(seskey(a, b, n(s, #0:Fresh))), nil]  & 
+:: #3:Fresh,#0:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #0:Fresh)) ; t(s, #3:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #0:Fresh)) ; t(s, #3:Fresh)))) | nil] )
+| 
+(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg) !inI,
+seskey(a, b, n(s, #0:Fresh)) !inI,
+(#2:Msg ; seskey(a, b, n(s, #0:Fresh)) ; #1:Msg) inI
+| 
+-(#2:Msg ; seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
++(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
+-(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
++(seskey(a, b, n(s, #0:Fresh)))
+| 
+nil)
+< 1 . 2 . 4 > (
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
+   +(seskey(a, b, n(s, #0:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(#2:UName ; #3:UName) | 
+   -(e(mkey(#2:UName, s), #3:UName ; #4:Sessionkey ; #5:Nonce ; seskey(a, b, n(
+    s, #0:Fresh)) ; #1:Msg)), 
+   +(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), nil]  & 
+:: #0:Fresh,#6:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #0:Fresh)) ; t(s, #6:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #0:Fresh)) ; t(s, #6:Fresh)))) | nil] )
+| 
+(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg) !inI,
+seskey(a, b, n(s, #0:Fresh)) !inI,
+e(mkey(#2:UName, s), #3:UName ; #4:Sessionkey ; #5:Nonce ; seskey(a, b, n(s,
+    #0:Fresh)) ; #1:Msg) inI
+| 
+-(e(mkey(#2:UName, s), #3:UName ; #4:Sessionkey ; #5:Nonce ; seskey(a, b, n(s,
+    #0:Fresh)) ; #1:Msg)), 
++(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
+-(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
++(seskey(a, b, n(s, #0:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(3) .
+rewrites: 197 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 2 . 5 > (
+:: nil ::
+[ nil | 
+   -(#3:Key), 
+   -(e(#3:Key, #0:Msg ; seskey(a, b, n(s, #1:Fresh)) ; #2:Msg)), 
+   +(#0:Msg ; seskey(a, b, n(s, #1:Fresh)) ; #2:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Msg ; seskey(a, b, n(s, #1:Fresh)) ; #2:Msg), 
+   +(seskey(a, b, n(s, #1:Fresh)) ; #2:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #1:Fresh)) ; #2:Msg), 
+   +(seskey(a, b, n(s, #1:Fresh))), nil]  & 
+:: #1:Fresh,#4:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #1:Fresh)) ; t(s, #4:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #1:Fresh)) ; t(s, #4:Fresh)))) | nil] )
+| 
+(#0:Msg ; seskey(a, b, n(s, #1:Fresh)) ; #2:Msg) !inI,
+(seskey(a, b, n(s, #1:Fresh)) ; #2:Msg) !inI,
+seskey(a, b, n(s, #1:Fresh)) !inI,
+e(#3:Key, #0:Msg ; seskey(a, b, n(s, #1:Fresh)) ; #2:Msg) inI
+| 
+-(#3:Key), 
+-(e(#3:Key, #0:Msg ; seskey(a, b, n(s, #1:Fresh)) ; #2:Msg)), 
++(#0:Msg ; seskey(a, b, n(s, #1:Fresh)) ; #2:Msg), 
+-(#0:Msg ; seskey(a, b, n(s, #1:Fresh)) ; #2:Msg), 
++(seskey(a, b, n(s, #1:Fresh)) ; #2:Msg), 
+-(seskey(a, b, n(s, #1:Fresh)) ; #2:Msg), 
++(seskey(a, b, n(s, #1:Fresh)))
+| ghost(#3:Key))
+(< 1 . 2 . 4 . 1 > (
+:: nil ::
+[ nil | 
+   +(#0:UName ; #1:UName), 
+   -(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(
+    s, #4:Fresh)) ; #5:Msg)), 
+   +(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
+   +(seskey(a, b, n(s, #4:Fresh))), nil]  & 
+:: #4:Fresh,#6:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #4:Fresh)) ; t(s, #6:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #4:Fresh)) ; t(s, #6:Fresh)))) | nil] )
+| 
+(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg) !inI,
+seskey(a, b, n(s, #4:Fresh)) !inI,
+e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s,
+    #4:Fresh)) ; #5:Msg) inI
+| 
++(#0:UName ; #1:UName), 
+-(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s,
+    #4:Fresh)) ; #5:Msg)), 
++(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
+-(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
++(seskey(a, b, n(s, #4:Fresh)))
+| 
+nil)
+< 1 . 2 . 4 . 8 > (
+:: nil ::
+[ nil | 
+   -(mkey(#2:UName, s)), 
+   -(#3:UName ; #4:Sessionkey ; #5:Nonce ; seskey(a, b, n(s, #0:Fresh)) ;
+    #1:Msg), 
+   +(e(mkey(#2:UName, s), #3:UName ; #4:Sessionkey ; #5:Nonce ; seskey(a, b, n(
+    s, #0:Fresh)) ; #1:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
+   +(seskey(a, b, n(s, #0:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(#2:UName ; #3:UName) | 
+   -(e(mkey(#2:UName, s), #3:UName ; #4:Sessionkey ; #5:Nonce ; seskey(a, b, n(
+    s, #0:Fresh)) ; #1:Msg)), 
+   +(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), nil]  & 
+:: #0:Fresh,#6:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #0:Fresh)) ; t(s, #6:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #0:Fresh)) ; t(s, #6:Fresh)))) | nil] )
+| 
+e(mkey(#2:UName, s), #3:UName ; #4:Sessionkey ; #5:Nonce ; seskey(a, b, n(s,
+    #0:Fresh)) ; #1:Msg) !inI,
+(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg) !inI,
+seskey(a, b, n(s, #0:Fresh)) !inI,
+mkey(#2:UName, s) inI,
+(#3:UName ; #4:Sessionkey ; #5:Nonce ; seskey(a, b, n(s, #0:Fresh)) ; #1:Msg)
+    inI
+| 
+-(mkey(#2:UName, s)), 
+-(#3:UName ; #4:Sessionkey ; #5:Nonce ; seskey(a, b, n(s, #0:Fresh)) ; #1:Msg),
+    
++(e(mkey(#2:UName, s), #3:UName ; #4:Sessionkey ; #5:Nonce ; seskey(a, b, n(s,
+    #0:Fresh)) ; #1:Msg)), 
+-(e(mkey(#2:UName, s), #3:UName ; #4:Sessionkey ; #5:Nonce ; seskey(a, b, n(s,
+    #0:Fresh)) ; #1:Msg)), 
++(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
+-(seskey(a, b, n(s, #0:Fresh)) ; #1:Msg), 
++(seskey(a, b, n(s, #0:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(4) .
+rewrites: 276 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 2 . 5 . 3 > (
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: #2:Fresh,#5:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #5:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #5:Fresh)))) | nil] )
+| 
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) inI
+| 
+-(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key))
+(< 1 . 2 . 2 . 5 . 5 > (
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(#4:UName ; #5:UName) | 
+   -(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: #2:Fresh,#8:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #8:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #8:Fresh)))) | nil] )
+| 
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) inI
+| 
+-(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key))
+(< 1 . 2 . 4 . 1 . 7 > (
+:: nil ::
+[ nil | 
+   +(#0:UName ; #1:UName), 
+   -(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(
+    s, #4:Fresh)) ; #5:Msg)), 
+   +(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(#0:UName, s)), 
+   -(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ;
+    #5:Msg), 
+   +(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(
+    s, #4:Fresh)) ; #5:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
+   +(seskey(a, b, n(s, #4:Fresh))), nil]  & 
+:: #4:Fresh,#6:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #4:Fresh)) ; t(s, #6:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #4:Fresh)) ; t(s, #6:Fresh)))) | nil] )
+| 
+e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s,
+    #4:Fresh)) ; #5:Msg) !inI,
+(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg) !inI,
+seskey(a, b, n(s, #4:Fresh)) !inI,
+mkey(#0:UName, s) inI,
+(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg)
+    inI
+| 
+-(mkey(#0:UName, s)), 
+-(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg),
+    
++(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s,
+    #4:Fresh)) ; #5:Msg)), 
++(#0:UName ; #1:UName), 
+-(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s,
+    #4:Fresh)) ; #5:Msg)), 
++(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
+-(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
++(seskey(a, b, n(s, #4:Fresh)))
+| 
+nil)
+(< 1 . 2 . 4 . 8 . 3 > (
+:: nil ::
+[ nil | 
+   +(mkey(i, s)), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(i, s)), 
+   -(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ;
+    #4:Msg), 
+   +(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
+   +(seskey(a, b, n(s, #3:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(i ; #0:UName) | 
+   -(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), 
+   +(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), nil]  & 
+:: #3:Fresh,#5:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #3:Fresh)) ; t(s, #5:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #3:Fresh)) ; t(s, #5:Fresh)))) | nil] )
+| 
+mkey(i, s) !inI,
+e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg) !inI,
+(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg) !inI,
+seskey(a, b, n(s, #3:Fresh)) !inI,
+(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg)
+    inI
+| 
++(mkey(i, s)), 
+-(mkey(i, s)), 
+-(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg),
+    
++(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), 
+-(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), 
++(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
+-(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
++(seskey(a, b, n(s, #3:Fresh)))
+| 
+nil)
+< 1 . 2 . 4 . 8 . 14 > (
+:: nil ::
+[ nil | 
+   -(mkey(#0:UName, s)), 
+   -(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ;
+    #5:Msg), 
+   +(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(
+    s, #4:Fresh)) ; #5:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
+   -(#1:UName), 
+   +(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ;
+    #5:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
+   +(seskey(a, b, n(s, #4:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(#0:UName ; #1:UName) | 
+   -(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(
+    s, #4:Fresh)) ; #5:Msg)), 
+   +(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), nil]  & 
+:: #4:Fresh,#6:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #4:Fresh)) ; t(s, #6:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #4:Fresh)) ; t(s, #6:Fresh)))) | nil] )
+| 
+e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s,
+    #4:Fresh)) ; #5:Msg) !inI,
+(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg)
+    !inI,
+(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg) !inI,
+seskey(a, b, n(s, #4:Fresh)) !inI,
+mkey(#0:UName, s) inI,
+(#2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg) inI
+| 
+-(#2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
+-(#1:UName), 
++(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg),
+    
+-(mkey(#0:UName, s)), 
+-(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg),
+    
++(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s,
+    #4:Fresh)) ; #5:Msg)), 
+-(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s,
+    #4:Fresh)) ; #5:Msg)), 
++(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
+-(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
++(seskey(a, b, n(s, #4:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(5) .
+rewrites: 395 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 2 . 5 . 3 . 2 > (
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), 
+   +(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: #2:Fresh,#6:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #6:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #6:Fresh)))) | nil] )
+| 
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))
+    inI
+| 
+-(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
++(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key))
+(< 1 . 2 . 2 . 5 . 3 . 4 > (
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(#5:UName ; #6:UName) | 
+   -(e(mkey(#5:UName, s), #6:UName ; #7:Sessionkey ; #8:Nonce ; #4:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+   +(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil] 
+    & 
+:: #2:Fresh,#9:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #9:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #9:Fresh)))) | nil] )
+| 
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+e(mkey(#5:UName, s), #6:UName ; #7:Sessionkey ; #8:Nonce ; #4:Msg ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) inI
+| 
+-(e(mkey(#5:UName, s), #6:UName ; #7:Sessionkey ; #8:Nonce ; #4:Msg ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
++(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key))
+(< 1 . 2 . 2 . 5 . 5 . 1 > (
+:: nil ::
+[ nil | 
+   +(#0:UName ; #1:UName), 
+   -(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; e(#4:Key,
+    #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg))), 
+   +(e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Key), 
+   -(e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)), 
+   +(#5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), 
+   +(seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), 
+   +(seskey(a, b, n(s, #6:Fresh))), nil]  & 
+:: #6:Fresh,#8:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #6:Fresh)) ; t(s, #8:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #6:Fresh)) ; t(s, #8:Fresh)))) | nil] )
+| 
+e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg) !inI,
+(#5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg) !inI,
+(seskey(a, b, n(s, #6:Fresh)) ; #7:Msg) !inI,
+seskey(a, b, n(s, #6:Fresh)) !inI,
+e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; e(#4:Key, #5:Msg ;
+    seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)) inI
+| 
++(#0:UName ; #1:UName), 
+-(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; e(#4:Key, #5:Msg ;
+    seskey(a, b, n(s, #6:Fresh)) ; #7:Msg))), 
++(e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)), 
+-(#4:Key), 
+-(e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)), 
++(#5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), 
+-(#5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), 
++(seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), 
+-(seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), 
++(seskey(a, b, n(s, #6:Fresh)))
+| ghost(#4:Key))
+(< 1 . 2 . 2 . 5 . 5 . 9 > (
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(#4:UName, s)), 
+   -(#5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ; seskey(a, b, n(s,
+    #2:Fresh)) ; #3:Msg)), 
+   +(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(#4:UName ; #5:UName) | 
+   -(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: #2:Fresh,#8:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #8:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #8:Fresh)))) | nil] )
+| 
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+mkey(#4:UName, s) inI,
+(#5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ; seskey(a, b, n(s,
+    #2:Fresh)) ; #3:Msg)) inI
+| 
+-(mkey(#4:UName, s)), 
+-(#5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ; seskey(a, b, n(s,
+    #2:Fresh)) ; #3:Msg)), 
++(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+-(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key))
+(< 1 . 2 . 4 . 1 . 7 . 2 > (
+:: nil ::
+[ nil | 
+   +(mkey(i, s)), nil]  & 
+:: nil ::
+[ nil | 
+   +(i ; #0:UName), 
+   -(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), 
+   +(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(i, s)), 
+   -(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ;
+    #4:Msg), 
+   +(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
+   +(seskey(a, b, n(s, #3:Fresh))), nil]  & 
+:: #3:Fresh,#5:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #3:Fresh)) ; t(s, #5:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #3:Fresh)) ; t(s, #5:Fresh)))) | nil] )
+| 
+mkey(i, s) !inI,
+e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg) !inI,
+(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg) !inI,
+seskey(a, b, n(s, #3:Fresh)) !inI,
+(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg)
+    inI
+| 
++(mkey(i, s)), 
+-(mkey(i, s)), 
+-(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg),
+    
++(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), 
++(i ; #0:UName), 
+-(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), 
++(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
+-(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
++(seskey(a, b, n(s, #3:Fresh)))
+| 
+nil)
+(< 1 . 2 . 4 . 1 . 7 . 13 > (
+:: nil ::
+[ nil | 
+   +(#0:UName ; #1:UName), 
+   -(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(
+    s, #4:Fresh)) ; #5:Msg)), 
+   +(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(#0:UName, s)), 
+   -(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ;
+    #5:Msg), 
+   +(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(
+    s, #4:Fresh)) ; #5:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
+   -(#1:UName), 
+   +(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ;
+    #5:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
+   +(seskey(a, b, n(s, #4:Fresh))), nil]  & 
+:: #4:Fresh,#6:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #4:Fresh)) ; t(s, #6:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #4:Fresh)) ; t(s, #6:Fresh)))) | nil] )
+| 
+e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s,
+    #4:Fresh)) ; #5:Msg) !inI,
+(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg)
+    !inI,
+(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg) !inI,
+seskey(a, b, n(s, #4:Fresh)) !inI,
+mkey(#0:UName, s) inI,
+(#2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg) inI
+| 
+-(#2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
+-(#1:UName), 
++(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg),
+    
+-(mkey(#0:UName, s)), 
+-(#1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s, #4:Fresh)) ; #5:Msg),
+    
++(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s,
+    #4:Fresh)) ; #5:Msg)), 
++(#0:UName ; #1:UName), 
+-(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; seskey(a, b, n(s,
+    #4:Fresh)) ; #5:Msg)), 
++(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
+-(seskey(a, b, n(s, #4:Fresh)) ; #5:Msg), 
++(seskey(a, b, n(s, #4:Fresh)))
+| 
+nil)
+< 1 . 2 . 4 . 8 . 3 . 8 > (
+:: nil ::
+[ nil | 
+   +(mkey(i, s)), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(i, s)), 
+   -(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ;
+    #4:Msg), 
+   +(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
+   -(#0:UName), 
+   +(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ;
+    #4:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
+   +(seskey(a, b, n(s, #3:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(i ; #0:UName) | 
+   -(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), 
+   +(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), nil]  & 
+:: #3:Fresh,#5:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #3:Fresh)) ; t(s, #5:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #3:Fresh)) ; t(s, #5:Fresh)))) | nil] )
+| 
+mkey(i, s) !inI,
+e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg) !inI,
+(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg)
+    !inI,
+(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg) !inI,
+seskey(a, b, n(s, #3:Fresh)) !inI,
+(#1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg) inI
+| 
+-(#1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
+-(#0:UName), 
++(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg),
+    
++(mkey(i, s)), 
+-(mkey(i, s)), 
+-(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg),
+    
++(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), 
+-(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), 
++(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
+-(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
++(seskey(a, b, n(s, #3:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(6) .
+rewrites: 528 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 2 . 5 . 3 . 2 . 2 > (
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), 
+   +(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#6:Msg ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh))
+    ; #3:Msg)), 
+   +(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: #2:Fresh,#7:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #7:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #7:Fresh)))) | nil] )
+| 
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))
+    !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+(#6:Msg ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)) inI
+| 
+-(#6:Msg ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), 
++(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
+-(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
++(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key))
+(< 1 . 2 . 2 . 5 . 3 . 2 . 4 > (
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), 
+   +(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(#6:UName ; #7:UName) | 
+   -(e(mkey(#6:UName, s), #7:UName ; #8:Sessionkey ; #9:Nonce ; #5:Msg ; #4:Msg
+    ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+   +(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), nil]  & 
+:: #2:Fresh,#10:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #10:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #10:Fresh)))) | nil] )
+| 
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))
+    !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+e(mkey(#6:UName, s), #7:UName ; #8:Sessionkey ; #9:Nonce ; #5:Msg ; #4:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) inI
+| 
+-(e(mkey(#6:UName, s), #7:UName ; #8:Sessionkey ; #9:Nonce ; #5:Msg ; #4:Msg ;
+    e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
++(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
+-(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
++(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key))
+(< 1 . 2 . 2 . 5 . 3 . 4 . 1 > (
+:: nil ::
+[ nil | 
+   +(#0:UName ; #1:UName), 
+   -(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; e(
+    #5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), 
+   +(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#5:Key), 
+   -(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+   +(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+   +(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+   +(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+   +(seskey(a, b, n(s, #7:Fresh))), nil]  & 
+:: #7:Fresh,#9:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #7:Fresh)) ; t(s, #9:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #7:Fresh)) ; t(s, #9:Fresh)))) | nil] )
+| 
+e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg) !inI,
+(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)) !inI,
+(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg) !inI,
+(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg) !inI,
+seskey(a, b, n(s, #7:Fresh)) !inI,
+e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; e(#5:Key,
+    #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)) inI
+| 
++(#0:UName ; #1:UName), 
+-(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; e(#5:Key,
+    #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), 
++(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+-(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
++(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+-(#5:Key), 
+-(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
++(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+-(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
++(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+-(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
++(seskey(a, b, n(s, #7:Fresh)))
+| ghost(#5:Key))
+(< 1 . 2 . 2 . 5 . 3 . 4 . 8 > (
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(#5:UName, s)), 
+   -(#6:UName ; #7:Sessionkey ; #8:Nonce ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(
+    a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(mkey(#5:UName, s), #6:UName ; #7:Sessionkey ; #8:Nonce ; #4:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(#5:UName ; #6:UName) | 
+   -(e(mkey(#5:UName, s), #6:UName ; #7:Sessionkey ; #8:Nonce ; #4:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+   +(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil] 
+    & 
+:: #2:Fresh,#9:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #9:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #9:Fresh)))) | nil] )
+| 
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+e(mkey(#5:UName, s), #6:UName ; #7:Sessionkey ; #8:Nonce ; #4:Msg ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+mkey(#5:UName, s) inI,
+(#6:UName ; #7:Sessionkey ; #8:Nonce ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b,
+    n(s, #2:Fresh)) ; #3:Msg)) inI
+| 
+-(mkey(#5:UName, s)), 
+-(#6:UName ; #7:Sessionkey ; #8:Nonce ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a,
+    b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(mkey(#5:UName, s), #6:UName ; #7:Sessionkey ; #8:Nonce ; #4:Msg ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+-(e(mkey(#5:UName, s), #6:UName ; #7:Sessionkey ; #8:Nonce ; #4:Msg ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
++(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key))
+(< 1 . 2 . 2 . 5 . 5 . 9 . 11 > (
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#8:Key), 
+   -(e(#8:Key, #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ; seskey(
+    a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+   +(#5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ; seskey(a, b, n(s,
+    #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(#4:UName, s)), 
+   -(#5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ; seskey(a, b, n(s,
+    #2:Fresh)) ; #3:Msg)), 
+   +(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(#4:UName ; #5:UName) | 
+   -(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: #2:Fresh,#9:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #9:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #9:Fresh)))) | nil] )
+| 
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ; seskey(a, b, n(s,
+    #2:Fresh)) ; #3:Msg)) !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+mkey(#4:UName, s) inI,
+e(#8:Key, #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ; seskey(a, b,
+    n(s, #2:Fresh)) ; #3:Msg)) inI
+| 
+-(#8:Key), 
+-(e(#8:Key, #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ; seskey(a,
+    b, n(s, #2:Fresh)) ; #3:Msg))), 
++(#5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ; seskey(a, b, n(s,
+    #2:Fresh)) ; #3:Msg)), 
+-(mkey(#4:UName, s)), 
+-(#5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ; seskey(a, b, n(s,
+    #2:Fresh)) ; #3:Msg)), 
++(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+-(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#8:Key),
+ghost(#0:Key))
+< 1 . 2 . 4 . 1 . 7 . 2 . 7 > (
+:: nil ::
+[ nil | 
+   +(mkey(i, s)), nil]  & 
+:: nil ::
+[ nil | 
+   +(i ; #0:UName), 
+   -(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), 
+   +(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(i, s)), 
+   -(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ;
+    #4:Msg), 
+   +(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
+   -(#0:UName), 
+   +(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ;
+    #4:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
+   +(seskey(a, b, n(s, #3:Fresh))), nil]  & 
+:: #3:Fresh,#5:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #3:Fresh)) ; t(s, #5:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #3:Fresh)) ; t(s, #5:Fresh)))) | nil] )
+| 
+mkey(i, s) !inI,
+e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg) !inI,
+(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg)
+    !inI,
+(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg) !inI,
+seskey(a, b, n(s, #3:Fresh)) !inI,
+(#1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg) inI
+| 
+-(#1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
+-(#0:UName), 
++(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg),
+    
++(mkey(i, s)), 
+-(mkey(i, s)), 
+-(#0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s, #3:Fresh)) ; #4:Msg),
+    
++(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), 
++(i ; #0:UName), 
+-(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; seskey(a, b, n(s,
+    #3:Fresh)) ; #4:Msg)), 
++(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
+-(seskey(a, b, n(s, #3:Fresh)) ; #4:Msg), 
++(seskey(a, b, n(s, #3:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(7) .
+rewrites: 647 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 2 . 5 . 3 . 2 . 2 . 5 > (
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#7:Key), 
+   -(e(#7:Key, #6:Msg ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s,
+    #2:Fresh)) ; #3:Msg))), 
+   +(#6:Msg ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh))
+    ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), 
+   +(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#6:Msg ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh))
+    ; #3:Msg)), 
+   +(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: #2:Fresh,#8:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #8:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #8:Fresh)))) | nil] )
+| 
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))
+    !inI,
+(#6:Msg ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)) !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+e(#7:Key, #6:Msg ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s,
+    #2:Fresh)) ; #3:Msg)) inI
+| 
+-(#7:Key), 
+-(e(#7:Key, #6:Msg ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s,
+    #2:Fresh)) ; #3:Msg))), 
++(#6:Msg ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), 
+-(#6:Msg ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), 
++(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
+-(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
++(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#7:Key),
+ghost(#0:Key))
+(< 1 . 2 . 2 . 5 . 3 . 2 . 4 . 1 > (
+:: nil ::
+[ nil | 
+   +(#0:UName ; #1:UName), 
+   -(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg
+    ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))), 
+   +(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ;
+    #9:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#6:Key), 
+   -(e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+   +(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ;
+    #9:Msg)), 
+   +(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+   +(e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
+   +(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
+   +(seskey(a, b, n(s, #8:Fresh))), nil]  & 
+:: #8:Fresh,#10:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #8:Fresh)) ; t(s, #10:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #8:Fresh)) ; t(s, #10:Fresh)))) | nil] )
+| 
+e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg) !inI,
+(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))
+    !inI,
+(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)) !inI,
+(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg) !inI,
+(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg) !inI,
+seskey(a, b, n(s, #8:Fresh)) !inI,
+e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(
+    #6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)) inI
+| 
++(#0:UName ; #1:UName), 
+-(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ;
+    e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))), 
++(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)),
+    
+-(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)),
+    
++(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+-(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
++(e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+-(#6:Key), 
+-(e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
++(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
+-(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
++(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
+-(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
++(seskey(a, b, n(s, #8:Fresh)))
+| ghost(#6:Key))
+(< 1 . 2 . 2 . 5 . 3 . 2 . 4 . 8 > (
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(#6:UName, s)), 
+   -(#7:UName ; #8:Sessionkey ; #9:Nonce ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(mkey(#6:UName, s), #7:UName ; #8:Sessionkey ; #9:Nonce ; #5:Msg ; #4:Msg
+    ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), 
+   +(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(#6:UName ; #7:UName) | 
+   -(e(mkey(#6:UName, s), #7:UName ; #8:Sessionkey ; #9:Nonce ; #5:Msg ; #4:Msg
+    ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+   +(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), nil]  & 
+:: #2:Fresh,#10:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #10:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #10:Fresh)))) | nil] )
+| 
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+e(mkey(#6:UName, s), #7:UName ; #8:Sessionkey ; #9:Nonce ; #5:Msg ; #4:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))
+    !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+mkey(#6:UName, s) inI,
+(#7:UName ; #8:Sessionkey ; #9:Nonce ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) inI
+| 
+-(mkey(#6:UName, s)), 
+-(#7:UName ; #8:Sessionkey ; #9:Nonce ; #5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(mkey(#6:UName, s), #7:UName ; #8:Sessionkey ; #9:Nonce ; #5:Msg ; #4:Msg ;
+    e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+-(e(mkey(#6:UName, s), #7:UName ; #8:Sessionkey ; #9:Nonce ; #5:Msg ; #4:Msg ;
+    e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
++(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
+-(#5:Msg ; #4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
++(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#4:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key))
+(< 1 . 2 . 2 . 5 . 3 . 4 . 1 . 7 > (
+:: nil ::
+[ nil | 
+   +(#0:UName ; #1:UName), 
+   -(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; e(
+    #5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), 
+   +(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#5:Key), 
+   -(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+   +(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(#0:UName, s)), 
+   -(#1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(
+    a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+   +(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; e(
+    #5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+   +(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+   +(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+   +(seskey(a, b, n(s, #7:Fresh))), nil]  & 
+:: #7:Fresh,#9:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #7:Fresh)) ; t(s, #9:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #7:Fresh)) ; t(s, #9:Fresh)))) | nil] )
+| 
+e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg) !inI,
+e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; e(#5:Key,
+    #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)) !inI,
+(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)) !inI,
+(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg) !inI,
+(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg) !inI,
+seskey(a, b, n(s, #7:Fresh)) !inI,
+mkey(#0:UName, s) inI,
+(#1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b,
+    n(s, #7:Fresh)) ; #8:Msg)) inI
+| 
+-(mkey(#0:UName, s)), 
+-(#1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a,
+    b, n(s, #7:Fresh)) ; #8:Msg)), 
++(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; e(#5:Key,
+    #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), 
++(#0:UName ; #1:UName), 
+-(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; e(#5:Key,
+    #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), 
++(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+-(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
++(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+-(#5:Key), 
+-(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
++(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+-(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
++(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+-(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
++(seskey(a, b, n(s, #7:Fresh)))
+| ghost(#5:Key))
+< 1 . 2 . 2 . 5 . 3 . 4 . 8 . 3 > (
+:: nil ::
+[ nil | 
+   +(mkey(i, s)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(i, s)), 
+   -(#4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; e(#0:Key, #1:Msg ; seskey(
+    a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#7:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(i ; #4:UName) | 
+   -(e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+   +(#7:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil] 
+    & 
+:: #2:Fresh,#8:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #8:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #8:Fresh)))) | nil] )
+| 
+mkey(i, s) !inI,
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#7:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+(#4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; e(#0:Key, #1:Msg ; seskey(a, b,
+    n(s, #2:Fresh)) ; #3:Msg)) inI
+| 
++(mkey(i, s)), 
+-(mkey(i, s)), 
+-(#4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; e(#0:Key, #1:Msg ; seskey(a,
+    b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; e(#0:Key, #1:Msg
+    ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+-(e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; e(#0:Key, #1:Msg
+    ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
++(#7:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#7:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key)
+==========================================
+reduce in MAUDE-NPA : run(8) .
+rewrites: 750 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 2 . 5 . 3 . 2 . 4 . 1 . 7 > (
+:: nil ::
+[ nil | 
+   +(#0:UName ; #1:UName), 
+   -(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg
+    ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))), 
+   +(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ;
+    #9:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#6:Key), 
+   -(e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+   +(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(#0:UName, s)), 
+   -(#1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ;
+    seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+   +(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg
+    ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ;
+    #9:Msg)), 
+   +(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+   +(e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
+   +(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
+   +(seskey(a, b, n(s, #8:Fresh))), nil]  & 
+:: #8:Fresh,#10:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #8:Fresh)) ; t(s, #10:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #8:Fresh)) ; t(s, #10:Fresh)))) | nil] )
+| 
+e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg) !inI,
+e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(
+    #6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)) !inI,
+(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))
+    !inI,
+(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)) !inI,
+(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg) !inI,
+(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg) !inI,
+seskey(a, b, n(s, #8:Fresh)) !inI,
+mkey(#0:UName, s) inI,
+(#1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ;
+    seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)) inI
+| 
+-(mkey(#0:UName, s)), 
+-(#1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ;
+    seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
++(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ;
+    e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))), 
++(#0:UName ; #1:UName), 
+-(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ;
+    e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))), 
++(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)),
+    
+-(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)),
+    
++(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+-(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
++(e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+-(#6:Key), 
+-(e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
++(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
+-(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
++(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
+-(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
++(seskey(a, b, n(s, #8:Fresh)))
+| ghost(#6:Key))
+(< 1 . 2 . 2 . 5 . 3 . 2 . 4 . 8 . 3 > (
+:: nil ::
+[ nil | 
+   +(mkey(i, s)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(i, s)), 
+   -(#4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), 
+   +(#8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(i ; #4:UName) | 
+   -(e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+   +(#7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), nil]  & 
+:: #2:Fresh,#9:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #9:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #9:Fresh)))) | nil] )
+| 
+mkey(i, s) !inI,
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))
+    !inI,
+(#8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+(#4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) inI
+| 
++(mkey(i, s)), 
+-(mkey(i, s)), 
+-(#4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+-(e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
++(#7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
+-(#7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
++(#8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key))
+(< 1 . 2 . 2 . 5 . 3 . 2 . 4 . 8 . 14 > (
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(#4:UName, s)), 
+   -(#5:UName ; #6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg
+    ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#9:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), 
+   +(#9:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ; seskey(a,
+    b, n(s, #2:Fresh)) ; #3:Msg)), 
+   -(#5:UName), 
+   +(#5:UName ; #6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(#4:UName ; #5:UName) | 
+   -(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg
+    ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+   +(#8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), nil]  & 
+:: #2:Fresh,#10:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #10:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #10:Fresh)))) | nil] )
+| 
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#9:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))
+    !inI,
+(#5:UName ; #6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+mkey(#4:UName, s) inI,
+(#6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ; seskey(a, b,
+    n(s, #2:Fresh)) ; #3:Msg)) inI
+| 
+-(#6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ; seskey(a, b,
+    n(s, #2:Fresh)) ; #3:Msg)), 
+-(#5:UName), 
++(#5:UName ; #6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(mkey(#4:UName, s)), 
+-(#5:UName ; #6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg ;
+    e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+-(e(mkey(#4:UName, s), #5:UName ; #6:Sessionkey ; #7:Nonce ; #8:Msg ; #9:Msg ;
+    e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
++(#8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
+-(#8:Msg ; #9:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
++(#9:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#9:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key))
+< 1 . 2 . 2 . 5 . 3 . 4 . 1 . 7 . 2 > (
+:: nil ::
+[ nil | 
+   +(mkey(i, s)), nil]  & 
+:: nil ::
+[ nil | 
+   +(i ; #0:UName), 
+   -(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; e(#4:Key,
+    #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg))), 
+   +(#3:Msg ; e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#4:Key), 
+   -(e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)), 
+   +(#5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(i, s)), 
+   -(#0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; e(#4:Key, #5:Msg ; seskey(
+    a, b, n(s, #6:Fresh)) ; #7:Msg)), 
+   +(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; e(#4:Key,
+    #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#3:Msg ; e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)), 
+   +(e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), 
+   +(seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), 
+   +(seskey(a, b, n(s, #6:Fresh))), nil]  & 
+:: #6:Fresh,#8:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #6:Fresh)) ; t(s, #8:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #6:Fresh)) ; t(s, #8:Fresh)))) | nil] )
+| 
+mkey(i, s) !inI,
+e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg) !inI,
+e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; e(#4:Key, #5:Msg ;
+    seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)) !inI,
+(#3:Msg ; e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)) !inI,
+(#5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg) !inI,
+(seskey(a, b, n(s, #6:Fresh)) ; #7:Msg) !inI,
+seskey(a, b, n(s, #6:Fresh)) !inI,
+(#0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; e(#4:Key, #5:Msg ; seskey(a, b,
+    n(s, #6:Fresh)) ; #7:Msg)) inI
+| 
++(mkey(i, s)), 
+-(mkey(i, s)), 
+-(#0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; e(#4:Key, #5:Msg ; seskey(a,
+    b, n(s, #6:Fresh)) ; #7:Msg)), 
++(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; e(#4:Key, #5:Msg
+    ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg))), 
++(i ; #0:UName), 
+-(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; e(#4:Key, #5:Msg
+    ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg))), 
++(#3:Msg ; e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)), 
+-(#3:Msg ; e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)), 
++(e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)), 
+-(#4:Key), 
+-(e(#4:Key, #5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg)), 
++(#5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), 
+-(#5:Msg ; seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), 
++(seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), 
+-(seskey(a, b, n(s, #6:Fresh)) ; #7:Msg), 
++(seskey(a, b, n(s, #6:Fresh)))
+| ghost(#4:Key)
+==========================================
+reduce in MAUDE-NPA : run(9) .
+rewrites: 834 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1 . 2 . 2 . 5 . 3 . 2 . 4 . 1 . 7 . 2 > (
+:: nil ::
+[ nil | 
+   +(mkey(i, s)), nil]  & 
+:: nil ::
+[ nil | 
+   +(i ; #0:UName), 
+   -(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(
+    #5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), 
+   +(#3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ;
+    #8:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#5:Key), 
+   -(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+   +(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(i, s)), 
+   -(#0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ;
+    seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+   +(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(
+    #5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ;
+    #8:Msg)), 
+   +(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+   +(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+   +(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+   +(seskey(a, b, n(s, #7:Fresh))), nil]  & 
+:: #7:Fresh,#9:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #7:Fresh)) ; t(s, #9:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #7:Fresh)) ; t(s, #9:Fresh)))) | nil] )
+| 
+mkey(i, s) !inI,
+e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg) !inI,
+e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key,
+    #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)) !inI,
+(#3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))
+    !inI,
+(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)) !inI,
+(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg) !inI,
+(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg) !inI,
+seskey(a, b, n(s, #7:Fresh)) !inI,
+(#0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ;
+    seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)) inI
+| 
++(mkey(i, s)), 
+-(mkey(i, s)), 
+-(#0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ;
+    seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
++(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(
+    #5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), 
++(i ; #0:UName), 
+-(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(
+    #5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), 
++(#3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)),
+    
+-(#3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)),
+    
++(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+-(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
++(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+-(#5:Key), 
+-(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
++(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+-(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
++(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+-(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
++(seskey(a, b, n(s, #7:Fresh)))
+| ghost(#5:Key))
+(< 1 . 2 . 2 . 5 . 3 . 2 . 4 . 1 . 7 . 13 > (
+:: nil ::
+[ nil | 
+   +(#0:UName ; #1:UName), 
+   -(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg
+    ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))), 
+   +(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ;
+    #9:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#6:Key), 
+   -(e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+   +(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(#0:UName, s)), 
+   -(#1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ;
+    seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+   +(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg
+    ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ;
+    #9:Msg)), 
+   +(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+   +(e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
+   +(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a,
+    b, n(s, #8:Fresh)) ; #9:Msg)), 
+   -(#1:UName), 
+   +(#1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ;
+    seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
+   +(seskey(a, b, n(s, #8:Fresh))), nil]  & 
+:: #8:Fresh,#10:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #8:Fresh)) ; t(s, #10:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #8:Fresh)) ; t(s, #10:Fresh)))) | nil] )
+| 
+e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg) !inI,
+e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(
+    #6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)) !inI,
+(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))
+    !inI,
+(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)) !inI,
+(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg) !inI,
+(#1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ;
+    seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)) !inI,
+(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg) !inI,
+seskey(a, b, n(s, #8:Fresh)) !inI,
+mkey(#0:UName, s) inI,
+(#2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b,
+    n(s, #8:Fresh)) ; #9:Msg)) inI
+| 
+-(#2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b,
+    n(s, #8:Fresh)) ; #9:Msg)), 
+-(#1:UName), 
++(#1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ;
+    seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+-(mkey(#0:UName, s)), 
+-(#1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ;
+    seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
++(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ;
+    e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))), 
++(#0:UName ; #1:UName), 
+-(e(mkey(#0:UName, s), #1:UName ; #2:Sessionkey ; #3:Nonce ; #4:Msg ; #5:Msg ;
+    e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg))), 
++(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)),
+    
+-(#4:Msg ; #5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)),
+    
++(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+-(#5:Msg ; e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
++(e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
+-(#6:Key), 
+-(e(#6:Key, #7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg)), 
++(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
+-(#7:Msg ; seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
++(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
+-(seskey(a, b, n(s, #8:Fresh)) ; #9:Msg), 
++(seskey(a, b, n(s, #8:Fresh)))
+| ghost(#6:Key))
+< 1 . 2 . 2 . 5 . 3 . 2 . 4 . 8 . 3 . 8 > (
+:: nil ::
+[ nil | 
+   +(mkey(i, s)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Key), 
+   -(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(i, s)), 
+   -(#4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), 
+   +(#8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+   +(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a,
+    b, n(s, #2:Fresh)) ; #3:Msg)), 
+   -(#4:UName), 
+   +(#4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+   +(seskey(a, b, n(s, #2:Fresh))), nil]  & 
+:: nil ::
+[ nil, 
+   +(i ; #4:UName) | 
+   -(e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+   +(#7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ;
+    #3:Msg)), nil]  & 
+:: #2:Fresh,#9:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #9:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #2:Fresh)) ; t(s, #9:Fresh)))) | nil] )
+| 
+mkey(i, s) !inI,
+e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key,
+    #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+(#7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))
+    !inI,
+(#8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(#4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)) !inI,
+(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg) !inI,
+seskey(a, b, n(s, #2:Fresh)) !inI,
+(#5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b,
+    n(s, #2:Fresh)) ; #3:Msg)) inI
+| 
+-(#5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b,
+    n(s, #2:Fresh)) ; #3:Msg)), 
+-(#4:UName), 
++(#4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(mkey(i, s)), 
+-(mkey(i, s)), 
+-(#4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ;
+    seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
+-(e(mkey(i, s), #4:UName ; #5:Sessionkey ; #6:Nonce ; #7:Msg ; #8:Msg ; e(
+    #0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg))), 
++(#7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
+-(#7:Msg ; #8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)),
+    
++(#8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#8:Msg ; e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
+-(#0:Key), 
+-(e(#0:Key, #1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg)), 
++(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(#1:Msg ; seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
+-(seskey(a, b, n(s, #2:Fresh)) ; #3:Msg), 
++(seskey(a, b, n(s, #2:Fresh)))
+| ghost(#0:Key)
+==========================================
+reduce in MAUDE-NPA : run(10) .
+rewrites: 884 in 0ms cpu (0ms real) (~ rewrites/second)
+result ShortIdSystem: < 1 . 2 . 2 . 5 . 3 . 2 . 4 . 1 . 7 . 2 . 7 > (
+:: nil ::
+[ nil | 
+   +(mkey(i, s)), nil]  & 
+:: nil ::
+[ nil | 
+   +(i ; #0:UName), 
+   -(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(
+    #5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), 
+   +(#3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ;
+    #8:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#5:Key), 
+   -(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+   +(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(mkey(i, s)), 
+   -(#0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ;
+    seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+   +(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(
+    #5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ;
+    #8:Msg)), 
+   +(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), nil] 
+    & 
+:: nil ::
+[ nil | 
+   -(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+   +(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+   +(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), nil]  & 
+:: nil ::
+[ nil | 
+   -(#1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a,
+    b, n(s, #7:Fresh)) ; #8:Msg)), 
+   -(#0:UName), 
+   +(#0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ;
+    seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), nil]  & 
+:: nil ::
+[ nil | 
+   -(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+   +(seskey(a, b, n(s, #7:Fresh))), nil]  & 
+:: #7:Fresh,#9:Fresh ::
+[ nil, 
+   -(a ; b), 
+   +(e(mkey(a, s), b ; seskey(a, b, n(s, #7:Fresh)) ; t(s, #9:Fresh) ; e(mkey(
+    b, s), a ; seskey(a, b, n(s, #7:Fresh)) ; t(s, #9:Fresh)))) | nil] )
+| 
+mkey(i, s) !inI,
+e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg) !inI,
+e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key,
+    #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)) !inI,
+(#3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))
+    !inI,
+(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)) !inI,
+(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg) !inI,
+(#0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ;
+    seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)) !inI,
+(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg) !inI,
+seskey(a, b, n(s, #7:Fresh)) !inI,
+(#1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b,
+    n(s, #7:Fresh)) ; #8:Msg)) inI
+| 
+-(#1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b,
+    n(s, #7:Fresh)) ; #8:Msg)), 
+-(#0:UName), 
++(#0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ;
+    seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
++(mkey(i, s)), 
+-(mkey(i, s)), 
+-(#0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ;
+    seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
++(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(
+    #5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), 
++(i ; #0:UName), 
+-(e(mkey(i, s), #0:UName ; #1:Sessionkey ; #2:Nonce ; #3:Msg ; #4:Msg ; e(
+    #5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg))), 
++(#3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)),
+    
+-(#3:Msg ; #4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)),
+    
++(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+-(#4:Msg ; e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
++(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
+-(#5:Key), 
+-(e(#5:Key, #6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg)), 
++(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+-(#6:Msg ; seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
++(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
+-(seskey(a, b, n(s, #7:Fresh)) ; #8:Msg), 
++(seskey(a, b, n(s, #7:Fresh)))
+| ghost(#5:Key)
+==========================================
+reduce in MAUDE-NPA : run(11) .
+rewrites: 906 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (empty).IdSystemSet
+Bye.
+Tue Jun  2 19:26:30 CEST 2020

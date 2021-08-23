@@ -1,0 +1,184 @@
+***(
+Version of SK3 protocol
+)***
+
+fmod PROTOCOL-EXAMPLE-SYMBOLS is
+  --- Importing sorts Msg, Fresh, Public, and GhostData
+  protecting DEFINITION-PROTOCOL-RULES .
+  
+  ----------------------------------------------------------
+  --- Overwrite this module with the syntax of your protocol
+  --- Notes:
+  --- * Sort Msg and Fresh are special and imported
+  --- * Every sort must be a subsort of Msg
+  --- * No sort can be a supersort of Msg
+  ----------------------------------------------------------
+
+
+--- Sort Information 
+  sorts Name Nonce Symkey Key   Sessionkey NSymEnc Null Number . 
+  subsort Symkey Sessionkey NSymEnc Number Name Nonce <  Msg .
+  subsort Name < Public . 
+  subsort Null < NSymEnc .
+  subsort Number < Public .
+
+  --- Concatenation operator
+  op _;_ : Msg Msg -> Msg [gather (e E) frozen] . --- make it AC
+
+  --- Nonce operator
+  op n : Name Fresh -> Nonce [frozen] .
+  
+  --- Principals
+  op a : -> Name . --- Alice
+  op b : -> Name . --- Bob
+  op i : -> Name . --- Intruder
+  op s : -> Name . --- Server
+  op Ca : -> Name . --- Smart card connected to A 
+  op Cb : -> Name . --- Smart card connected to B
+
+  --- encryption/decryption 
+  op e : NSymEnc  Msg -> Msg  [frozen] .
+  op d : NSymEnc  Msg -> Msg  [frozen] .
+
+  ---Symmetric encryption  
+  op se : Symkey Msg  -> Msg [frozen] .  
+  op sd : Symkey Msg ->  Msg  [frozen] .
+ 
+  op  0 : -> Number . 
+  op  1 : -> Number . 
+  op  2 : -> Number . 
+  
+--- Keys
+  op sesK : Nonce Name Name Number -> Sessionkey [frozen] . --- Every op includes a Number op in the original version, so we include it here also
+  op symKey : Name -> Symkey [frozen] .
+  op nse : Symkey Msg -> NSymEnc [frozen] .
+
+
+ --- Exclusive or
+  op _*_ :  NSymEnc  NSymEnc -> NSymEnc  [assoc comm frozen] .
+ op null : -> Null  .
+
+endfm
+
+
+fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  
+  ----------------------------------------------------------
+  --- Overwrite this module with the algebraic properties 
+  --- of your protocol
+  ----------------------------------------------------------
+   var NSEnc NSEnc' : NSymEnc .
+   var M M' : Msg .
+   var SKey : Symkey .
+   vars A B : Name .
+
+   eq d(NSEnc, e(NSEnc, M)) = M [variant] .
+   eq e(NSEnc, d(NSEnc, M)) = M [variant] .
+  
+   eq sd(SKey, se(SKey, M)) = M [variant] .  
+   eq se(SKey, sd(SKey, M)) = M [variant] .
+ 
+   --- Exclusive or
+   eq  null * NSEnc = NSEnc  [variant] .
+   eq NSEnc * NSEnc = null  [variant] .
+   eq NSEnc * NSEnc * NSEnc' = NSEnc'  [variant] .
+
+endfm 
+
+
+fmod PROTOCOL-SPECIFICATION is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  protecting DEFINITION-PROTOCOL-RULES .
+  protecting DEFINITION-CONSTRAINTS-INPUT .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the strands 
+  --- of your protocol
+  ----------------------------------------------------------
+  
+  vars X Y Z M  : Msg . 
+  var NSEnc NSEnc' PAB : NSymEnc .
+  var SKey KAB SK  : Symkey .
+  vars A B S CA CB  : Name .
+  var N NCA NCB : Nonce .
+  var r : Fresh .
+  var Nu : Number .
+
+
+  eq STRANDS-DOLEVYAO 
+   = :: nil :: [ nil | -(X), -(Y), +(X ; Y), nil ] & 
+     :: nil :: [ nil | -(X ; Y), +(X), nil ] & 
+     :: nil :: [ nil | -(X ; Y), +(Y), nil ] & 
+     :: nil :: [ nil | -(NSEnc), -(NSEnc'), +(NSEnc *  NSEnc'), nil ] & 
+     :: nil :: [ nil | +(null), nil ] &  
+     :: nil :: [ nil | -(M), -(NSEnc), +(e(NSEnc,M)), nil ] &  
+     :: nil :: [ nil | -(M), -(NSEnc), +(d(NSEnc,M)), nil ] &  
+     :: nil :: [ nil | -(SK), +(nse(SK, i)), nil ] &   ---- generate any kind of nse encoding?
+     :: nil :: [ nil | -(M), -(SK), +(se(SK,M)), nil ] &  
+     :: nil :: [ nil | -(M), -(SK), +(sd(SK,M)), nil ] &  
+     :: nil :: [ nil | +(symKey(i)), nil ] & 
+     :: nil :: [ nil | -(N), +(sesK(N,i,A, Nu)), nil ] &  
+     :: nil :: [ nil | -(N), +(sesK(N,A,i, Nu)), nil ] &   
+     :: r   :: [ nil | +(n(i,r)), nil ] &  
+     :: nil :: [ nil | +(Nu), nil ] &
+     :: nil :: [ nil | +(A), nil ] 
+  [nonexec] . 
+
+
+ eq STRANDS-PROTOCOL
+  = 
+    :: r :: *** Alice ***
+    [nil |   +(A ; B),
+	     -( (PAB * nse(symKey(A), B ; 1))  ; 
+	       (se(symKey(A), (PAB * nse(symKey(A), B)) ; B ; 2))),  
+     	     +(A ; n(A,r)),   	     	    		   --- impersonating Ca --- In Proverif they send also enc( (na(b,a), l1, l1), kc(b))
+             -(NCB ; e(PAB,  n(A,r) ; NCB)),
+	     *** Simulation
+	     -(e(PAB, sesK(NCB, A, B, 1))),
+             +(e(PAB, NCB ; 0 ; 1)), nil]
+  & 
+
+  :: r ::  *** Bob ***
+    [nil |  -(A ; NCA),
+      	    +(n(B,r) ; e(nse(symKey(B), A), NCA ; n(B,r) ; 1)), 
+            *** Simulation: Bob sends session key to Alice
+	    +(e(nse(symKey(B), A), sesK(n(B,r), A, B, 1))),
+ 	    -(e(nse(symKey(B), A), n(B,r) ; 0 ; 1)), nil] 
+   &
+    
+ :: nil :: *** Server ***
+    [nil |   -(A ; B),
+    	     +((nse(symKey(B), A ; 0) * nse(symKey(A), B ; 1)) ;
+                se(symKey(A),  (nse(symKey(B), A ; 0) * nse(symKey(A), B ; 1)) ; B ; 2)), nil]
+  [nonexec] .
+
+
+***(
+Both smart cards generate the session key sesK(NCB, A, B), and send them to A and B.
+A and B do not send any message containing this session key.
+
+--- Simulate that Bob sends to Alice the session key? encode it with PAB
+)***
+
+
+eq ATTACK-STATE(0)
+   =    :: r ::  *** Bob ***
+    [nil, -(a ; NCA),
+      	  +(n(b,r) ; e(nse(symKey(b), a), NCA ; n(b,r) ; 1)), 
+          *** Simulation: Bob sends session key to Alice
+	      +(e(nse(symKey(b), a), sesK(n(b,r), a, b, 1))),
+ 	      -(e(nse(symKey(b), a), n(b,r) ; 0 ; 1))   |  nil]   
+     || sesK(n(b,r), a, b, 1) inI 
+     || nil
+     || nil
+     || nil
+  [nonexec] .
+
+
+endfm 
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .
+
+ 

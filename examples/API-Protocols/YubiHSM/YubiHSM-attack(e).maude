@@ -1,0 +1,197 @@
+fmod PROTOCOL-EXAMPLE-SYMBOLS is
+--- Importing sorts IMsg, Fresh, Public
+protecting DEFINITION-PROTOCOL-RULES .
+
+----------------------------------------------------------
+--- Overwrite this module with the syntax of your protocol
+--- Notes:
+--- * Sort IMsg and Fresh are special and imported
+--- * Every sort must be a subsort of IMsg
+--- * No sort can be a supersort of IMsg
+----------------------------------------------------------
+
+--- Sort Information
+--- sort IMsg is split into three blocks: StdMsg, GlobalMsg, and EventList
+subsorts StdMsg GlobalEventList < IMsg .
+
+--- Generic sorts for Mutable Memory, event lists, and standard protocol messages
+sorts Event EventList StdMsg GlobalMsg GlobalEventList .
+op _|>_ : GlobalMsg EventList -> GlobalEventList [prec 50] .
+
+op _@_ : GlobalMsg GlobalMsg -> GlobalMsg [prec 20 assoc comm id: empty] .
+op empty : -> GlobalMsg .   --- Persistent memory ---
+
+subsort Event < EventList .
+op nil : -> EventList .
+op _++_ : EventList EventList -> EventList [assoc id: nil prec 40] .
+
+--- Events
+op MasterKey : FrNonce -> Event .
+op SEnc : FrNonce CounterMode -> Event .
+op GenerateAEAD : StdMsg StdMsg -> Event .
+
+--- Predicates for mutable memory
+op HSM : FrNonce FrNonce -> GlobalMsg .
+op YSM-AEAD-GENERATE : FrNonce -> GlobalMsg .
+
+--- Standard protocol messages
+sorts Fr FrNonce Mt CounterMode ElemConc ElemXOR Concatenation XOR .
+subsort Event < EventList .
+subsort CounterMode < StdMsg .
+subsort FrNonce < ElemXOR Mt < XOR < ElemConc < Concatenation < StdMsg .
+
+subsort CounterMode < Private .
+
+op Fr : Fresh -> FrNonce .
+op mac : ElemXOR FrNonce -> ElemConc .
+op senc : CounterMode FrNonce -> ElemXOR .
+op cmode : FrNonce -> CounterMode .
+
+op _;_ : ElemConc ElemConc -> Concatenation [gather (e E)] .
+
+op _*_ : XOR XOR -> XOR [assoc comm] .
+op mt : -> Mt .
+
+--- Roles for protocol composition
+op YubiHSM : -> Role .
+
+--- macro for AEAD
+op aead : CounterMode FrNonce ElemXOR -> StdMsg . --- XOR
+eq aead(ks:CounterMode,k:FrNonce,data:ElemXOR)
+ = (senc(ks:CounterMode,k:FrNonce) * data:ElemXOR) ; mac(data:ElemXOR,k:FrNonce) . ---  op de senc y mac
+
+endfm
+
+fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
+protecting PROTOCOL-EXAMPLE-SYMBOLS .
+
+----------------------------------------------------------
+--- Overwrite this module with the algebraic properties
+--- of your protocol
+----------------------------------------------------------
+
+  eq X:XOR * mt = X:XOR [variant] .
+  eq X:XOR * X:XOR = mt [variant] .
+  eq X:XOR * X:XOR * Y:XOR = Y:XOR [variant] .
+
+endfm
+
+fmod PROTOCOL-SPECIFICATION is
+protecting PROTOCOL-EXAMPLE-SYMBOLS .
+protecting DEFINITION-PROTOCOL-RULES .
+protecting DEFINITION-CONSTRAINTS-INPUT .
+
+----------------------------------------------------------
+--- Overwrite this module with the strands
+--- of your protocol
+----------------------------------------------------------
+
+  vars pid sid npr key nonce : FrNonce .
+  vars pid1 sid1 key1 : FrNonce .
+  vars r rpid rsid rnpr rk rnonce : Fresh .
+  vars mem mem1 mem2 mem3 mem4 mem5 : GlobalMsg .
+  vars EL EL1 EL2 EL3 : EventList .
+
+eq STRANDS-DOLEVYAO =
+   :: r   :: [ nil | +(Fr(r)), nil ]  &
+   :: nil :: [ nil | -(X:ElemXOR), -(K:FrNonce), +(mac(X:ElemXOR,K:FrNonce)), nil ] &
+   :: nil :: [ nil | -(X:CounterMode), -(K:FrNonce), +(senc(X:CounterMode,K:FrNonce)), nil ] &
+   :: nil :: [ nil | -(K:FrNonce), -(senc(X:CounterMode,K:FrNonce)), +(X:CounterMode), nil ] &
+   :: nil :: [ nil | +(mt), nil ] &
+   :: nil :: [ nil | -(X:ElemXOR), -(Y:XOR), +(X:ElemXOR * Y:XOR), nil ] &
+   :: nil :: [ nil | -(X:ElemConc), -(Y:ElemConc), +(X:ElemConc ; Y:ElemConc), nil ] &
+   :: nil :: [ nil | -(X:ElemConc ; Y:ElemConc), +(X:ElemConc), nil ] &
+   :: nil :: [ nil | -(X:ElemConc ; Y:ElemConc), +(Y:ElemConc), nil ]
+[nonexec] .
+
+eq STRANDS-PROTOCOL =
+
+:: kh:Fresh, k:Fresh :: --- + kh
+[nil |
+      +(Fr(kh:Fresh)),
+
+      {YubiHSM -> YubiHSM ;; 1-1 ;;
+       HSM(Fr(kh:Fresh),Fr(k:Fresh)) @ YSM-AEAD-GENERATE(Fr(kh:Fresh))
+       |>  MasterKey(Fr(k:Fresh))},
+       nil ]
+ &
+----------------------------------------------------------
+--- rule YSM-AEAD-GENERATE:
+:: data:Fresh ::
+
+[nil | {YubiHSM -> YubiHSM ;; 1-1 ;;
+        HSM(kh:FrNonce,k:FrNonce) @ YSM-AEAD-GENERATE(kh:FrNonce) @
+        mem:GlobalMsg
+	|> EL:EventList },
+
+       -(kh:FrNonce),
+       -(nonce:FrNonce),
+       +(aead(cmode(nonce:FrNonce),k:FrNonce,Fr(data:Fresh))),
+
+       {YubiHSM -> YubiHSM ;; 1-1 ;;
+        HSM(kh:FrNonce,k:FrNonce) @ YSM-AEAD-GENERATE(kh:FrNonce) @
+	mem:GlobalMsg
+        |> EL:EventList ++
+	   GenerateAEAD(Fr(data:Fresh),
+	      aead(cmode(nonce:FrNonce),k:FrNonce,Fr(data:Fresh))) },
+   nil ]
+
+&
+----------------------------------------------------------
+---rule YSM_AES_ECB_BLOCK_ENCRYPT:
+
+:: nil ::
+
+[nil | {YubiHSM -> YubiHSM ;; 1-1 ;;
+        HSM(kh:FrNonce,k:FrNonce) @
+        mem:GlobalMsg
+        |> EL:EventList },
+
+       -(kh:FrNonce),
+       -(nonce:FrNonce),
+       +(senc(cmode(nonce:FrNonce),k:FrNonce)), --- OutHSM
+
+       {YubiHSM -> YubiHSM ;; 1-1 ;;
+       HSM(kh:FrNonce,k:FrNonce) @
+       mem:GlobalMsg
+       |>  EL:EventList ++
+           SEnc(kh:FrNonce,cmode(nonce:FrNonce)) },
+  nil ]
+
+[nonexec] .
+
+----------------------------------------------------------
+--- First attack: how the intruder can extract the data sent
+--- within an AEAD if he was able to listen to
+--- the AEAD Generate API call
+
+
+eq ATTACK-STATE(0) =
+:: kh:Fresh, k:Fresh ::
+[nil,
+      +(Fr(kh:Fresh)),
+
+      {YubiHSM -> YubiHSM ;; 1-1 ;;
+       HSM(Fr(kh:Fresh),Fr(k:Fresh)) @ YSM-AEAD-GENERATE(Fr(kh:Fresh))
+       |>  MasterKey(Fr(k:Fresh))}
+| nil ]
+ &
+:: data:Fresh ::
+[nil,  {YubiHSM -> YubiHSM ;; 1-1 ;;
+        HSM(Fr(kh:Fresh),Fr(k:Fresh)) @ YSM-AEAD-GENERATE(Fr(kh:Fresh))
+	|> MasterKey(Fr(k:Fresh)) ++ SEnc(Fr(kh:Fresh),cmode(nonce:FrNonce)) },
+
+       -(Fr(kh:Fresh)), --- in HSM
+       -(nonce:FrNonce),
+       +(aead(cmode(nonce:FrNonce),Fr(k:Fresh),Fr(data:Fresh)))
+| nil  ]
+       || Fr(data:Fresh) inI
+       || nil
+       || nil
+       || nil
+ [nonexec] .
+
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .

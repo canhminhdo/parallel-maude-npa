@@ -1,0 +1,538 @@
+***(
+This is a simplified version of the Client-Server key exhange protocol in TLS 1.3.
+)***
+
+fmod PROTOCOL-EXAMPLE-SYMBOLS is
+  --- Importing sorts IMsg, Fresh, Public
+  protecting DEFINITION-PROTOCOL-RULES .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the syntax of your protocol
+  --- Notes:
+  --- * Sort IMsg and Fresh are special and imported
+  --- * Every sort must be a subsort of IMsg
+  --- * No sort can be a supersort of IMsg
+  ----------------------------------------------------------
+
+  --- Sort Information
+  sorts Name Nonce NeNonceSet Gen Exp Key GenvExp Group AuthMode Secret Test .
+  subsort Gen Exp < GenvExp .
+  subsort Name NeNonceSet GenvExp Key Group AuthMode Secret Test < IMsg .
+  subsort Exp < Key .
+  subsort Name < Public . --- This is quite relevant and necessary
+  subsort Gen < Public . --- This is quite relevant and necessary
+  subsort Group < Public . --- This is quite relevant and necessary
+
+  --- secret operator
+  op secret : Name Fresh -> Secret [frozen] .
+
+  --- Nonce operator
+  op n : Name Fresh -> Nonce [frozen] .
+
+  --- Intruder
+  ops server client i : -> Name .
+
+  --- Encryption
+  op e`(_`,_`) : Key IMsg -> IMsg [frozen format (d d d d n++i d s--)] .
+  op d`(_`,_`) : Key IMsg -> IMsg [frozen format (d d d d n++i d s--)] .
+
+  --- Exp
+  op exp : Group GenvExp NeNonceSet -> Exp [frozen] .
+
+  --- Gen
+  op gen : Group -> Gen .
+
+  --- Groups
+  ops g1 g2 : -> Group .
+
+--- NeNonceSet
+  subsort Nonce < NeNonceSet .
+  op _*_ : NeNonceSet NeNonceSet -> NeNonceSet [frozen assoc comm] .
+
+  --- Concatenation
+  op _;_ : IMsg IMsg -> IMsg [frozen gather (e E) format (d d ni d)] .
+
+  --- Signing
+  op sig`(_`,_`) : Name IMsg -> IMsg [frozen format (d d d d n++++i d s----)] .
+
+  --- MAC
+  op mac`(_`,_`) : Key IMsg -> IMsg [frozen format (d d d d n++++i d s----)] .
+
+  --- Special messages of TLS
+  op hs : -> IMsg .      --- hello message
+  op retry : -> IMsg .      --- retry message
+  op authreq : -> AuthMode .   --- with authentication request
+  op noauthreq : -> AuthMode . --- without authentication request
+
+--- Test operator
+
+op test1 : -> Test .
+op test2 : -> Test .
+
+endfm
+
+fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the algebraic properties
+  --- of your protocol
+  ----------------------------------------------------------
+
+  eq exp(G:Group,exp(G:Group,gen(G:Group),Y:NeNonceSet),Z:NeNonceSet)
+   = exp(G:Group,gen(G:Group), Y:NeNonceSet * Z:NeNonceSet) [variant] .
+  eq d(K:Key,e(K:Key,M:IMsg)) = M:IMsg [variant] .
+
+endfm
+
+fmod PROTOCOL-SPECIFICATION is
+  protecting PROTOCOL-EXAMPLE-SYMBOLS .
+  protecting DEFINITION-PROTOCOL-RULES .
+  protecting DEFINITION-CONSTRAINTS-INPUT .
+
+  ----------------------------------------------------------
+  --- Overwrite this module with the strands
+  --- of your protocol
+  ----------------------------------------------------------
+
+  vars NS1 NS2 NS3 NS : NeNonceSet .
+  vars N NA NB N1 N2 : Nonce .
+  var GE : GenvExp .
+  vars G G1 G2 : Group .
+  vars A C S : Name .
+  vars r r' r1 r2 r3 r4 : Fresh .
+  var Ke : Key .
+  vars E E1 E2 : Exp .
+  vars M M1 M2 HM : IMsg .
+  var AReq : AuthMode .
+  var Sr : Secret .
+
+  eq STRANDS-DOLEVYAO = --- Dolev-Yao commented for fast generation of regular execution
+***(
+    :: nil :: [ nil | -(M1 ; M2), +(M1), nil ] &
+    :: nil :: [ nil | -(M1 ; M2), +(M2), nil ] &
+    :: nil :: [ nil | -(M1), -(M2), +(M1 ; M2), nil ] &
+    :: nil :: [ nil | -(Ke), -(M), +(e(Ke,M)), nil ] &
+    :: nil :: [ nil | -(Ke), -(M), +(d(Ke,M)), nil ] &
+    :: nil :: [ nil | -(NS1), -(NS2), +(NS1 * NS2), nil ] &
+    :: nil :: [ nil | -(GE), -(NS), +(exp(G,GE,NS)), nil ] &
+    :: nil :: [ nil | -(G), +(gen(G)), nil ] &
+    :: nil :: [ nil | -(M), +(sig(i,M)), nil ] &
+    :: nil :: [ nil | -(sig(i,M)), +(M), nil ] &
+    :: nil :: [ nil | -(M), -(Ke), +(mac(Ke,M)), nil ] &
+)***
+    :: r ::   [ nil | +(secret(i,r)), nil ] &
+    :: r ::   [ nil | +(n(i,r)), nil ] &
+    :: nil :: [ nil | +(hs), nil ] &
+    :: nil :: [ nil | +(retry), nil ] &
+    :: nil :: [ nil | +(authreq), nil ] &
+    :: nil :: [ nil | +(noauthreq), nil ] &
+    :: nil :: [ nil | +(G), nil ] &
+    :: nil :: [ nil | +(A), nil ]
+  [nonexec] .
+
+  ---------------------- Macros
+
+  op _++_ : IMsg IMsg -> IMsg [frozen] .
+  eq (X1:IMsg ; X2:IMsg) ++ Y:IMsg = X1:IMsg ; (X2:IMsg ++ Y:IMsg) .
+  eq X:IMsg ++ Y:IMsg = X:IMsg ; Y:IMsg [owise] .
+
+  --- fragment TLS protocol
+  op clientHello : Name Fresh Group Fresh -> SMsgList-R [frozen] .
+  eq clientHello(C,r1,G,r2)
+   = +(hs ; n(C,r1) ; G ; gen(G) ; keyG(G,C,r2)), nil .
+
+  --- fragment TLS protocol
+  op serverHello : Nonce Group Exp -> SMsgList-R [frozen] .
+  eq serverHello(N,G,E)
+   = -(hs ; N ; G ; gen(G) ; E), nil .
+
+  --- fragment TLS protocol
+  op clientSecret : Exp Secret -> SMsgList-R [frozen] .
+  eq clientSecret(E,Sr)
+   = -(e(E,Sr)), nil .
+
+  --- fragment TLS protocol
+  op serverSecret : Exp Name Fresh -> SMsgList-R [frozen] .
+  eq serverSecret(E,S,r)
+   = +(e(E,secret(S,r))), nil .
+
+--- fragment TLS protocol
+
+ op clientTest : -> SMsgList-R  .
+ eq clientTest = +(test1), nil .
+
+ ---fragment TLS protocol
+
+ op serverTest : -> SMsgList-R  .
+ eq serverTest = +(test2), nil .
+
+  --- fragment TLS protocol
+  op clientHandshakeRetry : -> SMsgList-R .
+  eq clientHandshakeRetry
+   = -(hs ; retry), nil .
+
+  --- fragment TLS protocol
+  op serverHandshakeRetry : -> SMsgList-R .
+  eq serverHandshakeRetry
+   = +(hs ; retry), nil .
+
+  --- fragment TLS protocol
+  op clientHandshakeAuth : AuthMode Nonce Group Exp Name Fresh Name IMsg -> SMsgList-R [frozen] .
+  eq clientHandshakeAuth(AReq,N,G,E,C,r,S,HM)
+   = -(hs ; N ; G ; gen(G) ; E ; Z(AReq,G,E,C,r,S,HM)),
+     ( AReq eq authreq ),
+     +(e(keyE(G,E,C,r),
+         sig(C, W(HM,AReq,S,G,E,C,r))
+       ; mac(keyE(G,E,C,r),W(HM,AReq,S,G,E,C,r)))),
+     nil .
+
+  --- fragment TLS protocol
+  op serverHandshakeAuth : AuthMode Group Exp Name Fresh Fresh Name IMsg -> SMsgList-R [frozen] .
+  eq serverHandshakeAuth(AReq,G,E,C,r1,r2,S,HM)
+   = +(hs ; n(S,r1) ; G ; gen(G) ; keyG(G,S,r2) ; Z(AReq,G,E,S,r2,S,HM)),
+     ( AReq eq authreq ),
+     -(e(keyE(G,E,S,r2),
+         sig(C, W(HM,AReq,S,G,E,S,r2))   --- changed C in W to S (that is the second S)
+       ; mac(keyE(G,E,S,r2),W(HM,AReq,S,G,E,S,r2)))),  --- did same thing in this W
+     nil .
+
+  --- fragment TLS protocol
+  op clientHandshakeNoAuth : AuthMode Nonce Group Exp Name Fresh Name IMsg -> SMsgList-R [frozen] .
+  eq clientHandshakeNoAuth(AReq,N,G,E,C,r,S,HM)
+   = -(hs ; N ; G ; gen(G) ; E ; Z(AReq,G,E,C,r,S,HM)),
+     ( AReq eq noauthreq ),
+     +(e(keyE(G,E,C,r), mac(keyE(G,E,C,r), W(HM,AReq,S,G,E,C,r)))),
+     nil .
+
+  --- fragment TLS protocol
+  op serverHandshakeNoAuth : AuthMode Group Exp Name Fresh Fresh Name IMsg -> SMsgList-R [frozen] .
+  eq serverHandshakeNoAuth(AReq,G,E,C,r1,r2,S,HM)
+   = +(hs ; n(S,r1) ; G ; gen(G) ; keyG(G,S,r2) ; Z(AReq,G,E,S,r2,S,HM)),
+  --- E was keyG(G,S,r2)
+  ( AReq eq noauthreq ),
+    -(e(keyE(G,E,S,r2), mac(keyE(G,E,S,r2), W(HM,AReq,S,G,E,C,r2)))),
+     nil .
+
+  --- Message macro
+  op keyG : Group Name Fresh -> IMsg [frozen] .
+  eq keyG(G,A,r) = exp(G, gen(G), n(A,r)) .
+  op keyE : Group Exp Name Fresh -> IMsg [frozen] .
+  eq keyE(G,E,A,r) = exp(G, E, n(A,r)) .
+
+  --- Message macro
+  op W : IMsg AuthMode Name Group Exp Name Fresh -> IMsg [frozen] .
+  eq W(HM,AReq,S,G,E,A,r)
+   = HM ++ (AReq ; sig(S,HM ++ AReq) ; mac(keyE(G,E,A,r), HM ++ AReq)) .
+
+  --- Message macro
+  op Z : AuthMode Group Exp Name Fresh Name IMsg -> IMsg [frozen] .
+  eq Z(AReq,G,E,A,r,S,HM)
+   = e(keyE(G,E,A,r), AReq ; sig(S, HM ++ AReq) ; mac(keyE(G,E,A,r), HM ++ AReq)) .
+
+  --- Message macro
+  op H : Name Fresh Nonce Group Fresh Exp -> IMsg [frozen] .
+  eq H(A,r1,N,G,r2,E)
+   = n(A,r1) ; N ; G ; gen(G) ; keyG(G,A,r2) ; E .
+
+ --- Message macro
+ op Hopp : Name Fresh Nonce Group Fresh Exp -> IMsg [frozen] .
+  eq Hopp(A,r1,N,G,r2,E)
+   = N ; n(A,r1) ; G ; gen(G) ; E ; keyG(G,A,r2)  .
+--- Introduced Hopp in place of H for the server
+--- Sender generated data goes after client generated data
+
+  eq STRANDS-PROTOCOL =
+    --- client with authentication request
+     :: r1,r2 ::
+     [nil | clientHello(C,r1,G,r2)
+            ++
+	    clientHandshakeAuth(AReq,N,G,E,C,r2,S, hs ; H(C,r1,N,G,r2,E))
+	    ++
+         clientTest
+          ++
+	    nil] &
+    --- client without authentication request
+     :: r1,r2 ::
+     [nil | clientHello(C,r1,G,r2)
+            ++
+	    clientHandshakeNoAuth(AReq,N,G,E,C,r2,S, hs ; H(C,r1,N,G,r2,E))
+	    ++
+         clientTest
+            ++
+	    nil] &
+   --- client retry with authentication request
+     :: r1,r2,r3,r4 ::
+     [nil | clientHello(C,r1,G1,r2)
+            ++
+	    clientHandshakeRetry
+	    ++
+	    clientHello(C,r3,G2,r4)
+            ++
+	    clientHandshakeAuth(AReq,N2,G2,E2,C,r4,S, (hs ; H(C,r1,N1,G1,r2,E1)) ++ H(C,r3,N2,G2,r4,E2))
+	    ++
+	    clientTest
+	    ++
+	    nil] &
+   --- client retry without authentication request
+     :: r1,r2,r3,r4 ::
+     [nil | clientHello(C,r1,G1,r2)
+            ++
+	    clientHandshakeRetry
+	    ++
+	    clientHello(C,r3,G2,r4)
+            ++
+	    clientHandshakeNoAuth(AReq,N2,G2,E2,C,r4,S, (hs ; H(C,r1,N1,G1,r2,E1)) ++ H(C,r3,N2,G2,r4,E2))
+	    ++
+	    clientTest
+	    ++
+	    nil] &
+     --- server with authentication request
+     :: r1,r2 ::
+     [nil |
+          serverHello(N,G,E)
+          ++
+	    serverHandshakeAuth(AReq,G,E,C,r1,r2,S, hs ; Hopp(S,r1,N,G,r2,E))
+	    ++
+	    serverTest
+	    ++
+	    nil]
+ &
+     --- server without authentication request
+     :: r1,r2 ::
+     [nil |
+           serverHello(N,G,E)
+           ++
+	    serverHandshakeNoAuth(AReq,G,E,C,r1,r2,S, hs ; Hopp(S,r1,N,G,r2,E))
+--- Changed C in first argument of H to S
+--- Changed H to Hopp
+	    ++
+	    serverTest
+	    ++
+	    nil]  &
+     --- server retry with authentication request
+     :: r1,r2,r3,r4 ::
+     [nil | serverHello(N1,G1,E1)
+            ++
+	    serverHandshakeRetry
+	    ++
+	    serverHello(N2,G2,E2)
+            ++
+	    serverHandshakeAuth(AReq,G2,E2,C,r3,r4,S, (hs ; Hopp(S,r1,N1,G1,r2,E1)) ++ Hopp(S,r3,N2,G2,r4,E2))
+	    ++
+	    serverTest
+	    ++
+	    nil]
+   &
+     --- server retry without authentication request
+     :: r1,r2,r3,r4 ::
+     [nil | serverHello(N1,G1,E1)
+            ++
+	    serverHandshakeRetry
+	    ++
+	    serverHello(N2,G2,E2)
+            ++
+	    serverHandshakeNoAuth(AReq,G2,E2,C,r3,r4,S, (hs ; Hopp(S,r1,N1,G1,r2,E1)) ++ Hopp(S,r3,N2,G2,r4,E2))
+	    ++
+	    serverTest
+	    ++
+	    nil]
+  [nonexec] .
+
+--- Attack state for debugging client
+--- "red run(0,1)" gives all cilient strands
+eq ATTACK-STATE(0)
+ =
+ :: r1:Fresh,r2:Fresh ::
+[ nil,
+   +(hs ;
+     n(client, r1:Fresh) ;
+     g1 ;
+     gen(g1) ;
+     exp(g1, gen(g1), n(client, r2:Fresh))),
+   -(hs ;
+     n(server, r1*:Fresh) ;
+     g1 ;
+     gen(g1) ;
+     exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+     e(exp(g1, gen(g1), n(server, r2*:Fresh) * n(client, r2:Fresh)),
+       authreq ;
+       sig(server,
+           hs ;
+           n(client, r1:Fresh) ;
+           n(server, r1*:Fresh) ;
+           g1 ;
+           gen(g1) ;
+           exp(g1, gen(g1), n(client, r2:Fresh)) ;
+           exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+           authreq)  ;
+       mac(exp(g1, gen(g1), n(server, r2*:Fresh) * n(client, r2:Fresh)),
+           hs ;
+           n(client, r1:Fresh) ;
+           n(server, r1*:Fresh) ;
+           g1 ;
+           gen(g1) ;
+           exp(g1, gen(g1), n(client, r2:Fresh)) ;
+           exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+           authreq) ) ),
+   authreq eq authreq,
+   +(e(exp(g1, gen(g1), n(server, r2*:Fresh) * n(client, r2:Fresh)),
+       sig(client,
+           hs ;
+           n(client, r1:Fresh) ;
+           n(server, r1*:Fresh) ;
+           g1 ;
+           gen(g1) ;
+           exp(g1, gen(g1), n(client, r2:Fresh)) ;
+           exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+           authreq ;
+           sig(server,
+               hs ;
+               n(client, r1:Fresh) ;
+               n(server, r1*:Fresh) ;
+               g1 ;
+               gen(g1) ;
+               exp(g1, gen(g1), n(client, r2:Fresh)) ;
+               exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+               authreq)  ;
+           mac(exp(g1, gen(g1), n(server, r2*:Fresh) * n(client, r2:Fresh)),
+               hs ;
+               n(client, r1:Fresh) ;
+               n(server, r1*:Fresh) ;
+               g1 ;
+               gen(g1) ;
+               exp(g1, gen(g1), n(client, r2:Fresh)) ;
+               exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+               authreq) )  ;
+       mac(exp(g1, gen(g1), n(server, r2*:Fresh) * n(client, r2:Fresh)),
+           hs ;
+           n(client, r1:Fresh) ;
+           n(server, r1*:Fresh) ;
+           g1 ;
+           gen(g1) ;
+           exp(g1, gen(g1), n(client, r2:Fresh)) ;
+           exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+           authreq ;
+           sig(server,
+               hs ;
+               n(client, r1:Fresh) ;
+               n(server, r1*:Fresh) ;
+               g1 ;
+               gen(g1) ;
+               exp(g1, gen(g1), n(client, r2:Fresh)) ;
+               exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+               authreq)  ;
+           mac(exp(g1, gen(g1), n(server, r2*:Fresh) * n(client, r2:Fresh)),
+               hs ;
+               n(client, r1:Fresh) ;
+               n(server, r1*:Fresh) ;
+               g1 ;
+               gen(g1) ;
+               exp(g1, gen(g1), n(client, r2:Fresh)) ;
+               exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+               authreq) ) ) ) | nil] &
+:: r1*:Fresh,r2*:Fresh ::
+[ nil,
+   -(hs ;
+     n(client, r1:Fresh) ;
+     g1 ;
+     gen(g1) ;
+     exp(g1, gen(g1), n(client, r2:Fresh))),
+   +(hs ;
+     n(server, r1*:Fresh) ;
+     g1 ;
+     gen(g1) ;
+     exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+     e(exp(g1, gen(g1), n(client, r2:Fresh) * n(server, r2*:Fresh)),
+       authreq ;
+       sig(server,
+           hs ;
+           n(client, r1:Fresh) ;
+           n(server, r1*:Fresh) ;
+           g1 ;
+           gen(g1) ;
+           exp(g1, gen(g1), n(client, r2:Fresh)) ;
+           exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+           authreq)  ;
+       mac(exp(g1, gen(g1), n(client, r2:Fresh) * n(server, r2*:Fresh)),
+           hs ;
+           n(client, r1:Fresh) ;
+           n(server, r1*:Fresh) ;
+           g1 ;
+           gen(g1) ;
+           exp(g1, gen(g1), n(client, r2:Fresh)) ;
+           exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+           authreq) ) ),
+   authreq eq authreq,
+   -(e(exp(g1, gen(g1), n(client, r2:Fresh) * n(server, r2*:Fresh)),
+       sig(client,
+           hs ;
+           n(client, r1:Fresh) ;
+           n(server, r1*:Fresh) ;
+           g1 ;
+           gen(g1) ;
+           exp(g1, gen(g1), n(client, r2:Fresh)) ;
+           exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+           authreq ;
+           sig(server,
+               hs ;
+               n(client, r1:Fresh) ;
+               n(server, r1*:Fresh) ;
+               g1 ;
+               gen(g1) ;
+               exp(g1, gen(g1), n(client, r2:Fresh)) ;
+               exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+               authreq)  ;
+           mac(exp(g1, gen(g1), n(client, r2:Fresh) * n(server, r2*:Fresh)),
+               hs ;
+               n(client, r1:Fresh) ;
+               n(server, r1*:Fresh) ;
+               g1 ;
+               gen(g1) ;
+               exp(g1, gen(g1), n(client, r2:Fresh)) ;
+               exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+               authreq) )  ;
+       mac(exp(g1, gen(g1), n(client, r2:Fresh) * n(server, r2*:Fresh)),
+           hs ;
+           n(client, r1:Fresh) ;
+           n(server, r1*:Fresh) ;
+           g1 ;
+           gen(g1) ;
+           exp(g1, gen(g1), n(client, r2:Fresh)) ;
+           exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+           authreq ;
+           sig(server,
+               hs ;
+               n(client, r1:Fresh) ;
+               n(server, r1*:Fresh) ;
+               g1 ;
+               gen(g1) ;
+               exp(g1, gen(g1), n(client, r2:Fresh)) ;
+               exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+               authreq)  ;
+           mac(exp(g1, gen(g1), n(client, r2:Fresh) * n(server, r2*:Fresh)),
+               hs ;
+               n(client, r1:Fresh) ;
+               n(server, r1*:Fresh) ;
+               g1 ;
+               gen(g1) ;
+               exp(g1, gen(g1), n(client, r2:Fresh)) ;
+               exp(g1, gen(g1), n(server, r2*:Fresh)) ;
+               authreq) ) ) ) | nil]
+     || empty
+     || nil
+     || nil
+     || nil
+[nonexec] .
+
+
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .
+
+--- red summary(0,0) .
+--- red summary(0,1) .
+--- red summary(0,2) .
+--- red summary(0,3) .
+--- red initials(0,3) .

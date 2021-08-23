@@ -1,0 +1,133 @@
+Wed Apr 25 11:58:02 CEST 2018
+		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	   Maude alpha116 built: Mar 16 2018 17:40:28
+	    Copyright 1997-2017 SRI International
+		   Wed Apr 25 11:58:02 2018
+
+	    Maude-NPA Version: 3.1.1 (April 24th 2018)
+	    with direct composition and irreducibility constraints
+	    (To be run with Maude alpha 115 or above)
+	    Copyright (c) 2018, University of Illinois
+	    All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern
+    X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : summary(1, 1) .
+rewrites: 2556961 in 4176ms cpu (4176ms real) (612299 rewrites/second)
+result Summary: States>> 1 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 2) .
+rewrites: 241456 in 256ms cpu (256ms real) (943187 rewrites/second)
+result Summary: States>> 2 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 3) .
+rewrites: 908254 in 848ms cpu (848ms real) (1071054 rewrites/second)
+result Summary: States>> 3 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 4) .
+rewrites: 2907280 in 2268ms cpu (2264ms real) (1281869 rewrites/second)
+result Summary: States>> 4 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 5) .
+rewrites: 6934072 in 4864ms cpu (4864ms real) (1425590 rewrites/second)
+result Summary: States>> 7 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 6) .
+rewrites: 21037427 in 13416ms cpu (13418ms real) (1568084 rewrites/second)
+result Summary: States>> 13 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 7) .
+rewrites: 68984842 in 37288ms cpu (37288ms real) (1850054 rewrites/second)
+result Summary: States>> 24 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 8) .
+rewrites: 262451879 in 140016ms cpu (140019ms real) (1874442 rewrites/second)
+result Summary: States>> 40 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 9) .
+rewrites: 1070380282 in 633448ms cpu (633444ms real) (1689768 rewrites/second)
+result Summary: States>> 76 Solutions>> 1
+==========================================
+reduce in MAUDE-NPA : initials(1,9) .
+rewrites: 3624 in 0ms cpu (1ms real) (~ rewrites/second)
+result ShortIdSystem: < 1 . 4 . 6 . 20 . 0 . 5 . 2 . 1 . 1 . 1 . 1 > (
+:: nil ::
+[ nil | 
+   -(senc(cmode(#0:FrNonce), Fr(#1:Fresh))), 
+   -(Fr(#2:Fresh) * senc(cmode(#0:FrNonce), Fr(#1:Fresh))), 
+   +(Fr(#2:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -((Fr(#2:Fresh) * senc(cmode(#0:FrNonce), Fr(#1:Fresh))) ; mac(Fr(#2:Fresh),
+    Fr(#1:Fresh))), 
+   +(Fr(#2:Fresh) * senc(cmode(#0:FrNonce), Fr(#1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   {YubiHSM -> YubiHSM ;; 1-1 ;; YSM-AEAD-GENERATE(Fr(#3:Fresh)) @ HSM(Fr(
+    #3:Fresh), Fr(#1:Fresh)) |> MasterKey(Fr(#1:Fresh))}, 
+   -(Fr(#3:Fresh)), 
+   -(#0:FrNonce), 
+   +(senc(cmode(#0:FrNonce), Fr(#1:Fresh))), 
+   {YubiHSM -> YubiHSM ;; 1-1 ;; YSM-AEAD-GENERATE(Fr(#3:Fresh)) @ HSM(Fr(
+    #3:Fresh), Fr(#1:Fresh)) |> MasterKey(Fr(#1:Fresh)) ++ SEnc(Fr(#3:Fresh),
+    cmode(#0:FrNonce))}, nil]  & 
+:: #2:Fresh ::
+[ nil | 
+   {YubiHSM -> YubiHSM ;; 1-1 ;; YSM-AEAD-GENERATE(Fr(#3:Fresh)) @ HSM(Fr(
+    #3:Fresh), Fr(#1:Fresh)) |> MasterKey(Fr(#1:Fresh)) ++ SEnc(Fr(#3:Fresh),
+    cmode(#0:FrNonce))}, 
+   -(Fr(#3:Fresh)), 
+   -(#0:FrNonce), 
+   +((Fr(#2:Fresh) * senc(cmode(#0:FrNonce), Fr(#1:Fresh))) ; mac(Fr(#2:Fresh),
+    Fr(#1:Fresh))), nil]  & 
+:: #1:Fresh,#3:Fresh ::
+[ nil | 
+   +(Fr(#3:Fresh)), 
+   {YubiHSM -> YubiHSM ;; 1-1 ;; YSM-AEAD-GENERATE(Fr(#3:Fresh)) @ HSM(Fr(
+    #3:Fresh), Fr(#1:Fresh)) |> MasterKey(Fr(#1:Fresh))}, nil] )
+| 
+#0:FrNonce !inI,
+Fr(#2:Fresh) !inI,
+Fr(#3:Fresh) !inI,
+senc(cmode(#0:FrNonce), Fr(#1:Fresh)) !inI,
+((Fr(#2:Fresh) * senc(cmode(#0:FrNonce), Fr(#1:Fresh))) ; mac(Fr(#2:Fresh), Fr(
+    #1:Fresh))) !inI,
+(Fr(#2:Fresh) * senc(cmode(#0:FrNonce), Fr(#1:Fresh))) !inI
+| 
++(Fr(#3:Fresh)), 
+{YubiHSM -> YubiHSM ;; 1-1 ;; YSM-AEAD-GENERATE(Fr(#3:Fresh)) @ HSM(Fr(
+    #3:Fresh), Fr(#1:Fresh)) |> MasterKey(Fr(#1:Fresh))}, 
+generatedByIntruder(#0:FrNonce), 
+-(Fr(#3:Fresh)), 
+-(#0:FrNonce), 
++(senc(cmode(#0:FrNonce), Fr(#1:Fresh))), 
+{YubiHSM -> YubiHSM ;; 1-1 ;; YSM-AEAD-GENERATE(Fr(#3:Fresh)) @ HSM(Fr(
+    #3:Fresh), Fr(#1:Fresh)) |> MasterKey(Fr(#1:Fresh)) ++ SEnc(Fr(#3:Fresh),
+    cmode(#0:FrNonce))}, 
+-(Fr(#3:Fresh)), 
+-(#0:FrNonce), 
++((Fr(#2:Fresh) * senc(cmode(#0:FrNonce), Fr(#1:Fresh))) ; mac(Fr(#2:Fresh),
+    Fr(#1:Fresh))), 
+-((Fr(#2:Fresh) * senc(cmode(#0:FrNonce), Fr(#1:Fresh))) ; mac(Fr(#2:Fresh),
+    Fr(#1:Fresh))), 
++(Fr(#2:Fresh) * senc(cmode(#0:FrNonce), Fr(#1:Fresh))), 
+resuscitated(senc(cmode(#0:FrNonce), Fr(#1:Fresh))), 
+-(senc(cmode(#0:FrNonce), Fr(#1:Fresh))), 
+-(Fr(#2:Fresh) * senc(cmode(#0:FrNonce), Fr(#1:Fresh))), 
++(Fr(#2:Fresh))
+| 
+nil
+Bye.
+Wed Apr 25 12:12:00 CEST 2018

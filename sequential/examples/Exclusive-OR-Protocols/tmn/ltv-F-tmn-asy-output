@@ -1,0 +1,1419 @@
+Tue Jun  2 19:21:58 CEST 2020
+		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	     Maude alpha128 built: Mar 10 2020 14:45:05
+	     Copyright 1997-2020 SRI International
+		   Tue Jun  2 19:21:58 2020
+
+	    Maude-NPA Version: 3.1.4 (June 2nd 2020)
+	    with direct composition, irreducibility constraints and time
+	    (To be run with Maude alpha 121 or above)
+	    Copyright (c) 2020, University of Illinois
+	    All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern
+    X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : genGrammars .
+rewrites: 2162486 in 7704ms cpu (31885ms real) (280696 rewrites/second)
+result GrammarList: (errorNoHeuristicApplied {
+grl #0:Msg inL => pair(#1:Msg, #0:Msg) inL . ,
+  '#0:Msg <- 'null.Null ; 
+  '#1:Msg <- '#2:Name,
+grl null inL => (pair(#2:Name, enc(#3:Nonce)),pair(#5:Name, enc(#3:Nonce))) inL
+    . ,none,
+grl (null * #7:NonceXOR) notInI,
+   null notLeq n(i, #8:Fresh) => (pair(#2:Name, enc(#3:Nonce)),pair(#5:Name,
+    enc(#3:Nonce))) inL . } usingGrammar 
+grl #0:Msg inL => pair(#1:Msg, #0:Msg) inL .  ; 
+grl #0:Msg inL => pair(#0:Msg, #1:Msg) inL .  ; 
+grl #0:NonceXOR notInI,
+   #0:NonceXOR notLeq n(i, #1:Fresh) => (#2:NonceXOR * #0:NonceXOR) inL .  ; 
+grl (#1:NonceXOR * #0:NonceXOR) notInI,
+   #0:NonceXOR notLeq n(i, #2:Fresh) => #0:NonceXOR inL . )
+| (errorNoHeuristicApplied {
+grl empty => (#1:NonceXOR * #2:NonceXOR) inL . ,none,
+grl empty => (#1:NonceXOR,#2:NonceXOR) inL . ,none,
+grl empty => (#1:NonceXOR,#2:NonceXOR) inL . } usingGrammar 
+grl empty => (#1:NonceXOR * #2:NonceXOR) inL . )
+| (
+grl #0:Msg inL => pair(#1:Msg, #0:Msg) inL .  ; 
+grl #0:Msg inL => pair(#0:Msg, #1:Msg) inL .  ; 
+grl #0:Msg notInI,
+   #0:Msg notLeq n(#1:Name, #2:Fresh) => enc(#0:Msg) inL . )
+| (
+grl #0:Msg inL => pair(#1:Msg, #0:Msg) inL .  ; 
+grl #0:Msg inL => pair(#0:Msg, #1:Msg) inL .  ; 
+grl enc(#0:Msg) notLeq enc(#1:Nonce) => enc(#0:Msg) inL . )
+| (errorInconsistentExceptionsInGrammarRule 
+grl n(#0:Name, #1:Fresh) notLeq n(#3:Name, #4:Fresh) => n(#0:Name, #1:Fresh)
+    inL .  inGrammar 
+grl #1:Msg inL => enc(#1:Msg) inL .  ; 
+grl #0:Msg inL => pair(#1:Msg, #0:Msg) inL .  ; 
+grl #0:Msg inL => pair(#0:Msg, #1:Msg) inL .  ; 
+grl #0:Nonce inL => (#1:NonceXOR * #0:Nonce) inL .  ; 
+grl n(#0:Name, #1:Fresh) notLeq n(#3:Name, #4:Fresh) => n(#0:Name, #1:Fresh)
+    inL . )
+| (
+grl #0:Msg inL => pair(#1:Msg, #0:Msg) inL .  ; 
+grl #0:Msg inL => pair(#0:Msg, #1:Msg) inL .  ; 
+grl #0:Msg notInI => pair(#0:Msg, #1:Msg) inL . )
+| (
+grl #0:Msg inL => pair(#1:Msg, #0:Msg) inL .  ; 
+grl #0:Msg inL => pair(#0:Msg, #1:Msg) inL .  ; 
+grl #0:Msg notInI,
+   (#0:Msg notLeq null),
+   (#0:Msg notLeq enc(n(#1:Name, #2:Fresh))),
+   #0:Msg notLeq #3:Nonce * #4:Nonce => pair(#5:Msg, #0:Msg) inL . )
+| errorNoHeuristicApplied {
+grl empty => pair(#1:Msg, #2:Msg) inL . ,none,
+grl empty => (#1:Msg,#2:Msg) inL . ,none,
+grl empty => (#1:Msg,#2:Msg) inL . } usingGrammar 
+grl empty => pair(#1:Msg, #2:Msg) inL . 
+==========================================
+reduce in MAUDE-NPA : run(0) .
+rewrites: 5848 in 336ms cpu (1461ms real) (17404 rewrites/second)
+result IdSystemSet: (< 1[1] > 
+:: r:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, r:Fresh)))) | 
+   -(pair(b, null)), nil] 
+| 
+pair(b, null) !inI,
+n(a, r:Fresh) inI
+| 
+generatedByIntruder(pair(b, null)), 
+-(pair(b, null))
+| 
+nil)
+< 1[2] > 
+:: r:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, r:Fresh)))) | 
+   -(pair(b, NB:Nonce * n(a, r:Fresh))), nil] 
+| 
+pair(b, NB:Nonce * n(a, r:Fresh)) inI,
+n(a, r:Fresh) inI
+| 
+-(pair(b, NB:Nonce * n(a, r:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : summary(1) .
+rewrites: 485388 in 1752ms cpu (6873ms real) (277047 rewrites/second)
+result Summary: States>> 4 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(2) .
+rewrites: 8389972 in 20080ms cpu (71781ms real) (417827 rewrites/second)
+result Summary: States>> 7 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(3) .
+rewrites: 22743355 in 126796ms cpu (272126ms real) (179369 rewrites/second)
+result Summary: States>> 8 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(4) .
+rewrites: 73410298 in 136668ms cpu (228094ms real) (537143 rewrites/second)
+result Summary: States>> 7 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(5) .
+rewrites: 5330236 in 12624ms cpu (25772ms real) (422230 rewrites/second)
+result Summary: States>> 6 Solutions>> 1
+==========================================
+reduce in MAUDE-NPA : run(1) .
+rewrites: 168 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1[1] . 3[2] > (
+:: nil ::
+[ nil | 
+   -(%5:NonceXOR), 
+   -(%5:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, null)), nil] )
+| 
+pair(b, null) !inI,
+n(a, #1:Fresh) !inI,
+(%5:NonceXOR * n(a, #1:Fresh)) inI
+| 
+-(%5:NonceXOR), 
+-(%5:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+generatedByIntruder(pair(b, null)), 
+-(pair(b, null))
+| ghost(%5:NonceXOR))
+(< 1[2] . 5 > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) inI,
+(#0:Nonce * n(a, #1:Fresh)) inI
+| 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| 
+nil)
+(< 1[2] . 7 > (
+:: nil ::
+[ nil, 
+   -(pair(b, enc(n(a, #0:Fresh)))), 
+   +(#1:Name) | 
+   -(pair(#1:Name, enc(#2:Nonce))), 
+   +(pair(b, #2:Nonce * n(a, #0:Fresh))), nil]  & 
+:: #0:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #0:Fresh)))) | 
+   -(pair(b, #2:Nonce * n(a, #0:Fresh))), nil] )
+| 
+pair(b, #2:Nonce * n(a, #0:Fresh)) !inI,
+pair(#1:Name, enc(#2:Nonce)) !inI,
+n(a, #0:Fresh) inI
+| 
+generatedByIntruder(pair(#1:Name, enc(#2:Nonce))), 
+-(pair(#1:Name, enc(#2:Nonce))), 
++(pair(b, #2:Nonce * n(a, #0:Fresh))), 
+-(pair(b, #2:Nonce * n(a, #0:Fresh)))
+| 
+nil)
+< 1[2] . 6[2] > (
+:: nil ::
+[ nil | 
+   -(%5:NonceXOR), 
+   -(%5:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #2:Nonce * n(a, #1:Fresh))), nil] )
+| 
+n(a, #1:Fresh) !inI,
+pair(b, #2:Nonce * n(a, #1:Fresh)) inI,
+(%5:NonceXOR * n(a, #1:Fresh)) inI
+| 
+-(%5:NonceXOR), 
+-(%5:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(pair(b, #2:Nonce * n(a, #1:Fresh)))
+| ghost(%5:NonceXOR)
+==========================================
+reduce in MAUDE-NPA : run(2) .
+rewrites: 262 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1[1] . 3[2] . 2 > (
+:: nil ::
+[ nil | 
+   -(#0:NonceXOR), 
+   -(#0:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#2:Msg, #0:NonceXOR * n(a, #1:Fresh))), 
+   +(#0:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, null)), nil] )
+| 
+pair(b, null) !inI,
+n(a, #1:Fresh) !inI,
+(#0:NonceXOR * n(a, #1:Fresh)) !inI,
+pair(#2:Msg, #0:NonceXOR * n(a, #1:Fresh)) inI
+| 
+-(pair(#2:Msg, #0:NonceXOR * n(a, #1:Fresh))), 
++(#0:NonceXOR * n(a, #1:Fresh)), 
+-(#0:NonceXOR), 
+-(#0:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+generatedByIntruder(pair(b, null)), 
+-(pair(b, null))
+| ghost(#0:NonceXOR))
+(< 1[2] . 5 . 7[3] > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(n(a, #1:Fresh)), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+#0:Nonce !inI,
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) inI
+| 
+generatedByIntruder(#0:Nonce), 
+-(#0:Nonce), 
+-(n(a, #1:Fresh)), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| 
+nil)
+(< 1[2] . 5 . 6[2]{1} > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(%6:NonceXOR), 
+   -(%6:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(%6:NonceXOR * n(a, #1:Fresh)) inI,
+(#0:Nonce * n(a, #1:Fresh)) inI,(
+%6:NonceXOR != #0:Nonce),
+(%6:NonceXOR * n(a, #1:Fresh)) != #0:Nonce * n(a, #1:Fresh)
+| 
+-(%6:NonceXOR), 
+-(%6:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(%6:NonceXOR))
+(< 1[2] . 5 . 6[2]{2} > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:Nonce * n(a, #1:Fresh)) inI
+| 
+-(#0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#0:Nonce))
+(< 1[2] . 7 . 5[2] > (
+:: nil ::
+[ nil | 
+   -(%7:NonceXOR), 
+   -(%7:NonceXOR * n(a, #0:Fresh)), 
+   +(n(a, #0:Fresh)), nil]  & 
+:: nil ::
+[ nil, 
+   -(pair(b, enc(n(a, #0:Fresh)))), 
+   +(#1:Name) | 
+   -(pair(#1:Name, enc(#2:Nonce))), 
+   +(pair(b, #2:Nonce * n(a, #0:Fresh))), nil]  & 
+:: #0:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #0:Fresh)))) | 
+   -(pair(b, #2:Nonce * n(a, #0:Fresh))), nil] )
+| 
+pair(b, #2:Nonce * n(a, #0:Fresh)) !inI,
+pair(#1:Name, enc(#2:Nonce)) !inI,
+n(a, #0:Fresh) !inI,
+(%7:NonceXOR * n(a, #0:Fresh)) inI
+| 
+-(%7:NonceXOR), 
+-(%7:NonceXOR * n(a, #0:Fresh)), 
++(n(a, #0:Fresh)), 
+generatedByIntruder(pair(#1:Name, enc(#2:Nonce))), 
+-(pair(#1:Name, enc(#2:Nonce))), 
++(pair(b, #2:Nonce * n(a, #0:Fresh))), 
+-(pair(b, #2:Nonce * n(a, #0:Fresh)))
+| ghost(%7:NonceXOR))
+(< 1[2] . 6[2] . 3[2]{1} > (
+:: nil ::
+[ nil | 
+   -(#0:NonceXOR), 
+   -(#0:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#2:Msg, #0:NonceXOR * n(a, #1:Fresh))), 
+   +(#0:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #3:Nonce * n(a, #1:Fresh))), nil] )
+| 
+n(a, #1:Fresh) !inI,
+(#0:NonceXOR * n(a, #1:Fresh)) !inI,
+pair(b, #3:Nonce * n(a, #1:Fresh)) inI,
+pair(#2:Msg, #0:NonceXOR * n(a, #1:Fresh)) inI,
+pair(b, #3:Nonce * n(a, #1:Fresh)) != pair(#2:Msg, #0:NonceXOR * n(a,
+    #1:Fresh))
+| 
+-(pair(#2:Msg, #0:NonceXOR * n(a, #1:Fresh))), 
++(#0:NonceXOR * n(a, #1:Fresh)), 
+-(#0:NonceXOR), 
+-(#0:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(pair(b, #3:Nonce * n(a, #1:Fresh)))
+| ghost(#0:NonceXOR))
+< 1[2] . 6[2] . 3[2]{2} > (
+:: nil ::
+[ nil | 
+   -(#3:Nonce), 
+   -(#3:Nonce * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(b, #3:Nonce * n(a, #1:Fresh))), 
+   +(#3:Nonce * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #3:Nonce * n(a, #1:Fresh))), nil] )
+| 
+n(a, #1:Fresh) !inI,
+(#3:Nonce * n(a, #1:Fresh)) !inI,
+pair(b, #3:Nonce * n(a, #1:Fresh)) inI
+| 
+-(pair(b, #3:Nonce * n(a, #1:Fresh))), 
++(#3:Nonce * n(a, #1:Fresh)), 
+-(#3:Nonce), 
+-(#3:Nonce * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(pair(b, #3:Nonce * n(a, #1:Fresh)))
+| ghost(#3:Nonce)
+==========================================
+reduce in MAUDE-NPA : run(3) .
+rewrites: 396 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1[2] . 5 . 7[3] . 4[2] > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(%6:NonceXOR), 
+   -(%6:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(n(a, #1:Fresh)), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+#0:Nonce !inI,
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+(%6:NonceXOR * n(a, #1:Fresh)) inI
+| 
+-(%6:NonceXOR), 
+-(%6:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+generatedByIntruder(#0:Nonce), 
+-(#0:Nonce), 
+-(n(a, #1:Fresh)), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(%6:NonceXOR))
+(< 1[2] . 5 . 6[2]{1} . 2[2] > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR), 
+   -(#2:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#3:Msg, #2:NonceXOR * n(a, #1:Fresh))), 
+   +(#2:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#2:NonceXOR * n(a, #1:Fresh)) !inI,
+pair(#3:Msg, #2:NonceXOR * n(a, #1:Fresh)) inI,
+(#0:Nonce * n(a, #1:Fresh)) inI,(
+#2:NonceXOR != #0:Nonce),
+(#2:NonceXOR * n(a, #1:Fresh)) != #0:Nonce * n(a, #1:Fresh)
+| 
+-(pair(#3:Msg, #2:NonceXOR * n(a, #1:Fresh))), 
++(#2:NonceXOR * n(a, #1:Fresh)), 
+-(#2:NonceXOR), 
+-(#2:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#2:NonceXOR))
+(< 1[2] . 5 . 6[2]{1} . 6[6]{1} > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR), 
+   -(#2:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#8:NonceXOR), 
+   -(#2:NonceXOR * #8:NonceXOR * n(a, #1:Fresh)), 
+   +(#2:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#2:NonceXOR * n(a, #1:Fresh)) !inI,
+(#0:Nonce * n(a, #1:Fresh)) inI,
+(#2:NonceXOR * #8:NonceXOR * n(a, #1:Fresh)) inI
+| 
+-(#8:NonceXOR), 
+-(#2:NonceXOR * #8:NonceXOR * n(a, #1:Fresh)), 
++(#2:NonceXOR * n(a, #1:Fresh)), 
+-(#2:NonceXOR), 
+-(#2:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#8:NonceXOR),
+ghost(#2:NonceXOR))
+(< 1[2] . 5 . 6[2]{1} . 6[8]{2} > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR), 
+   -(#2:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR * #0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(#2:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#2:NonceXOR * n(a, #1:Fresh)) !inI,
+(#0:Nonce * n(a, #1:Fresh)) inI,(
+#2:NonceXOR != #0:Nonce),
+(#2:NonceXOR * n(a, #1:Fresh)) != #0:Nonce * n(a, #1:Fresh)
+| 
+-(#2:NonceXOR * #0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(#2:NonceXOR * n(a, #1:Fresh)), 
+-(#2:NonceXOR), 
+-(#2:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#2:NonceXOR),
+ghost(#2:NonceXOR * #0:Nonce))
+(< 1[2] . 5 . 6[2]{2} . 2 > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#2:Msg, #0:Nonce * n(a, #1:Fresh))), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#2:Msg, #0:Nonce * n(a, #1:Fresh)) inI
+| 
+-(pair(#2:Msg, #0:Nonce * n(a, #1:Fresh))), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(#0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#0:Nonce))
+(< 1[2] . 5 . 6[2]{2} . 4[2] > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#7:NonceXOR), 
+   -(#7:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+(#7:NonceXOR * #0:Nonce * n(a, #1:Fresh)) inI
+| 
+-(#7:NonceXOR), 
+-(#7:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(#0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#7:NonceXOR),
+ghost(#0:Nonce))
+(< 1[2] . 6[2] . 3[2]{1} . 6 > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#3:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #3:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:NonceXOR), 
+   -(#0:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#2:Msg, #0:NonceXOR * n(a, #1:Fresh))), 
+   +(#0:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #3:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #3:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:NonceXOR * n(a, #1:Fresh)) !inI,
+pair(#2:Msg, #0:NonceXOR * n(a, #1:Fresh)) inI,
+(#3:Nonce * n(a, #1:Fresh)) inI,
+pair(b, #3:Nonce * n(a, #1:Fresh)) != pair(#2:Msg, #0:NonceXOR * n(a,
+    #1:Fresh))
+| 
+-(b), 
+-(#3:Nonce * n(a, #1:Fresh)), 
++(pair(b, #3:Nonce * n(a, #1:Fresh))), 
+-(pair(#2:Msg, #0:NonceXOR * n(a, #1:Fresh))), 
++(#0:NonceXOR * n(a, #1:Fresh)), 
+-(#0:NonceXOR), 
+-(#0:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(pair(b, #3:Nonce * n(a, #1:Fresh)))
+| ghost(#0:NonceXOR))
+< 1[2] . 6[2] . 3[2]{2} . 5 > (
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil, 
+   -(pair(b, enc(n(a, #1:Fresh)))), 
+   +(#2:Name) | 
+   -(pair(#2:Name, enc(#0:Nonce))), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+#0:Nonce !inI,
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#2:Name, enc(#0:Nonce)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI
+| 
+generatedByIntruder(#0:Nonce), 
+generatedByIntruder(pair(#2:Name, enc(#0:Nonce))), 
+-(pair(#2:Name, enc(#0:Nonce))), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh))), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(#0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(4) .
+rewrites: 536 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1[2] . 5 . 7[3] . 4[2] . 2[2] > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR), 
+   -(#2:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(n(a, #1:Fresh)), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#3:Msg, #2:NonceXOR * n(a, #1:Fresh))), 
+   +(#2:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+#0:Nonce !inI,
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#2:NonceXOR * n(a, #1:Fresh)) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#3:Msg, #2:NonceXOR * n(a, #1:Fresh)) inI
+| 
+-(pair(#3:Msg, #2:NonceXOR * n(a, #1:Fresh))), 
++(#2:NonceXOR * n(a, #1:Fresh)), 
+-(#2:NonceXOR), 
+-(#2:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+generatedByIntruder(#0:Nonce), 
+-(#0:Nonce), 
+-(n(a, #1:Fresh)), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#2:NonceXOR))
+(< 1[2] . 5 . 6[2]{1} . 6[6]{1} . 3 > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR), 
+   -(#2:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#3:NonceXOR), 
+   -(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)), 
+   +(#2:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#4:Msg, #2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh))), 
+   +(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#2:NonceXOR * n(a, #1:Fresh)) !inI,
+(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)) !inI,
+pair(#4:Msg, #2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)) inI,
+(#0:Nonce * n(a, #1:Fresh)) inI
+| 
+-(pair(#4:Msg, #2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh))), 
++(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)), 
+-(#3:NonceXOR), 
+-(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)), 
++(#2:NonceXOR * n(a, #1:Fresh)), 
+-(#2:NonceXOR), 
+-(#2:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#3:NonceXOR),
+ghost(#2:NonceXOR))
+(< 1[2] . 5 . 6[2]{1} . 6[6]{1} . 7[18]{2} > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR), 
+   -(#2:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR * #9:NonceXOR), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(#2:NonceXOR * #9:NonceXOR * #0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#9:NonceXOR * #0:Nonce), 
+   -(#2:NonceXOR * #9:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
+   +(#2:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#2:NonceXOR * n(a, #1:Fresh)) !inI,
+(#2:NonceXOR * #9:NonceXOR * #0:Nonce * n(a, #1:Fresh)) !inI,
+(#0:Nonce * n(a, #1:Fresh)) inI
+| 
+-(#2:NonceXOR * #9:NonceXOR), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(#2:NonceXOR * #9:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
+-(#9:NonceXOR * #0:Nonce), 
+-(#2:NonceXOR * #9:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
++(#2:NonceXOR * n(a, #1:Fresh)), 
+-(#2:NonceXOR), 
+-(#2:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#2:NonceXOR),
+ghost(#2:NonceXOR * #9:NonceXOR),
+ghost(#9:NonceXOR * #0:Nonce))
+(< 1[2] . 5 . 6[2]{1} . 6[8]{2} . 2 > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR), 
+   -(#2:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#3:Msg, #0:Nonce * n(a, #1:Fresh))), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR * #0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(#2:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#2:NonceXOR * n(a, #1:Fresh)) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#3:Msg, #0:Nonce * n(a, #1:Fresh)) inI,(
+#2:NonceXOR != #0:Nonce),
+(#2:NonceXOR * n(a, #1:Fresh)) != #0:Nonce * n(a, #1:Fresh)
+| 
+-(pair(#3:Msg, #0:Nonce * n(a, #1:Fresh))), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(#2:NonceXOR * #0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(#2:NonceXOR * n(a, #1:Fresh)), 
+-(#2:NonceXOR), 
+-(#2:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#2:NonceXOR),
+ghost(#2:NonceXOR * #0:Nonce))
+(< 1[2] . 5 . 6[2]{2} . 2 . 5 > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#2:Name, #0:Nonce * n(a, #1:Fresh))), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil, 
+   -(pair(#2:Name, enc(n(a, #1:Fresh)))), 
+   +(#3:Name) | 
+   -(pair(#3:Name, enc(#0:Nonce))), 
+   +(pair(#2:Name, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+#0:Nonce !inI,
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#2:Name, #0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#3:Name, enc(#0:Nonce)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI
+| 
+generatedByIntruder(#0:Nonce), 
+generatedByIntruder(pair(#3:Name, enc(#0:Nonce))), 
+-(pair(#3:Name, enc(#0:Nonce))), 
++(pair(#2:Name, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(#2:Name, #0:Nonce * n(a, #1:Fresh))), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(#0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| 
+nil)
+(< 1[2] . 5 . 6[2]{2} . 4[2] . 2[2] > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR), 
+   -(#2:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#3:Msg, #2:NonceXOR * #0:Nonce * n(a, #1:Fresh))), 
+   +(#2:NonceXOR * #0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+(#2:NonceXOR * #0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#3:Msg, #2:NonceXOR * #0:Nonce * n(a, #1:Fresh)) inI
+| 
+-(pair(#3:Msg, #2:NonceXOR * #0:Nonce * n(a, #1:Fresh))), 
++(#2:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
+-(#2:NonceXOR), 
+-(#2:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(#0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#2:NonceXOR),
+ghost(#0:Nonce))
+< 1[2] . 6[2] . 3[2]{2} . 5 . 1 > (
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(b, enc(n(a, #1:Fresh)))), 
+   +(#2:Name), 
+   -(pair(#2:Name, enc(#0:Nonce))), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+#0:Nonce !inI,
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#2:Name, enc(#0:Nonce)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+pair(b, enc(n(a, #1:Fresh))) inI
+| 
+-(pair(b, enc(n(a, #1:Fresh)))), 
++(#2:Name), 
+generatedByIntruder(#0:Nonce), 
+generatedByIntruder(pair(#2:Name, enc(#0:Nonce))), 
+-(pair(#2:Name, enc(#0:Nonce))), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh))), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(#0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : run(5) .
+rewrites: 661 in 0ms cpu (0ms real) (~ rewrites/second)
+result IdSystemSet: (< 1[2] . 5 . 6[2]{1} . 6[6]{1} . 3 . 7[2] > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR), 
+   -(#2:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#3:NonceXOR), 
+   -(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)), 
+   +(#2:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#10:NonceXOR), 
+   -(#10:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#4:Msg, #2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh))), 
+   +(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#2:NonceXOR * n(a, #1:Fresh)) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)) !inI,
+pair(#4:Msg, #2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)) inI,
+(#10:NonceXOR * #0:Nonce * n(a, #1:Fresh)) inI
+| 
+-(#10:NonceXOR), 
+-(#10:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(pair(#4:Msg, #2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh))), 
++(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)), 
+-(#3:NonceXOR), 
+-(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)), 
++(#2:NonceXOR * n(a, #1:Fresh)), 
+-(#2:NonceXOR), 
+-(#2:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#10:NonceXOR),
+ghost(#3:NonceXOR),
+ghost(#2:NonceXOR))
+(< 1[2] . 5 . 6[2]{1} . 6[6]{1} . 3 . 3{1} > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR), 
+   -(#2:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#3:NonceXOR), 
+   -(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)), 
+   +(#2:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#4:Msg, #2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh))), 
+   +(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#5:Msg, #0:Nonce * n(a, #1:Fresh))), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#2:NonceXOR * n(a, #1:Fresh)) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)) !inI,
+pair(#4:Msg, #2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)) inI,
+pair(#5:Msg, #0:Nonce * n(a, #1:Fresh)) inI,
+pair(#4:Msg, #2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)) != pair(#5:Msg,
+    #0:Nonce * n(a, #1:Fresh))
+| 
+-(pair(#5:Msg, #0:Nonce * n(a, #1:Fresh))), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(pair(#4:Msg, #2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh))), 
++(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)), 
+-(#3:NonceXOR), 
+-(#2:NonceXOR * #3:NonceXOR * n(a, #1:Fresh)), 
++(#2:NonceXOR * n(a, #1:Fresh)), 
+-(#2:NonceXOR), 
+-(#2:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#3:NonceXOR),
+ghost(#2:NonceXOR))
+(< 1[2] . 5 . 6[2]{1} . 6[6]{1} . 7[18]{2} . 2 > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR), 
+   -(#2:NonceXOR * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#4:Msg, #0:Nonce * n(a, #1:Fresh))), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#2:NonceXOR * #3:NonceXOR), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(#2:NonceXOR * #3:NonceXOR * #0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(#3:NonceXOR * #0:Nonce), 
+   -(#2:NonceXOR * #3:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
+   +(#2:NonceXOR * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+n(a, #1:Fresh) !inI,
+(#2:NonceXOR * n(a, #1:Fresh)) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+(#2:NonceXOR * #3:NonceXOR * #0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#4:Msg, #0:Nonce * n(a, #1:Fresh)) inI
+| 
+-(pair(#4:Msg, #0:Nonce * n(a, #1:Fresh))), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(#2:NonceXOR * #3:NonceXOR), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(#2:NonceXOR * #3:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
+-(#3:NonceXOR * #0:Nonce), 
+-(#2:NonceXOR * #3:NonceXOR * #0:Nonce * n(a, #1:Fresh)), 
++(#2:NonceXOR * n(a, #1:Fresh)), 
+-(#2:NonceXOR), 
+-(#2:NonceXOR * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| ghost(#2:NonceXOR),
+ghost(#2:NonceXOR * #3:NonceXOR),
+ghost(#3:NonceXOR * #0:Nonce))
+(< 1[2] . 5 . 6[2]{2} . 2 . 5 . 1 > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#2:Name, enc(n(a, #1:Fresh)))), 
+   +(#3:Name), 
+   -(pair(#3:Name, enc(#0:Nonce))), 
+   +(pair(#2:Name, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(#2:Name, #0:Nonce * n(a, #1:Fresh))), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+#0:Nonce !inI,
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#2:Name, #0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#3:Name, enc(#0:Nonce)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#2:Name, enc(n(a, #1:Fresh))) inI
+| 
+-(pair(#2:Name, enc(n(a, #1:Fresh)))), 
++(#3:Name), 
+generatedByIntruder(#0:Nonce), 
+generatedByIntruder(pair(#3:Name, enc(#0:Nonce))), 
+-(pair(#3:Name, enc(#0:Nonce))), 
++(pair(#2:Name, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(#2:Name, #0:Nonce * n(a, #1:Fresh))), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(#0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(b), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| 
+nil)
+(< 1[2] . 6[2] . 3[2]{2} . 5 . 1 . 1 > (
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(b, enc(n(a, #1:Fresh)))), 
+   +(#2:Name), 
+   -(pair(#2:Name, enc(#0:Nonce))), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   +(pair(b, enc(n(a, #1:Fresh)))), 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+#0:Nonce !inI,
+pair(b, enc(n(a, #1:Fresh))) !inI,
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#2:Name, enc(#0:Nonce)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI
+| 
++(pair(b, enc(n(a, #1:Fresh)))), 
+-(pair(b, enc(n(a, #1:Fresh)))), 
++(#2:Name), 
+generatedByIntruder(#0:Nonce), 
+generatedByIntruder(pair(#2:Name, enc(#0:Nonce))), 
+-(pair(#2:Name, enc(#0:Nonce))), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh))), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(#0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| 
+nil)
+< 1[2] . 6[2] . 3[2]{2} . 5 . 1 . 5 > (
+:: nil ::
+[ nil | 
+   -(b), 
+   -(enc(n(a, #1:Fresh))), 
+   +(pair(b, enc(n(a, #1:Fresh)))), nil]  & 
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(b, enc(n(a, #1:Fresh)))), 
+   +(#2:Name), 
+   -(pair(#2:Name, enc(#0:Nonce))), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil, 
+   +(pair(b, enc(n(a, #1:Fresh)))) | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+#0:Nonce !inI,
+pair(b, enc(n(a, #1:Fresh))) !inI,
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#2:Name, enc(#0:Nonce)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI,
+enc(n(a, #1:Fresh)) inI
+| 
+-(b), 
+-(enc(n(a, #1:Fresh))), 
++(pair(b, enc(n(a, #1:Fresh)))), 
+-(pair(b, enc(n(a, #1:Fresh)))), 
++(#2:Name), 
+generatedByIntruder(#0:Nonce), 
+generatedByIntruder(pair(#2:Name, enc(#0:Nonce))), 
+-(pair(#2:Name, enc(#0:Nonce))), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh))), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(#0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| 
+nil
+==========================================
+reduce in MAUDE-NPA : initials(5) .
+rewrites: 734 in 4ms cpu (0ms real) (183500 rewrites/second)
+result ShortIdSystem: < 1[2] . 6[2] . 3[2]{2} . 5 . 1 . 1 > (
+:: nil ::
+[ nil | 
+   -(#0:Nonce), 
+   -(#0:Nonce * n(a, #1:Fresh)), 
+   +(n(a, #1:Fresh)), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(b, enc(n(a, #1:Fresh)))), 
+   +(#2:Name), 
+   -(pair(#2:Name, enc(#0:Nonce))), 
+   +(pair(b, #0:Nonce * n(a, #1:Fresh))), nil]  & 
+:: nil ::
+[ nil | 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+   +(#0:Nonce * n(a, #1:Fresh)), nil]  & 
+:: #1:Fresh ::
+[ nil | 
+   +(pair(b, enc(n(a, #1:Fresh)))), 
+   -(pair(b, #0:Nonce * n(a, #1:Fresh))), nil] )
+| 
+#0:Nonce !inI,
+pair(b, enc(n(a, #1:Fresh))) !inI,
+pair(b, #0:Nonce * n(a, #1:Fresh)) !inI,
+pair(#2:Name, enc(#0:Nonce)) !inI,
+n(a, #1:Fresh) !inI,
+(#0:Nonce * n(a, #1:Fresh)) !inI
+| 
++(pair(b, enc(n(a, #1:Fresh)))), 
+-(pair(b, enc(n(a, #1:Fresh)))), 
++(#2:Name), 
+generatedByIntruder(#0:Nonce), 
+generatedByIntruder(pair(#2:Name, enc(#0:Nonce))), 
+-(pair(#2:Name, enc(#0:Nonce))), 
++(pair(b, #0:Nonce * n(a, #1:Fresh))), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh))), 
++(#0:Nonce * n(a, #1:Fresh)), 
+-(#0:Nonce), 
+-(#0:Nonce * n(a, #1:Fresh)), 
++(n(a, #1:Fresh)), 
+-(pair(b, #0:Nonce * n(a, #1:Fresh)))
+| 
+nil
+Bye.
+Tue Jun  2 19:32:41 CEST 2020
