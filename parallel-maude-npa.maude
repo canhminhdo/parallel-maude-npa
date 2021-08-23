@@ -40,13 +40,16 @@ mod MAUDE-NPA-EXT is
     op pF : -> Filters .
 
     --- parallel back narrowing wrapper function
-    op nextBackNarrowParallel* : Nat GrammarList Bound IdSystemSet IdSystemSet -> IdSystemSet [memo] .
+    op nextBackNarrowParallel* : Nat Bound IdSystemSet IdSystemSet -> IdSystemSet .
+    ceq nextBackNarrowParallel*(Pid, Nodes, HistoryIST, IST) = nextBackNarrowParallel(Pid, pM, GS, pF, Nodes, HistoryIST, IST)
+    if GS := downTerm(extract('pGS.GrammarList, upModule('MAUDE-NPA-EXT-ADDEDEQS, false)), (none).GrammarList) .
+
+    op nextBackNarrowParallel* : Nat GrammarList Bound IdSystemSet IdSystemSet -> IdSystemSet .
     eq nextBackNarrowParallel*(Pid, GS, Nodes, HistoryIST, IST) = nextBackNarrowParallel(Pid, pM, GS, pF, Nodes, HistoryIST, IST) .
 
-    op nextBackNarrowParallel : Nat Module GrammarList Filters Bound IdSystemSet IdSystemSet -> IdSystemSet [memo] .
-    ceq nextBackNarrowParallel(Pid,M,GS,F,Nodes,HistoryIST,IST)
-    = IST':[IdSystemSet-or-Error]
-    if IST':[IdSystemSet-or-Error] := filterSMsgListX(F,
+    op nextBackNarrowParallel : Nat Module GrammarList Filters Bound IdSystemSet IdSystemSet -> IdSystemSet .
+    eq nextBackNarrowParallel(Pid,M,GS,F,Nodes,HistoryIST,IST)
+    = filterSMsgListX(F,
         filterIdX(F,
             simplify-theSystemSet(F,HistoryIST,
                 filter-eachSystem#Top(F,M,GS, --- filter systems with grammars, never patterns, ...
@@ -65,30 +68,10 @@ mod MAUDE-NPA-EXT is
             )
         )
     ) [print "Handling by Pid = " Pid] .
-
-    --- eq nextBackNarrowParallel(Pid,M,GS,F,Nodes,HistoryIST,IST)
-    --- = filterSMsgListX(F,
-    ---     filterIdX(F,
-    ---         simplify-theSystemSet(F,HistoryIST,
-    ---             filter-eachSystem#Top(F,M,GS, --- filter systems with grammars, never patterns, ...
-    ---                 simplify-eachSystem#Top(F,M, --- always simplify before filtering
-    ---                     simplifyGhost#Top(F, --- simplify Ghost
-    ---                         createGhost#Top(M,F, --- create Ghost again
-    ---                             reactivateGhost#Top(F, --- if messages are not ghost messages anymore, reactive the messages
-    ---                                 tryUnificationofKnowledge(M, --- create and check ghosts before and after
-    ---                                     nextBackNarrow*(M,GS,F,Nodes,empty,IST)
-    ---                                 )
-    ---                             )
-    ---                         )
-    ---                     )
-    ---                 )
-    ---             )
-    ---         )
-    ---     )
-    --- ) [print "Handling by Pid = " Pid] .
 endm
 
 load metaInterpreter.maude
+load loading.maude
 
 view Worker from TRIV to CONFIGURATION is
     sort Elt to Oid .
@@ -98,6 +81,7 @@ mod PARALLEL-CONFIG is
     pr MAUDE-NPA-EXT .
     pr META-INTERPRETER .
     pr SET{Worker} .
+    pr SEQUENCE .
 
     sort Status .
     ops idle initializing initialized waiting suspending working stopping terminated : -> Status .
@@ -114,8 +98,10 @@ mod PARALLEL-CONFIG is
     op next :_ : IdSystemSet -> Attribute .
     op init :_ : IdSystemSet -> Attribute .
     op depth :_ : Nat -> Attribute . --- depth needs to be explored
-    op nWorkers :_ : Nat -> Attribute [ctor format(! o o o)] .
-    op workers :_ : Set{Worker} -> Attribute [ctor format(! o o o)] .
+    op nWorkers :_ : Nat -> Attribute [format(! o o o)] .
+    op workers :_ : Set{Worker} -> Attribute [format(! o o o)] .
+    op (loading[_] :_) : Oid Bool -> Attribute .
+    op (pending[_] :_) : Oid Seq -> Attribute .
     op stopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
     op ShortIdSystem:_ : IdSystemSet-or-Error -> Msg [ctor msg] .
     op initialize : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
@@ -171,6 +157,8 @@ mod PARALLEL-MAUDE-NPA is
     vars M M' M'' : Module .
     var GS : GrammarList .
     var F : Filters .
+    vars Q V : Qid .
+    var Rest : Seq .
 
     crl [CreateWorkers] : < O : Manager |
         status : idle,
@@ -203,7 +191,7 @@ mod PARALLEL-MAUDE-NPA is
         produceInterpreter(O, sd(N, 1)) if N > 0 .
     eq produceInterpreter(O, N) = none [owise] .
 
-    crl [CreatedWorker] : < O : Manager |
+    rl [CreatedWorker] : < O : Manager |
         status : initializing,
         nWorkers : N,
         workers : empty,
@@ -223,27 +211,111 @@ mod PARALLEL-MAUDE-NPA is
         filter : F,
         nodes : Nodes,
         jobs : IST,
+        (loading[MI] : false),
+        (pending[MI] : prelude maudenpa),
+        A >
+        [print "[CreatedWorker]"] .
+
+    rl [LoadingModule] : < O : Manager |
+        status : initializing,
+        (loading[MI] : false),
+        (pending[MI] : m(Q) Rest),
+        A >
+    => < O : Manager |
+        status : initializing,
+        (pending[MI] : Rest),
+        (loading[MI] : true),
+        A >
+        insertModule(MI, O, upModule(Q, false))
+        [print "[LoadingModule] " MI " - " Q] .
+
+    rl [LoadingModule] : < O : Manager |
+        status : initializing,
+        (pending[MI] : m(Q) Rest),
+        A >
+        insertedModule(O, MI)
+    => < O : Manager |
+        status : initializing,
+        (pending[MI] : Rest),
+        A >
+        insertModule(MI, O, upModule(Q, false))
+        [print "[LoadingModule] " MI " - " Q] .
+
+    rl [LoadingModule] : < O : Manager |
+        status : initializing,
+        (pending[MI] : m(Q) Rest),
+        A >
+        insertedView(O, MI)
+    => < O : Manager |
+        status : initializing,
+        (pending[MI] : Rest),
+        A >
+        insertModule(MI, O, upModule(Q, false))
+        [print "[LoadingModule] " MI " - " Q] .
+
+    rl [LoadingView] : < O : Manager |
+        status : initializing,
+        (pending[MI] : v(Q) Rest),
+        A >
+        insertedModule(O, MI)
+    => < O : Manager |
+        status : initializing,
+        (pending[MI] : Rest),
+        A >
+        insertView(MI, O, upView(Q))
+        [print "[LoadingView] " MI " - " Q] .
+
+    rl [LoadingView] : < O : Manager |
+        status : initializing,
+        (pending[MI] : v(Q) Rest),
+        A >
+        insertedView(O, MI)
+    => < O : Manager |
+        status : initializing,
+        (pending[MI] : Rest),
+        A >
+        insertView(MI, O, upView(Q))
+        [print "[LoadingView] " MI " - " Q] .
+
+    crl [LoadingModule] : < O : Manager |
+        status : initializing,
+        m : M,
+        gs : GS,
+        filter : F,
+        (loading[MI] : true),
+        (pending[MI] : nil),
+        A >
+        insertedModule(O, MI)
+    => < O : Manager |
+        status : initializing,
+        m : M,
+        gs : GS,
+        filter : F,
+        (loading[MI] : false),
+        (pending[MI] : nil),
         A >
         insertModule(MI, O, M'')
         if M' := upModule('MAUDE-NPA-EXT, true)
         /\ M'' := addEqs(
             (eq 'pM.Module = upTerm(M) [none] . )
-            --- (eq 'pGS.GrammarList = upTerm(GS) [none] . )
+            (eq 'pGS.GrammarList = upTerm(GS) [nonexec] . )
             (eq 'pF.Filters = upTerm(F) [none] . )
             , M'
         )
-        [print "[CreatedWorker]"] .
+        [print "[LoadingModule] MAUDE-NPA-EXT-ADDEDEQS"] .
 
-    rl [InsertedModule] : < O : Manager |
+    rl [LoadingDone] : < O : Manager |
         status : initializing,
-        workers : W,
+        workers : (W),
+        (loading[MI] : false),
+        (pending[MI] : nil),
         A >
         insertedModule(O, MI)
     => < O : Manager |
         status : initializing,
-        workers : (MI, W),
+        workers : (W, MI),
         A >
-        [print "[InsertedModule]"] .
+        [print "[LoadingDone] " MI] .
 
     crl [CreatedWorkersDone] : < O : Manager |
         status : initializing,
@@ -288,20 +360,17 @@ mod PARALLEL-MAUDE-NPA is
         'MAUDE-NPA-EXT-ADDEDEQS,
         T)
     if Pid := extractPid(MI)
-    /\ T := 'nextBackNarrowParallel[
+    /\ T := 'nextBackNarrowParallel*[
             upTerm(Pid),
-            upTerm(M),
-            upTerm(GS),
-            upTerm(F),
+            --- upTerm(M),
+            --- upTerm(GS),
+            --- upTerm(F),
             upTerm(Nodes),
             upTerm(HistoryIST),
             upTerm(IS)
         ]
-    /\ RP?:ResultPair := metaReduce(upModule('MAUDE-NPA-EXT, false), T)
-    [print "RP? = " RP?:ResultPair]
+    [print "[HandleJob]"]
     .
-        --- upTerm(nextBackNarrowParallel(M, GS, F, Nodes, IS))) .
-        --- upTerm(nextBackNarrow(M, GS, F, Nodes, HistoryIST, IS))) .
 
     op extractPid : Oid -> Nat .
     eq extractPid(interpreter(N)) = N .
@@ -313,15 +382,14 @@ mod PARALLEL-MAUDE-NPA is
         A >
         reducedTerm(O, MI, N, T, RT)
     => < O : Manager |
-        status : stopping,
+        status : working,
         workers : (W, MI),
         next : (IST IST'),
         A >
-        stopWorking(O, O)
     if RT == 'IdSystemSet or-else RT == 'IdSystem
     /\ IST' := downTerm(T, errIdSystemSet)
     /\ Pid := extractPid(MI)
-    [print "[WorkerResult] Pid = " Pid] .
+    [print "[WorkerResult] Pid = " Pid " T = " T] .
 
     crl [Switch] : < O : Manager |
         status : working,

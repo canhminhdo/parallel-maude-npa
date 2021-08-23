@@ -1,8 +1,8 @@
 #!/bin/zsh
 time maude << EOF
-in parallel-maude-npa.maude
-in examples/Needham_Schroeder.maude
+load debug.maude
+load parallel-maude-npa.maude
+load examples/Needham_Schroeder.maude
 select PARALLEL-MAUDE-NPA .
-set print attribute on .
-erew <> p-run(0, unbounded, 2) .
+erew <> p-run(0, unbounded, 4) .
 EOF

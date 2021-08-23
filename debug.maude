@@ -1,0 +1,20 @@
+set trace off .
+--- set trace whole on .
+--- set trace eq off .
+--- set trace condition off .
+--- set trace substitution off .
+--- set trace rewrite off . --- don't print redex and its replacement
+--- set trace select on .
+--- trace exclude FULL-MAUDE SOLVER-APP CACHE .
+--- trace include SERVER CLIENT .
+--- trace select MqCreatedSocket .
+--- trace select CreatedSocket CreatedSocket AcceptedClient AcceptedClient Receive Received Send Sent CloseSocket ClosedSocket .
+set print attribute on .
+set show timing on .
+set print conceal on .
+print conceal fmod_is_sorts_.____endfm
+              mod_is_sorts_._____endm
+              db
+              if_then_else_fi
+              procDecl
+              .
