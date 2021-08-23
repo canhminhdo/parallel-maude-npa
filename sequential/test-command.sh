@@ -1,9 +1,9 @@
 #!/bin/zsh
 time maude << EOF
 in maude-npa.maude
-load examples/API-Protocols/YubiKey/YubiKey.maude
+load examples/Needham_Schroeder.maude
 select MAUDE-NPA .
-red run(21, 8) .
+red run(0, unbounded) .
 EOF
 
 # red run(0, 7) .
