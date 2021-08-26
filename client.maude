@@ -121,9 +121,9 @@ mod PARALLEL-MAUDE-NPA is
     => < O : Client | none > [print "[ClosedSocket]"] .
 endm
 
-load examples/API-Protocols/YubiKey/YubiKey.maude
+load examples/Symmetric-Key-Protocols/Diffie-Hellman/Diffie-Hellman.maude
 select PARALLEL-MAUDE-NPA .
 load debug.maude
-erew <> p-run(21, unbounded, aClient)
+erew <> p-run(1, 2, aClient)
         < aClient : Client | status : idle >
-        CreateClientTcpSocket(socketManager, aClient, "localhost", 9003) .
+        CreateClientTcpSocket(socketManager, aClient, "localhost", 9000) .

@@ -1,4 +1,5 @@
 load maude-npa.maude
+load interpreter/handler.maude
 load socket/buffered-socket.maude
 load socket/queue.maude
 load common.maude .
@@ -171,7 +172,7 @@ mod PARALLEL-MAUDE-NPA is
         (if N > 0 then StopWorking(O, O) else none fi)
     if qsize(W) == | SW |
     /\ IST =/= empty
-    /\ < INIT', IST' > := searchState-CheckInit(M, Sess, HistoryIST, < empty, empty >, IST) --- filter initial and other states
+    /\ < INIT', IST' > := searchState-CheckInit(M, Sess, HistoryIST, IST) --- filter initial and other states
     /\ IST'' := filterStates(F, HistoryIST, IST') --- filter sucessor states with history states
     /\ C' := #jobs(IST'')
     /\ D' := D + Step
@@ -275,8 +276,8 @@ mod PARALLEL-MAUDE-NPA is
         [print "[ShowResult]"] .
 endm
 
-load examples/API-Protocols/YubiKey/YubiKey.maude
+load examples/Symmetric-Key-Protocols/Diffie-Hellman/Diffie-Hellman.maude
 select PARALLEL-MAUDE-NPA .
 load debug.maude
-erew <> < aServer : Server | status : idle, attack : 21, bStep : unbounded, step : 1, #workers : 8 >
-        CreateServerTcpSocket(socketManager, aServer, 9003, 10) .
+erew <> < aServer : Server | status : idle, attack : 1, bStep : 2, step : 1, #workers : 1 >
+        CreateServerTcpSocket(socketManager, aServer, 9000, 10) .

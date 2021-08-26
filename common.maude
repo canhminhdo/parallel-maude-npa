@@ -38,27 +38,29 @@ mod MAUDE-NPA-EXT is
     eq #jobs(IS IST) = #jobs(IST) + 1 .
     eq #jobs(empty) = 0 .
 
+    *** filter by simplification *******************************
     op filterStates : Filters IdSystemSet IdSystemSet -> IdSystemSet .
-    eq filterStates(F, HistoryIST, IST)
-    = filterSMsgListX(F,filterIdX(F, simplify-theSystemSet(F,HistoryIST, IST)))
-    [print "simplify-theSystemSet"] .
-    --- eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplify-theSystemSet(F,HistoryIST, IST))) .
-    --- eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F,filterIdX(F, simplifyByImplicationL(IST))) .
+    eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F, filterIdX(F, simplify-theSystemSet(F, HistoryIST, IST))) [print "Simlification"] .
 
-    op searchState-CheckInit : Module Bound IdSystemSet IdSystemSetPair IdSystemSet -> IdSystemSetPair .
-    eq searchState-CheckInit(M, Sess, HistoryIST, < INIT, IST' >, empty) = < INIT, IST' > .
-    eq searchState-CheckInit(M, Sess, HistoryIST, < INIT, IST' >, (IS IST))
+    *** filter init and other states by history *******************************
+    op searchState-CheckInit : Module Bound IdSystemSet IdSystemSet -> IdSystemSetPair .
+    eq searchState-CheckInit(M, Sess, HistoryIST, IST) = searchState-CheckInit*(M, Sess, HistoryIST, < empty, empty >, IST) [print "Filter States"] .
+
+    op searchState-CheckInit* : Module Bound IdSystemSet IdSystemSetPair IdSystemSet -> IdSystemSetPair .
+    eq searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, empty) = < INIT, IST' > .
+    eq searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, (IS IST))
     = if Sess =/= unbounded and-then countSessions(IS) > Sess
-    then searchState-CheckInit(M, Sess, HistoryIST, < INIT, IST' >, IST)
-    else if isInitialM(M,IS)
+    then searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, IST)
+    else if isInitialM(M, IS)
         then
-            searchState-CheckInit(M, Sess, HistoryIST, < INIT IS, IST' >, IST)
-        else searchState-CheckInit(M, Sess, HistoryIST,
-            < INIT, if isNFSystem(M,HistoryIST,IS) then IST' else (IS IST') fi >,
+            searchState-CheckInit*(M, Sess, HistoryIST, < INIT IS, IST' >, IST)
+        else searchState-CheckInit*(M, Sess, HistoryIST,
+            < INIT, if isNFSystem(M, HistoryIST, IS) then IST' else (IS IST') fi >,
             IST)
         fi
     fi .
 
+    *** filter states by histories *******************************
     op filterStateWithHistory : Module IdSystemSet IdSystemSet -> IdSystemSet .
     eq filterStateWithHistory(M, HistoryIST, empty) = empty .
     eq filterStateWithHistory(M, HistoryIST, IS IST)
@@ -67,42 +69,7 @@ mod MAUDE-NPA-EXT is
     else IS filterStateWithHistory(M, HistoryIST, IST)
     fi .
 
-    op searchStateMParallel : Module GrammarList Filters Bound Bound Bound Bool
-                    IdSystemSet IdSystemSet -> IdSystemSetTuple .
-    op searchStateMParallel* : Module GrammarList Filters Bound Bound Bound Bool
-                    IdSystemSet IdSystemSet IdSystemSet IdSystemSet -> IdSystemSetTuple .
-    op searchStateMParallel** : Module GrammarList Filters Bound Bound Bound Bool
-                    IdSystemSet IdSystemSet IdSystemSet IdSystemSet -> IdSystemSetTuple .
-
-    eq searchStateMParallel(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST,IST)
-    = searchStateMParallel*(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST,empty,empty,IST) .
-
-    eq searchStateMParallel*(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST,INIT,HistoryIST',IST)
-    = if BStep == 0 or-else IST == empty
-    then
-        < INIT, IST, HistoryIST' >
-    else
-        searchStateMParallel**(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST,INIT,HistoryIST',IST)
-    fi .
-
-    ceq searchStateMParallel**(M,GS,F,BStep,Nodes,Sess,Rem?,HistoryIST,INIT,HistoryIST',IST)
-    =  searchStateMParallel*(M,GS,F,dec(BStep),Nodes,Sess,Rem?,HistoryIST IST',INIT INIT',HistoryIST' IST',
-            filterSMsgListX(F,filterIdX(F,
-                    nextBackNarrow(M,GS,F,
-                        if BStep == 1 then Nodes else unbounded fi,
-                        HistoryIST IST',IST')
-                ))
-        )
-    if < INIT', IST' > := searchState-CheckInit(M,Sess,HistoryIST,< empty, empty >,IST)
-    --- /\ C := #jobs(IST')
-    --- /\ N :=  #jobs(HistoryIST')
-    --- /\ N' :=  #jobs(HistoryIST HistoryIST')
-    --- [print "\nBStep = " BStep "\n#Jobs = " C "\n#His = " N "\nHisTotal = " N']
-    .
-
-    op nextBackNarrowParallel* : Module GrammarList Filters Bound IdSystemSet -> IdSystemSet .
-    eq nextBackNarrowParallel*(M, GS, F, Nodes, IST) = nextBackNarrowParallel(M, GS, F, Nodes, IST) .
-
+    *** backward one step *******************************
     op nextBackNarrowParallel : Module GrammarList Filters Bound IdSystemSet -> IdSystemSet .
     eq nextBackNarrowParallel(M,GS,F:Filters,Nodes,IST)
     = filter-eachSystem#Top(F:Filters,M,GS, --- filter systems with grammars, never patterns, ...
@@ -119,10 +86,6 @@ mod MAUDE-NPA-EXT is
         )
     ) .
 endm
-
-view Worker from TRIV to CONFIGURATION is
-    sort Elt to Oid .
-endv
 
 mod PARALLEL-CONFIG is
     pr MAUDE-NPA-EXT .
