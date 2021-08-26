@@ -1,17 +1,25 @@
 load metaInterpreter.maude
 
+view IdSystemSet from TRIV to MAUDE-NPA is
+    sort Elt to IdSystemSet .
+endv
+
 mod HANDLER is
     pr PARALLEL-CONFIG .
     pr META-INTERPRETER .
+    pr MAP{Worker,IdSystemSet} .
+
+    sort W2JAndW .
+    op <_:_> : Map{Worker,IdSystemSet} Set{Worker} -> W2JAndW .
 
     vars O O' MI : Oid .
     var  A : AttributeSet .
-    vars N D D' C : Nat .
+    vars N D D' C C' C'' C''' : Nat .
     vars Nodes BStep Sess : Bound .
     vars Rem? : Bool .
     vars IST IST' IST'' INIT INIT' HistoryIST : IdSystemSet .
     var IS : IdSystem .
-    vars W : Queue{Worker} .
+    vars W W' : Queue{Worker} .
     vars T : Term .
     var RT : Type .
     vars M M' M'' : Module .
@@ -19,8 +27,10 @@ mod HANDLER is
     var F : Filters .
     vars Q : Qid .
     var Rest : Seq .
+    vars W2J W2J' : Map{Worker,IdSystemSet} .
+    vars SW : Set{Worker} .
 
-    rl [CreatePWorkers] : < O : Server |
+    rl [CreateWorkers] : < O : Server |
         status : initializeInterpeter,
         #workers : N,
         A >
@@ -28,17 +38,17 @@ mod HANDLER is
     => < O : Server |
         status : initializeInterpeter,
         #workers : N,
-        pworkers : emptyq,
+        interpreters : emptyq,
         A >
         produceInterpreters(O, N)
-    [print "[CreatePWorkers]"] .
+    [print "[CreateWorkers]"] .
 
     op produceInterpreters : Oid Nat -> Configuration .
     ceq produceInterpreters(O, N) = createInterpreter(interpreterManager, O, newProcess)
         produceInterpreters(O, sd(N, 1)) if N > 0 .
     eq produceInterpreters(O, N) = none [owise] .
 
-    rl [CreatedPWorker] : < O : Server |
+    rl [CreatedWorker] : < O : Server |
         status : initializeInterpeter,
         A >
         createdInterpreter(O, O', MI)
@@ -47,7 +57,7 @@ mod HANDLER is
         (loading[MI] : false),
         (pending[MI] : prelude maudenpa),
         A >
-        [print "[CreatedPWorker]"] .
+        [print "[CreatedWorker]"] .
 
     *** loading modules from prelude and maude-npa files *******************************
     rl [LoadingModule] : < O : Server |
@@ -134,26 +144,175 @@ mod HANDLER is
 
     rl [Loaded] : < O : Server |
         status : initializeInterpeter,
-        pworkers : W,
+        interpreters : W,
         (loading[MI] : false),
         (pending[MI] : nil),
         A >
         insertedModule(O, MI)
     => < O : Server |
         status : initializeInterpeter,
-        pworkers : (W | MI),
+        interpreters : (W | MI),
         A >
         [print "[Loaded] " MI] .
 
-    crl [CreatedPWorkersDone] : < O : Server |
+    crl [CreatedWorkersDone] : < O : Server |
         status : initializeInterpeter,
         #workers : N,
-        pworkers : W,
+        interpreters : W,
         A >
     => < O : Server |
         status : initialized,
         #workers : N,
-        pworkers : W,
+        interpreters : W,
         A >
-    if qsize(W) == N [print "[CreatedPWorkersDone]"] .
+    if qsize(W) == N [print "[CreatedWorkersDone]"] .
+
+    crl [SimplificationH] : < O : Server |
+        status : simplifying,
+        interpreters : W,
+        #workers : N,
+        next : IST,
+        history : HistoryIST,
+        A >
+    => < O : Server |
+        status : (if C > 0 then simplifyingStart else stopping fi),
+        interpreters : deleteInterpreters(W, SW),
+        #workers : N,
+        next : empty,
+        history : HistoryIST,
+        A >
+        if C > 0 then handleJobsByWorkers(O, W, W2J, HistoryIST) else StopWorking(O, O) fi
+    if IST' := simplifyByImplicationL(IST)
+    /\ < W2J : SW > := produceJobs2Workers(W, IST')
+    /\ C := | SW |
+    /\ C' := #jobs(HistoryIST)
+    /\ C'' := #jobs(IST')
+    /\ C''' := #jobs(IST)
+    [print "SimplifyByImplicationL => SimplifyByImplicationH #usedInterpreters = " C " #IST = " C''' " #IST' = " C'' " #His = " C'] .
+
+    op deleteInterpreters : Queue{Worker} Set{Worker} -> Queue{Worker} .
+    eq deleteInterpreters(MI | W, SW) = if MI in SW then deleteInterpreters(W, SW) else MI | W fi .
+    eq deleteInterpreters(emptyq, SW) = emptyq .
+
+    op initW2J : Queue{Worker} -> Map{Worker,IdSystemSet} .
+    eq initW2J(MI | W) =  MI |-> empty, initW2J(W) .
+    eq initW2J(emptyq) = empty .
+
+    op produceJobs2Workers : Queue{Worker} IdSystemSet -> W2JAndW .
+    eq produceJobs2Workers(W, IST) = produceJobs2Workers*(W, W, < initW2J(W) : empty >, IST) .
+
+    op produceJobs2Workers* : Queue{Worker} Queue{Worker} W2JAndW IdSystemSet -> W2JAndW .
+    eq produceJobs2Workers*(W, MI | W', < (MI |-> IST', W2J) : SW >, IS IST)
+    = produceJobs2Workers*(W, W', < (MI |-> IS IST', W2J) : insert(MI, SW) >, IST) .
+
+    eq produceJobs2Workers*(W, emptyq, < W2J : SW >, IST) = produceJobs2Workers*(W, W, < W2J : SW >, IST) .
+    eq produceJobs2Workers*(W, W', < W2J : SW >, empty) = < W2J : SW > .
+
+    op handleJobsByWorkers : Oid Queue{Worker} Map{Worker,IdSystemSet} IdSystemSet -> Configuration .
+    eq handleJobsByWorkers(O, MI | W, (MI |-> IST, W2J), HistoryIST) = if IST == empty then
+                                                            none
+                                                        else
+                                                            reduceTerm(MI, O,
+                                                                'MAUDE-NPA-EXT,
+                                                                'simplifyByImplicationH[
+                                                                    upTerm(HistoryIST),
+                                                                    upTerm(IST)
+                                                                ]
+                                                            )
+                                                            handleJobsByWorkers(O, W, W2J, HistoryIST)
+                                                        fi .
+    eq handleJobsByWorkers(O, emptyq, empty, HistoryIST) = none .
+
+    crl [Result4SimplificationH] : < O : Server |
+        status : simplifyingStart,
+        interpreters : W,
+        next : IST,
+        A >
+        reducedTerm(O, MI, N, T, RT)
+    => < O : Server |
+        status : simplifyingStart,
+        interpreters : (W | MI),
+        next : (IST IST'),
+        A >
+    if RT == 'IdSystemSet or-else RT == 'IdSystem
+    /\ IST' := downTerm(T, errIdSystemSet)
+    /\ C := #jobs(IST')
+    [print "[Result4SimplificationH] " MI " #jobs = " C] .
+
+    crl [SimplificationDone] : < O : Server |
+        status : simplifyingStart,
+        #workers : N,
+        interpreters : W,
+        m : M,
+        sess : Sess,
+        init : INIT,
+        jobs : empty,
+        next : IST,
+        history : HistoryIST,
+        A >
+    => < O : Server |
+        status : suspending,
+        #workers : N,
+        interpreters : W,
+        m : M,
+        sess : Sess,
+        init : (INIT INIT'),
+        jobs : IST',
+        next : empty,
+        history : (HistoryIST IST'),
+        A >
+    if qsize(W) == N
+    /\ IST =/= empty
+    /\ < INIT', IST' > := searchState-CheckInit(M, Sess, HistoryIST, IST)
+    /\ C := #jobs(INIT')
+    /\ C' := #jobs(IST')
+    [print "<================= [SimplificationDone] #jobs = " C' " #init = " C "] =================>"] .
+
+
+    rl [StopWorker] : < O : Server |
+        status : closeInterpreters,
+        interpreters : (MI | W),
+        A >
+        =>
+        < O : Server |
+        status : closeInterpreters,
+        interpreters : W,
+        A >
+        quit(MI, O)
+        [print "[StopWorker] " MI] .
+
+    rl [StopWorker] : < O : Server |
+        status : closeInterpreters,
+        interpreters : (MI | W),
+        A >
+        bye(O, O')
+        =>
+        < O : Server |
+        status : closeInterpreters,
+        interpreters : W,
+        A >
+        quit(MI, O)
+        [print "[StopWorker] " MI] .
+
+    rl [ClosedInterpreters] : < O : Server |
+        status : closeInterpreters,
+        interpreters : emptyq,
+        A >
+        bye(O, O')
+        =>
+        < O : Server |
+        status : terminated,
+        interpreters : emptyq,
+        A >
+        [print "[ClosedInterpreters]"] .
+
+    rl [RemoveBye] : < O : Server |
+        status : terminated,
+        A >
+        bye(O, O')
+        =>
+        < O : Server |
+        status : terminated,
+        A >
+        [print "[RemoveBye]"] .
 endm

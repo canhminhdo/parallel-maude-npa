@@ -1,6 +1,7 @@
 load maude-npa.maude
 load socket/buffered-socket.maude
-load socket/queue.maude
+load utils/queue.maude
+load utils/loading.maude
 load common.maude .
 
 mod PARALLEL-MAUDE-NPA is
@@ -124,6 +125,6 @@ endm
 load examples/Symmetric-Key-Protocols/Diffie-Hellman/Diffie-Hellman.maude
 select PARALLEL-MAUDE-NPA .
 load debug.maude
-erew <> p-run(1, 2, aClient)
+erew <> p-run(1, unbounded, aClient)
         < aClient : Client | status : idle >
         CreateClientTcpSocket(socketManager, aClient, "localhost", 9000) .

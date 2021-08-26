@@ -4,6 +4,7 @@ mod MAUDE-NPA-EXT is
     sorts IdSystemSetPair ShortIdSystemSetTuple IdSystemSetTuple .
     subsort ShortIdSystemSetTuple < IdSystemSetTuple .
     op <_,_> : IdSystemSet IdSystemSet -> IdSystemSetPair .
+    op errIdSystemSet : -> IdSystemSet .
     op errIdSystemSetPair : -> IdSystemSetPair .
     op <_,_,_,_> : IdSystemSet IdSystemSet IdSystemSet Nat -> IdSystemSetTuple .
     op <_,_,_> : IdSystemSet IdSystemSet IdSystemSet -> ShortIdSystemSetTuple .
@@ -40,11 +41,16 @@ mod MAUDE-NPA-EXT is
 
     *** filter by simplification *******************************
     op filterStates : Filters IdSystemSet IdSystemSet -> IdSystemSet .
-    eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F, filterIdX(F, simplify-theSystemSet(F, HistoryIST, IST))) [print "Simlification"] .
+    eq filterStates(F, HistoryIST, IST)
+    = filterSMsgListX(F, filterIdX(F, simplify-theSystemSet(F, HistoryIST, IST)))
+    [print "Simlification"] .
 
     *** filter init and other states by history *******************************
     op searchState-CheckInit : Module Bound IdSystemSet IdSystemSet -> IdSystemSetPair .
-    eq searchState-CheckInit(M, Sess, HistoryIST, IST) = searchState-CheckInit*(M, Sess, HistoryIST, < empty, empty >, IST) [print "Filter States"] .
+    eq searchState-CheckInit(M, Sess, HistoryIST, IST)
+    = searchState-CheckInit*(M, Sess, HistoryIST, < empty, empty >, IST)
+    --- [print "searchState-CheckInit"]
+    .
 
     op searchState-CheckInit* : Module Bound IdSystemSet IdSystemSetPair IdSystemSet -> IdSystemSetPair .
     eq searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, empty) = < INIT, IST' > .
@@ -87,17 +93,16 @@ mod MAUDE-NPA-EXT is
     ) .
 endm
 
-load loading.maude .
-
 mod PARALLEL-CONFIG is
     pr MAUDE-NPA-EXT .
     pr SET{Worker} .
     pr IQUEUE{Worker} .
-    pr MAP{Worker,Bool} .
     pr SEQUENCE .
 
     sort IStatus .
-    ops idle initializing initializeInterpeter initializeInterpeterStart initialized waiting suspending working stopping terminated : -> IStatus .
+    ops idle initializing initializeInterpeter initializeInterpeterStart
+    initialized simplifying simplifyingStart waiting suspending
+    working stopping terminated closeSocket closeInterpreters : -> IStatus .
     op status :_ : IStatus -> Attribute [ctor format(m o o o)] .
     op m :_ : Module -> Attribute .
     op gs:_ : GrammarList -> Attribute .
@@ -122,7 +127,7 @@ mod PARALLEL-CONFIG is
     op #workers :_ : Nat -> Attribute .
     op (loading[_] :_) : Oid Bool -> Attribute .
     op (pending[_] :_) : Oid Seq -> Attribute .
-    op pworkers :_ : Queue{Worker} -> Attribute [ctor format(! o o o)] .
+    op interpreters :_ : Queue{Worker} -> Attribute [ctor format(! o o o)] .
     op attack :_ : Nat -> Attribute .
 
     op StopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
