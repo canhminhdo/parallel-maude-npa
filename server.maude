@@ -1,13 +1,14 @@
 load maude-npa.maude
-load interpreter/handler.maude
 load socket/buffered-socket.maude
 load socket/queue.maude
 load common.maude .
+load interpreter/handler.maude
 
 mod PARALLEL-MAUDE-NPA is
     pr PARALLEL-GENERIC-TOOL .
     pr REQUEST .
     pr MESSAGE-CONVERTER .
+    pr HANDLER .
 
     vars O O' LISTENER CLIENT : Oid .
     var  A : AttributeSet .
@@ -49,7 +50,7 @@ mod PARALLEL-MAUDE-NPA is
         A >
         Initialize(O, O', M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST)
     => < O : Server |
-        status : initialized,
+        status : initializeInterpeter,
         bStep : BStep,
         step : Step,
         m : M,
@@ -64,6 +65,7 @@ mod PARALLEL-MAUDE-NPA is
         init : empty,
         depth : 0,
         A >
+        InitializeInterpreter(O, O)
     if BStep =/= 0
     /\ IST' := nextBackNarrowParallel(M, GS, F, Nodes, IST) --- run fist job in master
     [print "[Initialize]"] .

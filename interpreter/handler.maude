@@ -1,2 +1,159 @@
 load metaInterpreter.maude
-load ../loading.maude
+
+mod HANDLER is
+    pr PARALLEL-CONFIG .
+    pr META-INTERPRETER .
+
+    vars O O' MI : Oid .
+    var  A : AttributeSet .
+    vars N D D' C : Nat .
+    vars Nodes BStep Sess : Bound .
+    vars Rem? : Bool .
+    vars IST IST' IST'' INIT INIT' HistoryIST : IdSystemSet .
+    var IS : IdSystem .
+    vars W : Queue{Worker} .
+    vars T : Term .
+    var RT : Type .
+    vars M M' M'' : Module .
+    var GS : GrammarList .
+    var F : Filters .
+    vars Q : Qid .
+    var Rest : Seq .
+
+    rl [CreatePWorkers] : < O : Server |
+        status : initializeInterpeter,
+        #workers : N,
+        A >
+        InitializeInterpreter(O, O')
+    => < O : Server |
+        status : initializeInterpeter,
+        #workers : N,
+        pworkers : emptyq,
+        A >
+        produceInterpreters(O, N)
+    [print "[CreatePWorkers]"] .
+
+    op produceInterpreters : Oid Nat -> Configuration .
+    ceq produceInterpreters(O, N) = createInterpreter(interpreterManager, O, newProcess)
+        produceInterpreters(O, sd(N, 1)) if N > 0 .
+    eq produceInterpreters(O, N) = none [owise] .
+
+    rl [CreatedPWorker] : < O : Server |
+        status : initializeInterpeter,
+        A >
+        createdInterpreter(O, O', MI)
+    => < O : Server |
+        status : initializeInterpeter,
+        (loading[MI] : false),
+        (pending[MI] : prelude maudenpa),
+        A >
+        [print "[CreatedPWorker]"] .
+
+    *** loading modules from prelude and maude-npa files *******************************
+    rl [LoadingModule] : < O : Server |
+        status : initializeInterpeter,
+        (loading[MI] : false),
+        (pending[MI] : m(Q) Rest),
+        A >
+    => < O : Server |
+        status : initializeInterpeter,
+        (loading[MI] : true),
+        (pending[MI] : Rest),
+        A >
+        insertModule(MI, O, upModule(Q, false))
+        .
+
+    rl [LoadingModule] : < O : Server |
+        status : initializeInterpeter,
+        (pending[MI] : m(Q) Rest),
+        A >
+        insertedModule(O, MI)
+    => < O : Server |
+        status : initializeInterpeter,
+        (pending[MI] : Rest),
+        A >
+        insertModule(MI, O, upModule(Q, false))
+        .
+
+    rl [LoadingModule] : < O : Server |
+        status : initializeInterpeter,
+        (pending[MI] : m(Q) Rest),
+        A >
+        insertedView(O, MI)
+    => < O : Server |
+        status : initializeInterpeter,
+        (pending[MI] : Rest),
+        A >
+        insertModule(MI, O, upModule(Q, false))
+        .
+
+    rl [LoadingView] : < O : Server |
+        status : initializeInterpeter,
+        (pending[MI] : v(Q) Rest),
+        A >
+        insertedModule(O, MI)
+    => < O : Server |
+        status : initializeInterpeter,
+        (pending[MI] : Rest),
+        A >
+        insertView(MI, O, upView(Q))
+        .
+
+    rl [LoadingView] : < O : Server |
+        status : initializeInterpeter,
+        (pending[MI] : v(Q) Rest),
+        A >
+        insertedView(O, MI)
+    => < O : Server |
+        status : initializeInterpeter,
+        (pending[MI] : Rest),
+        A >
+        insertView(MI, O, upView(Q))
+        .
+
+    crl [LoadingModule] : < O : Server |
+        status : initializeInterpeter,
+        m : M,
+        gs: GS,
+        filter : F,
+        (loading[MI] : true),
+        (pending[MI] : nil),
+        A >
+        insertedModule(O, MI)
+    => < O : Server |
+        status : initializeInterpeter,
+        m : M,
+        gs: GS,
+        filter : F,
+        (loading[MI] : false),
+        (pending[MI] : nil),
+        A >
+        insertModule(MI, O, M')
+        if M' := upModule('MAUDE-NPA-EXT, false)
+        .
+
+    rl [Loaded] : < O : Server |
+        status : initializeInterpeter,
+        pworkers : W,
+        (loading[MI] : false),
+        (pending[MI] : nil),
+        A >
+        insertedModule(O, MI)
+    => < O : Server |
+        status : initializeInterpeter,
+        pworkers : (W | MI),
+        A >
+        [print "[Loaded] " MI] .
+
+    crl [CreatedPWorkersDone] : < O : Server |
+        status : initializeInterpeter,
+        #workers : N,
+        pworkers : W,
+        A >
+    => < O : Server |
+        status : initialized,
+        #workers : N,
+        pworkers : W,
+        A >
+    if qsize(W) == N [print "[CreatedPWorkersDone]"] .
+endm
