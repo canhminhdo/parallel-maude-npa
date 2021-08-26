@@ -24,18 +24,6 @@ mod MAUDE-NPA-EXT is
     eq #jobs(IS IST) = #jobs(IST) + 1 .
     eq #jobs(empty) = 0 .
 
-    *** addEqs* *******************************
-    op addEqs* : EquationSet SModule -> SModule .
-    op addEqs* : EquationSet FModule -> FModule .
-    eq addEqs*(ES:EquationSet,mod Q:Qid is IL:ImportList sorts S:SortSet .
-        S:SubsortDeclSet O:OpDeclSet M:MembAxSet E:EquationSet R:RuleSet endm)
-    = mod Q:Qid is IL:ImportList sorts S:SortSet . S:SubsortDeclSet
-        O:OpDeclSet M:MembAxSet (E:EquationSet ES:EquationSet) R:RuleSet endm .
-    eq addEqs*(ES:EquationSet,fmod Q:Qid is IL:ImportList sorts S:SortSet .
-            S:SubsortDeclSet O:OpDeclSet M:MembAxSet E:EquationSet endfm)
-    = fmod Q:Qid is IL:ImportList sorts S:SortSet . S:SubsortDeclSet
-        O:OpDeclSet M:MembAxSet (E:EquationSet ES:EquationSet) endfm .
-
     *** filter by simplification *******************************
     op filterStates : Filters IdSystemSet IdSystemSet -> IdSystemSet .
     eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F, filterIdX(F, simplify-theSystemSet(F, HistoryIST, IST))) [print "Simlification"] .
@@ -58,6 +46,14 @@ mod MAUDE-NPA-EXT is
         fi
     fi .
 
+    op filterStateWithHistory : Module IdSystemSet IdSystemSet -> IdSystemSet .
+    eq filterStateWithHistory(M, HistoryIST, empty) = empty .
+    eq filterStateWithHistory(M, HistoryIST, IS IST)
+    = if isNFSystem(M, HistoryIST, IS)
+    then filterStateWithHistory(M, HistoryIST, IST)
+    else IS filterStateWithHistory(M, HistoryIST, IST)
+    fi .
+
     op pM : -> Module .
     op pGS : -> GrammarList .
     op pF : -> Filters .
@@ -71,20 +67,21 @@ mod MAUDE-NPA-EXT is
     eq nextBackNarrowParallel(GS, Nodes, IST) = nextBackNarrowParallel*(pM, GS, pF, Nodes, IST) .
 
     op nextBackNarrowParallel* : Module GrammarList Filters Bound IdSystemSet -> IdSystemSet .
-    eq nextBackNarrowParallel*(M,GS,F,Nodes,IST)
-    = filter-eachSystem#Top(F,M,GS, --- filter systems with grammars, never patterns, ...
-        simplify-eachSystem#Top(F,M, --- always simplify before filtering
-            simplifyGhost#Top(F, --- simplify Ghost
-                createGhost#Top(M,F, --- create Ghost again
-                    reactivateGhost#Top(F, --- if messages are not ghost messages anymore, reactive the messages
+    eq nextBackNarrowParallel*(M,GS,F:Filters,Nodes,IST)
+    = filter-eachSystem#Top(F:Filters,M,GS, --- filter systems with grammars, never patterns, ...
+        simplify-eachSystem#Top(F:Filters,M, --- always simplify before filtering
+            simplifyGhost#Top(F:Filters, --- simplify Ghost
+                createGhost#Top(M,F:Filters, --- create Ghost again
+                    reactivateGhost#Top(F:Filters, --- if messages are not ghost messages anymore, reactive the messages
                         tryUnificationofKnowledge(M, --- create and check ghosts before and after
-                            nextBackNarrow*(M,GS,F,Nodes,empty,IST)
+                            nextBackNarrow*(M,GS,F:Filters,Nodes,empty,IST)
                         )
                     )
                 )
-            )
+             )
         )
-    ) .
+    )
+    .
 endm
 
 load metaInterpreter.maude
@@ -212,13 +209,14 @@ mod PARALLEL-MAUDE-NPA is
         nodes : Nodes,
         sess : Sess,
         rem : Rem?,
-        history : HistoryIST,
+        history : (HistoryIST),
         jobs : IST,
         next : empty,
         init : empty,
         depth : 0,
         A >
         produceInterpreter(O, N)
+        --- if IST' := nextBackNarrowParallel*(M, GS, F, Nodes, IST)
     [print "[CreateWorkers]"] .
 
     op produceInterpreter : Oid Nat -> Configuration .
@@ -228,24 +226,10 @@ mod PARALLEL-MAUDE-NPA is
 
     rl [CreatedWorker] : < O : Manager |
         status : initializing,
-        #workers : N,
-        workers : emptyq,
-        m : M,
-        gs : GS,
-        filter : F,
-        nodes : Nodes,
-        jobs : IST,
         A >
         createdInterpreter(O, O', MI)
     => < O : Manager |
         status : initializing,
-        #workers : N,
-        workers : emptyq,
-        m : M,
-        gs : GS,
-        filter : F,
-        nodes : Nodes,
-        jobs : IST,
         (loading[MI] : false),
         (pending[MI] : prelude maudenpa),
         A >
@@ -259,8 +243,8 @@ mod PARALLEL-MAUDE-NPA is
         A >
     => < O : Manager |
         status : initializing,
-        (pending[MI] : Rest),
         (loading[MI] : true),
+        (pending[MI] : Rest),
         A >
         insertModule(MI, O, upModule(Q, false))
         .
@@ -331,13 +315,13 @@ mod PARALLEL-MAUDE-NPA is
         (pending[MI] : nil),
         A >
         insertModule(MI, O, M'')
-        if M' := upModule('MAUDE-NPA-EXT, true)
-        /\ M'' := addEqs*(
+        if M' := upModule('MAUDE-NPA-EXT, false)
+        /\ M'' := newName('MAUDE-NPA-EXT, addEqs(
             (eq 'pM.Module = upTerm(M) [none] . )
             (eq 'pGS.GrammarList = upTerm(GS) [nonexec] . )
             (eq 'pF.Filters = upTerm(F) [none] . )
             , M'
-        )
+        ))
         .
 
     rl [Loaded] : < O : Manager |
@@ -374,7 +358,6 @@ mod PARALLEL-MAUDE-NPA is
         filter : F,
         nodes : Nodes,
         bStep : BStep,
-        history : HistoryIST,
         A >
     => < O : Manager |
         status : working,
@@ -385,7 +368,6 @@ mod PARALLEL-MAUDE-NPA is
         filter : F,
         nodes : Nodes,
         bStep : BStep,
-        history : (HistoryIST IS),
         A >
         handleJob(O, MI, M, GS, F, if BStep == 1 then Nodes else unbounded fi, IS)
         [print "[AssignJob] " MI] .
@@ -395,10 +377,10 @@ mod PARALLEL-MAUDE-NPA is
     = reduceTerm(MI, O,
         'MAUDE-NPA-EXT,
         T)
-    if T := 'nextBackNarrowParallel[
-            --- upTerm(M),
-            --- upTerm(GS),
-            --- upTerm(F),
+    if T := 'nextBackNarrowParallel*[
+            upTerm(M),
+            upTerm(GS),
+            upTerm(F),
             upTerm(Nodes),
             upTerm(IS)
         ]
@@ -407,17 +389,24 @@ mod PARALLEL-MAUDE-NPA is
     crl [WorkerResult] : < O : Manager |
         status : working,
         workers : W,
+        m : M,
         next : IST,
+        history : HistoryIST,
         A >
         reducedTerm(O, MI, N, T, RT)
     => < O : Manager |
         status : working,
         workers : (W | MI),
+        m : M,
         next : (IST IST'),
+        history : HistoryIST,
         A >
     if RT == 'IdSystemSet or-else RT == 'IdSystem
     /\ IST' := downTerm(T, errIdSystemSet)
-    [print "[WorkerResult] " MI] .
+    /\ IST'' := filterStateWithHistory(M, HistoryIST, IST')
+    /\ C := #jobs(IST')
+    /\ C':Nat := #jobs(IST'')
+    [print "[WorkerResult] " MI " #jobs = " C " #jobs' = " C':Nat] .
 
     crl [Switch] : < O : Manager |
         status : working,
@@ -450,7 +439,7 @@ mod PARALLEL-MAUDE-NPA is
         jobs : IST'',
         next : empty,
         init : (INIT INIT'),
-        history : HistoryIST,
+        history : (HistoryIST IST''),
         depth : D',
         A >
     if qsize(W) == N
@@ -459,7 +448,10 @@ mod PARALLEL-MAUDE-NPA is
     /\ IST'' := filterStates(F, HistoryIST, IST') --- filter states by simplification
     /\ D' := (D + 1)
     /\ C := #jobs(IST'')
-    [print "<================= [Switch at Depth " D' " #jobs = " C "] =================>"] .
+    /\ K:Nat := #jobs(IST)
+    /\ H:Nat := #jobs(IST')
+    /\ L:Nat := #jobs(HistoryIST)
+    [print "<================= [Switch at Depth " D' " #jobs = " C " #jobs1 = " K:Nat " #jobs2 = " H:Nat " #his = " L:Nat "] =================>"] .
 
     rl [Resuming] : < O : Manager |
         status : suspending,
