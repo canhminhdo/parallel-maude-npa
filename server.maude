@@ -52,7 +52,7 @@ mod PARALLEL-MAUDE-NPA is
         A >
         Initialize(O, O', M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST)
     => < O : Server |
-        status : initialized,   --- initializeInterpeter, ---> for meta-interpreter
+        status : initialized,   --- initializeInterpeter,   ---> for meta-interpreter
         bStep : BStep,
         step : Step,
         m : M,
@@ -67,7 +67,7 @@ mod PARALLEL-MAUDE-NPA is
         init : empty,
         depth : 0,
         A >
-        InitializeInterpreter(O, O)
+        --- InitializeInterpreter(O, O) ---> for meta-interpreter
     if BStep =/= 0
     /\ IST' := nextBackNarrowParallel(M, GS, F, Nodes, IST) --- run fist job in master
     [print "[Initialize]"] .
@@ -136,6 +136,7 @@ mod PARALLEL-MAUDE-NPA is
     /\ < INIT', IST', HistoryIST' > := string2state(DATA)
     [print "[Received] " CLIENT] .
 
+    *** for meta-interpreters
     --- crl [Switching] : < O : Server |
     ---     status : working,
     ---     workers : SW,
@@ -301,7 +302,7 @@ mod PARALLEL-MAUDE-NPA is
         status : closeSocket, A >
         ClosedSocket(O, LISTENER, DATA)
     => < O : Server |
-        status : terminated,    --- closeInterpreters, ---> for meta-interpreter
+        status : terminated,    --- closeInterpreters,  ---> for meta-interpreter
         A > [print "[ClosedSocket]"] .
 
     rl [RemoveClosedSocket] : < O : Server |
