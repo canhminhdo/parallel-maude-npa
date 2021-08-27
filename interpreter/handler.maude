@@ -251,7 +251,7 @@ mod HANDLER is
         history : HistoryIST,
         A >
     => < O : Server |
-        status : suspending,
+        status : (if C > 0 then stopping else suspending fi),
         #workers : N,
         interpreters : W,
         m : M,
@@ -261,13 +261,13 @@ mod HANDLER is
         next : empty,
         history : (HistoryIST IST'),
         A >
+        (if C > 0 then StopWorking(O, O) else none fi)
     if qsize(W) == N
     /\ IST =/= empty
     /\ < INIT', IST' > := searchState-CheckInit(M, Sess, HistoryIST, IST)
     /\ C := #jobs(INIT')
     /\ C' := #jobs(IST')
     [print "<================= [SimplificationDone] #jobs = " C' " #init = " C "] =================>"] .
-
 
     rl [StopWorker] : < O : Server |
         status : closeInterpreters,
