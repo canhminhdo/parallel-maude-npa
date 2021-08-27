@@ -52,7 +52,7 @@ mod PARALLEL-MAUDE-NPA is
         A >
         Initialize(O, O', M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST)
     => < O : Server |
-        status : initializeInterpeter,
+        status : initialized,   --- initializeInterpeter, ---> for meta-interpreter
         bStep : BStep,
         step : Step,
         m : M,
@@ -297,11 +297,20 @@ mod PARALLEL-MAUDE-NPA is
     rl [Sent] : < O : Server | A > Sent(O, CLIENT)
     => < O : Server | A > [print "[Sent]"] .
 
-    rl [ClosedSocket] : < O : Server | status : closeSocket, A > ClosedSocket(O, LISTENER, DATA)
-    => < O : Server | status : closeInterpreters, A > [print "[ClosedSocket]"] .
+    rl [ClosedSocket] : < O : Server |
+        status : closeSocket, A >
+        ClosedSocket(O, LISTENER, DATA)
+    => < O : Server |
+        status : terminated,    --- closeInterpreters, ---> for meta-interpreter
+        A > [print "[ClosedSocket]"] .
 
-    rl [RemoveClosedSocket] : < O : Server | status : terminated, A > ClosedSocket(O, LISTENER, DATA)
-    => < O : Server | status : terminated, A > [print "[RemoveClosedSocket]"] .
+    rl [RemoveClosedSocket] : < O : Server |
+        status : terminated, A >
+        ClosedSocket(O, LISTENER, DATA)
+    => < O : Server |
+        status : terminated,
+        A >
+        [print "[RemoveClosedSocket]"] .
 
     rl [ShowResult] : < O : Server |
         status : terminated,
