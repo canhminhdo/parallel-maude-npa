@@ -11,14 +11,16 @@ mod PARALLEL-MAUDE-NPA is
 
     vars O O' CLIENT : Oid .
     var  A : AttributeSet .
-    vars Nodes BStep Step Sess : Bound .
+    vars Nodes BStep Step Sess BSize : Bound .
     vars Rem? : Bool .
-    vars IST IST' HistoryIST HistoryIST' : IdSystemSet .
+    vars IS : IdSystem .
+    vars IST IST' IST1 IST2 HistoryIST HistoryIST' : IdSystemSet .
     vars M : Module .
     var GS : GrammarList .
     var F : Filters .
     vars DATA S : String .
     vars State : IdSystemSetTuple .
+    vars C N C1 C2 C3 : Nat .
 
     rl [Initialize] : < O : Client |
         status : idle,
@@ -32,6 +34,7 @@ mod PARALLEL-MAUDE-NPA is
         nodes : Nodes,
         sess : Sess,
         rem : Rem?,
+        jobs : empty,
         history : empty,
         A >
         [print "[Initialize]"] .
@@ -51,8 +54,34 @@ mod PARALLEL-MAUDE-NPA is
     rl [Sent] : < O : Client | status : waiting, A > Sent(O, CLIENT)
     => < O : Client | status : waiting, A > [print "[Sent]"] .
 
-    rl [SentData&GetJob] : < O : Client | status : suspending, A > Sent(O, CLIENT)
-    => < O : Client | status : waiting, A > Send(CLIENT, O, getJob) [print "[SentData&GetJob]"] .
+    rl [GetJob] : < O : Client |
+        status : sending,
+        jobs : empty,
+        A >
+        Sent(O, CLIENT)
+    => < O : Client |
+        status : waiting,
+        jobs : empty,
+        A >
+        Send(CLIENT, O, getJob)
+        [print "[GetJob]"] .
+
+    crl [SendData] : < O : Client |
+        status : sending,
+        jobs : IST,
+        batchSize : BSize,
+        A >
+        Sent(O, CLIENT)
+    => < O : Client |
+        status : sending,
+        jobs : IST1,
+        batchSize : BSize,
+        A >
+        Send(CLIENT, O, state2string(< empty, IST2, empty >))
+    if C := #jobs(IST)
+    /\ C > 0
+    /\ < IST1, IST2 > := getBatchJobsToSend(IST, BSize)
+    [print "[SendData]"] .
 
     crl [Received] : < O : Client |
         status : waiting,
@@ -63,10 +92,12 @@ mod PARALLEL-MAUDE-NPA is
         sess : Sess,
         rem : Rem?,
         history : HistoryIST,
+        jobs : empty,
+        batchSize : BSize,
         A >
         Received(O, CLIENT, DATA)
     =>  < O : Client |
-        status : suspending,
+        status : sending,
         m : M,
         gs: GS,
         filter : F,
@@ -74,15 +105,26 @@ mod PARALLEL-MAUDE-NPA is
         sess : Sess,
         rem : Rem?,
         history : (HistoryIST' IST'), --- update history if any
+        jobs : IST1,
+        batchSize : BSize,
         A >
-        Send(CLIENT, O, state2string(< empty, IST', empty >))
-    --- handleJob(O, CLIENT, M, GS, F, step(State), if step(State) == 1 then Nodes else unbounded fi, Sess, Rem?, HistoryIST', IST)
+        Send(CLIENT, O, state2string(< empty, IST2, empty >))
     if State := string2state(DATA)
     /\ State =/= errIdSystemSetTuple
     /\ IST := jobs(State)
     /\ HistoryIST' := (HistoryIST IST)
     /\ IST' := filterStateWithHistory(M, HistoryIST, nextBackNarrowParallel(M, GS, F, Nodes, IST))
-    [print "[Received] & [HandleJob]"] .
+    /\ < IST1, IST2 > := getBatchJobsToSend(IST', BSize)
+    /\ C := #jobs(IST')
+    [print "[Received] & [HandleJob] & [SendData] #IST = " C] .
+
+    op getBatchJobsToSend : IdSystemSet Bound -> IdSystemSetPair .
+    eq getBatchJobsToSend(IST, BSize) = if BSize == unbounded then < empty, IST > else getBatchJobsToSend*(IST, BSize, empty) fi .
+
+    op getBatchJobsToSend* : IdSystemSet Nat IdSystemSet -> IdSystemSetPair .
+    eq getBatchJobsToSend*(IS IST, s(N), IST') = getBatchJobsToSend*(IST, N, IS IST') .
+    eq getBatchJobsToSend*(IST, 0, IST') = < IST, IST' > .
+    eq getBatchJobsToSend*(empty, N, IST') = < empty, IST' > .
 
     crl [ReceivedError] : < O : Client |
         status : waiting,
@@ -110,21 +152,6 @@ mod PARALLEL-MAUDE-NPA is
     /\ State == errIdSystemSetTuple
     [print "[ReceivedError] errIdSystemSetTuple"] .
 
-    --- op handleJob : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
-    ---                 IdSystemSet IdSystemSet -> Configuration .
-    --- ceq handleJob(O, CLIENT, M, GS, F, Step, Nodes, Sess, Rem?, HistoryIST, IST)
-    --- = Send(CLIENT, O, state2string(< empty, IST', empty >))
-    --- if IST' := nextBackNarrowParallel(M, GS, F, Nodes, IST)
-    --- if IST' := filterStateWithHistory(M, HistoryIST, nextBackNarrowParallel(M, GS, F, Nodes, IST))
-    --- [print "[HandleJob]"] .
-
     rl [ClosedSocket] : < O : Client | A > ClosedSocket(O, CLIENT, S)
     => < O : Client | none > [print "[ClosedSocket]"] .
 endm
-
-load examples/Symmetric-Key-Protocols/Diffie-Hellman/Diffie-Hellman.maude
-select PARALLEL-MAUDE-NPA .
-load debug.maude
-erew <> p-run(1, unbounded, aClient)
-        < aClient : Client | status : idle >
-        CreateClientTcpSocket(socketManager, aClient, "localhost", 9000) .

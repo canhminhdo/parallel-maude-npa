@@ -43,7 +43,8 @@ mod MAUDE-NPA-EXT is
     op filterStates : Filters IdSystemSet IdSystemSet -> IdSystemSet .
     eq filterStates(F, HistoryIST, IST)
     = filterSMsgListX(F, filterIdX(F, simplify-theSystemSet(F, HistoryIST, IST)))
-    [print "Simlification"] .
+    --- [print "Simlification"]
+    .
 
     *** filter init and other states by history *******************************
     op searchState-CheckInit : Module Bound IdSystemSet IdSystemSet -> IdSystemSetPair .
@@ -101,9 +102,10 @@ mod PARALLEL-CONFIG is
 
     sort IStatus .
     ops idle initializing initializeInterpeter initializeInterpeterStart
-    initialized simplifying simplifyingStart waiting suspending
+    initialized simplifying simplifyingStart waiting suspending sending
     working stopping terminated closeSocket closeInterpreters : -> IStatus .
     op status :_ : IStatus -> Attribute [ctor format(m o o o)] .
+    op batchSize :_ : Bound -> Attribute .
     op m :_ : Module -> Attribute .
     op gs:_ : GrammarList -> Attribute .
     op filter :_ : Filters -> Attribute .
