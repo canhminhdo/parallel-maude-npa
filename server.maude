@@ -123,7 +123,7 @@ mod PARALLEL-MAUDE-NPA is
         depth : D,
         history : HistoryIST,
         A >
-        Send(CLIENT, O, state2string(< empty, IS, empty, Step >))
+        Send(CLIENT, O, state2string(< empty, IS, empty, D >))
         [print "[SendJob] " CLIENT] .
 
     crl [Received] : < O : Server |
