@@ -20,7 +20,7 @@ mod PARALLEL-MAUDE-NPA is
     var F : Filters .
     vars DATA S : String .
     vars State : IdSystemSetTuple .
-    vars C N C1 C2 C3 : Nat .
+    vars C N D C1 C2 C3 : Nat .
 
     rl [Initialize] : < O : Client |
         status : idle,
@@ -112,11 +112,12 @@ mod PARALLEL-MAUDE-NPA is
     if State := string2state(DATA)
     /\ State =/= errIdSystemSetTuple
     /\ IST := jobs(State)
+    /\ D := step(State)
     /\ HistoryIST' := (HistoryIST IST)
     /\ IST' := filterStateWithHistory(M, HistoryIST, nextBackNarrowParallel(M, GS, F, Nodes, IST))
     /\ < IST1, IST2 > := getBatchJobsToSend(IST', BSize)
     /\ C := #jobs(IST')
-    [print "[Received] & [HandleJob] & [SendData] #IST = " C] .
+    [print "[Received] & [HandleJob] & [SendData] Depth = " D " #IST = " C] .
 
     op getBatchJobsToSend : IdSystemSet Bound -> IdSystemSetPair .
     eq getBatchJobsToSend(IST, BSize) = if BSize == unbounded then < empty, IST > else getBatchJobsToSend*(IST, BSize, empty) fi .
