@@ -203,8 +203,8 @@ mod PARALLEL-MAUDE-NPA is
         (if N > 0 then StopWorking(O, O) else none fi)
     if qsize(W) == | SW |
     /\ IST =/= empty
-    /\ < INIT', IST' > := searchState-CheckInit(M, Sess, HistoryIST, IST) --- filter initial and other states
-    /\ IST'' := filterStates(F, HistoryIST, IST') --- filter sucessor states with history states
+    /\ IST' := filterStates(F, HistoryIST, IST) --- filter sucessor states with history states
+    /\ < INIT', IST'' > := searchState-CheckInit(M, Sess, HistoryIST, IST') --- filter initial and other states
     /\ C' := #jobs(IST'')
     /\ D' := D + Step
     /\ N := #jobs(INIT')
