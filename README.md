@@ -24,7 +24,7 @@ The following is the content of `server-commands.sh` file where you can specify:
 <ul>
 <li>the protocol</li>
 <li>the number of workers</li>
-<li>the backward step</li>
+<li>the number of backward steps</li>
 <li>the attack state id</li>
 <li>...</li>
 </ul>
@@ -46,6 +46,8 @@ EOF
 The following is the content of `client-commands.sh` file where you can specify:
 <ul>
 <li>the protocol</li>
+<li>the attack state id</li>
+<li>the number of backward steps</li>
 <li>the batchSize, the number of states are sent at the same time to the master.</li>
 <li>...</li>
 </ul>
