@@ -1,0 +1,332 @@
+load maude-npa.maude
+load socket/buffered-socket.maude
+load utils/queue.maude
+load utils/map.maude
+load utils/loading.maude
+load common.maude .
+load interpreter/handler.maude
+
+mod PARALLEL-MAUDE-NPA is
+    pr PARALLEL-GENERIC-TOOL .
+    pr REQUEST .
+    pr MESSAGE-CONVERTER .
+    pr HANDLER .
+
+    vars O O' LISTENER CLIENT : Oid .
+    var  A : AttributeSet .
+    vars N D D' C C' : Nat .
+    vars Nodes BStep Step Sess : Bound .
+    vars Rem? : Bool .
+    vars IST IST' IST'' INIT INIT' HistoryIST HistoryIST' HistoryIST'' : IdSystemSet .
+    var IS : IdSystem .
+    vars M : Module .
+    var GS : GrammarList .
+    var F : Filters .
+    vars IP DATA S : String .
+    vars SW : Set{Worker} .
+    vars W : Queue{Worker} .
+    vars B : Bool .
+
+    rl [CreatedSocket] : < O : Server |
+        status : idle,
+        attack : N,
+        bStep : BStep,
+        A >
+        CreatedSocket(O, socketManager, LISTENER)
+    => < O : Server |
+        status : initializing,
+        attack : N,
+        bStep : BStep,
+        listener : LISTENER,
+        workers : empty,
+        waitingWorkers : emptyq,
+        A >
+        AcceptClient(LISTENER, O)
+        p-run(N, BStep, O)
+        [print "[CreatedSocket]"] .
+
+    crl [Initialize] : < O : Server |
+        status : initializing,
+        bStep : BStep,
+        step : Step,
+        A >
+        Initialize(O, O', M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST)
+    => < O : Server |
+        status : initialized,
+        --- status : initializeInterpeter, --- for meta-interpreters
+        bStep : BStep,
+        step : Step,
+        m : M,
+        gs: GS,
+        filter : F,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        history : (HistoryIST IST),
+        jobs : empty,
+        next : IST',
+        init : empty,
+        depth : 0,
+        A >
+        --- InitializeInterpreter(O, O) --- for meta-interpreters
+    if BStep =/= 0
+    /\ IST' := nextBackNarrowParallel(M, GS, F, Nodes, IST) --- run fist job in master
+    [print "[Initialize]"] .
+
+    rl [AcceptedClient] : < O : Server |
+        workers : SW,
+        A >
+        AcceptedClient(O, LISTENER, IP, CLIENT)
+    => < O : Server |
+        workers : (CLIENT, SW),
+        A >
+        Receive(CLIENT, O)
+        AcceptClient(LISTENER, O) [print "[AcceptedClient]"] .
+
+    crl [Ready] : < O : Server |
+        status : initialized,
+        workers : SW,
+        #workers : N,
+        A >
+    => < O : Server |
+        status : working,
+        workers : SW,
+        #workers : N,
+        A >
+    if | SW | == N
+    [print "[Ready]"] .
+
+    crl [GetJob] : < O : Server |
+        waitingWorkers : W,
+        A >
+        Received(O, CLIENT, DATA)
+    => < O : Server |
+        waitingWorkers : (W | CLIENT),
+        A >
+    if DATA == getJob [print "[GetJob]"] .
+
+    rl [SendJob] : < O : Server |
+        status : working,
+        jobs : (IS IST),
+        waitingWorkers : (CLIENT | W),
+        bStep : BStep,
+        step : Step,
+        depth : D,
+        history : HistoryIST,
+        A >
+    => < O : Server |
+        status : working,
+        jobs : IST,
+        waitingWorkers : W,
+        bStep : BStep,
+        step : Step,
+        depth : D,
+        history : HistoryIST,
+        A >
+        Send(CLIENT, O, state2string(< empty, IS, empty, D >))
+        [print "[SendJob] " CLIENT] .
+
+    crl [Received] : < O : Server |
+        next : IST,
+        A >
+        Received(O, CLIENT, DATA)
+    => < O : Server |
+        next : (IST IST'),
+        A >
+    if DATA =/= getJob
+    /\ < INIT', IST', HistoryIST' > := string2state(DATA)
+    [print "[Received] " CLIENT] .
+
+    *** for meta-interpreters
+    --- crl [Switching] : < O : Server |
+    ---     status : working,
+    ---     workers : SW,
+    ---     waitingWorkers : W,
+    ---     bStep : BStep,
+    ---     step : Step,
+    ---     jobs : empty,
+    ---     next : IST,
+    ---     depth : D,
+    ---     A >
+    --- => < O : Server |
+    ---     status : simplifying,
+    ---     workers : SW,
+    ---     waitingWorkers : W,
+    ---     bStep : decN(BStep,Step),
+    ---     step : Step,
+    ---     jobs : empty,
+    ---     next : IST,
+    ---     depth : D',
+    ---     A >
+    --- if qsize(W) == | SW |
+    --- /\ IST =/= empty
+    --- /\ D' := D + Step
+    --- [print "<================= [Switching at Depth " D' "] =================>"] .
+
+    crl [Switch] : < O : Server |
+        status : working,
+        workers : SW,
+        waitingWorkers : W,
+        m : M,
+        gs: GS,
+        filter : F,
+        bStep : BStep,
+        step : Step,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        jobs : empty,
+        next : IST,
+        init : INIT,
+        history : HistoryIST,
+        depth : D,
+        A >
+    => < O : Server |
+        status : (if N > 0 then stopping else suspending fi),
+        --- status : suspending,
+        workers : SW,
+        waitingWorkers : W,
+        m : M,
+        gs: GS,
+        filter : F,
+        bStep : decN(BStep,Step),
+        step : Step,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        jobs : IST'',
+        next : empty,
+        init : (INIT INIT'),
+        history : (HistoryIST IST''),
+        depth : D',
+        A >
+        (if N > 0 then StopWorking(O, O) else none fi)
+    if qsize(W) == | SW |
+    /\ IST =/= empty
+    /\ IST' := filterStates(F, HistoryIST, IST) --- filter sucessor states with history states
+    /\ < INIT', IST'' > := searchState-CheckInit(M, Sess, HistoryIST, IST') --- filter initial and other states
+    /\ C' := #jobs(IST'')
+    /\ D' := D + Step
+    /\ N := #jobs(INIT')
+    [print "<================= [Switch at Depth " D' " #jobs = " C' " #init = " N "] =================>"] .
+
+    rl [Resuming] : < O : Server |
+        status : suspending,
+        jobs : IST,
+        filter : F,
+        history : HistoryIST,
+        bStep : BStep,
+        rem : Rem?,
+        A >
+    => if BStep == 0 or-else IST == empty then
+        --- Stop the search
+        < O : Server |
+            status : stopping,
+            jobs : IST,
+            filter : F,
+            history : HistoryIST,
+            bStep : BStep,
+            rem : Rem?,
+            A >
+        StopWorking(O, O)
+    else
+        < O : Server |
+            status : working,
+            jobs : IST,
+            filter : F,
+            history : HistoryIST,
+            bStep : BStep,
+            rem : Rem?,
+            A >
+    fi [print "[Resuming]"] .
+
+    crl [CheckTermination] : < O : Server |
+        status : working,
+        workers : SW,
+        jobs : empty,
+        next : empty,
+        waitingWorkers : W,
+        A >
+    => < O : Server |
+        status : stopping,
+        workers : SW,
+        jobs : empty,
+        next : empty,
+        waitingWorkers : W,
+        A >
+        StopWorking(O, O)
+    if qsize(W) == | SW |
+    /\ qsize(W) > 0 [print "[CheckTermination]"] .
+
+    rl [StopClient] : < O : Server |
+        status : stopping,
+        workers : (CLIENT, SW),
+        A >
+        StopWorking(O, O')
+    => < O : Server |
+        status : stopping,
+        workers : SW,
+        A >
+        CloseSocket(CLIENT, O)
+        [print "[StopClient] " CLIENT] .
+
+    rl [StopClient] : < O : Server |
+        status : stopping,
+        workers : (CLIENT, SW),
+        A >
+        ClosedSocket(O, O', DATA)
+    => < O : Server |
+        status : stopping,
+        workers : SW,
+        A >
+        CloseSocket(CLIENT, O)
+        [print "[StopClient] " CLIENT] .
+
+    rl [StopServer] : < O : Server |
+        status : stopping,
+        workers : empty,
+        listener : LISTENER,
+        A >
+        ClosedSocket(O, O', DATA)
+    => < O : Server |
+        status : closeSocket,
+        workers : empty,
+        listener : LISTENER,
+        A >
+        CloseSocket(LISTENER, O)
+        [print "[StopServer] " LISTENER] .
+
+    rl [Sent] : < O : Server | A > Sent(O, CLIENT)
+    => < O : Server | A > [print "[Sent]"] .
+
+    rl [ClosedSocket] : < O : Server |
+        status : closeSocket, A >
+        ClosedSocket(O, LISTENER, DATA)
+    => < O : Server |
+        status : terminated,
+        --- status : closeInterpreters, --- for meta-interpreters
+        A > [print "[ClosedSocket]"] .
+
+    rl [RemoveClosedSocket] : < O : Server |
+        status : terminated, A >
+        ClosedSocket(O, LISTENER, DATA)
+    => < O : Server |
+        status : terminated,
+        A >
+        [print "[RemoveClosedSocket]"] .
+
+    rl [ShowResult] : < O : Server |
+        status : terminated,
+        filter : F,
+        jobs : IST,
+        rem : Rem?,
+        init : INIT,
+        A >
+    => < O : Server | status : terminated >
+        ShortIdSystem: if Rem? then
+            changeShortSystem(F, INIT IST)
+        else
+            changeShortSystem(F, INIT)
+        fi
+        [print "[ShowResult]"] .
+endm
