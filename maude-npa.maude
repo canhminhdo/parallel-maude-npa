@@ -14890,8 +14890,11 @@ fmod BACK-NARROWING is
 
   *** fixStrandSet StrandSet with FreshSet using StrandSet
   op fixStrandSet_with_using_ : StrandSet FreshSet StrandSet -> StrandSet .
+  op *fixStrandSet_with_using_ : StrandSet FreshSet StrandSet -> StrandSet .
 
   eq fixStrandSet SS:StrandSet with nil using SS':StrandSet
+   = SS:StrandSet .
+  eq *fixStrandSet SS:StrandSet with nil using SS':StrandSet
    = SS:StrandSet .
 
   eq fixStrandSet
@@ -14905,7 +14908,7 @@ fmod BACK-NARROWING is
      with RLL:FreshSet
      using SS':StrandSet .
 
-  eq fixStrandSet SS:StrandSet
+  eq *fixStrandSet SS:StrandSet
      with (R:Fresh,RLL:FreshSet)
      using
       :: R:Fresh,RL:FreshSet :: [ L:SMsgList-L | L':SMsgList-R ]
@@ -14924,13 +14927,22 @@ fmod BACK-NARROWING is
       )
      using
       :: R:Fresh,RL:FreshSet :: [ L:SMsgList-L | L':SMsgList-R ]
-      & SS':StrandSet [owise] .
+      & SS':StrandSet .
 
-  eq fixStrandSet
+  eq *fixStrandSet
        SS:StrandSet
      with (R:Fresh,RLL:FreshSet)
      using SS':StrandSet
-   = fixStrandSet
+   = *fixStrandSet
+       SS:StrandSet
+     with RLL:FreshSet
+     using SS':StrandSet [owise] .
+
+  eq fixStrandSet
+       SS:StrandSet
+     with (RLL:FreshSet)
+     using SS':StrandSet
+   = *fixStrandSet
        SS:StrandSet
      with RLL:FreshSet
      using SS':StrandSet [owise] .
