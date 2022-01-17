@@ -1,190 +1,21 @@
-mod MAUDE-NPA-EXT is
-    pr MAUDE-NPA .
-
-    sort IdSystemSetPair .
-    op <_,_> : IdSystemSet IdSystemSet -> IdSystemSetPair .
-    op errIdSystemSet : -> IdSystemSet .
-
-    vars M : Module .
-    vars GS : GrammarList .
-    vars F : Filters .
-    vars BStep Nodes Sess : Bound .
-    vars Rem? : Bool .
-    vars IS : IdSystem .
-    vars IST IST' INIT HistoryIST : IdSystemSet .
-    vars N N' : Nat .
-
-    op decN : Bound Nat -> Bound .
-    eq decN(unbounded, N) = unbounded .
-    eq decN(s(N), s(N')) = decN(N, N') .
-    eq decN(0, N) = 0 .
-    eq decN(N, 0) = N .
-
-    op #jobs : IdSystemSet -> Nat .
-    eq #jobs(IS IST) = #jobs(IST) + 1 .
-    eq #jobs(empty) = 0 .
-
-    *** filter by simplification *******************************
-    op filterStates : Filters IdSystemSet IdSystemSet -> IdSystemSet .
-    eq filterStates(F, HistoryIST, IST) = filterSMsgListX(F, filterIdX(F, simplify-theSystemSet(F, HistoryIST, IST))) [print "Simlification"] .
-
-    *** filter init and other states by history *******************************
-    op searchState-CheckInit : Module Bound IdSystemSet IdSystemSet -> IdSystemSetPair .
-    eq searchState-CheckInit(M, Sess, HistoryIST, IST) = searchState-CheckInit*(M, Sess, HistoryIST, < empty, empty >, IST) [print "Filter States"] .
-
-    op searchState-CheckInit* : Module Bound IdSystemSet IdSystemSetPair IdSystemSet -> IdSystemSetPair .
-    eq searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, empty) = < INIT, IST' > .
-    eq searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, (IS IST))
-    = if Sess =/= unbounded and-then countSessions(IS) > Sess
-    then searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, IST)
-    else if isInitialM(M, IS)
-        then
-            searchState-CheckInit*(M, Sess, HistoryIST, < INIT IS, IST' >, IST)
-        else searchState-CheckInit*(M, Sess, HistoryIST,
-            < INIT, if isNFSystem(M, HistoryIST, IS) then IST' else (IS IST') fi >,
-            IST)
-        fi
-    fi .
-
-    op filterStateWithHistory : Module IdSystemSet IdSystemSet -> IdSystemSet .
-    eq filterStateWithHistory(M, HistoryIST, empty) = empty .
-    eq filterStateWithHistory(M, HistoryIST, IS IST)
-    = if isNFSystem(M, HistoryIST, IS)
-    then filterStateWithHistory(M, HistoryIST, IST)
-    else IS filterStateWithHistory(M, HistoryIST, IST)
-    fi .
-
-    op pM : -> Module .
-    op pGS : -> GrammarList .
-    op pF : -> Filters .
-
-    *** backward one step *******************************
-    op nextBackNarrowParallel : Bound IdSystemSet -> IdSystemSet .
-    ceq nextBackNarrowParallel(Nodes, IST) = nextBackNarrowParallel*(pM, GS, pF, Nodes, IST)
-    if GS := downTerm(extract('pGS.GrammarList, upModule('MAUDE-NPA-EXT, false)), (none).GrammarList) .
-
-    op nextBackNarrowParallel : GrammarList Bound IdSystemSet -> IdSystemSet .
-    eq nextBackNarrowParallel(GS, Nodes, IST) = nextBackNarrowParallel*(pM, GS, pF, Nodes, IST) .
-
-    op nextBackNarrowParallel* : Module GrammarList Filters Bound IdSystemSet -> IdSystemSet .
-    eq nextBackNarrowParallel*(M,GS,F:Filters,Nodes,IST)
-    = filter-eachSystem#Top(F:Filters,M,GS, --- filter systems with grammars, never patterns, ...
-        simplify-eachSystem#Top(F:Filters,M, --- always simplify before filtering
-            simplifyGhost#Top(F:Filters, --- simplify Ghost
-                createGhost#Top(M,F:Filters, --- create Ghost again
-                    reactivateGhost#Top(F:Filters, --- if messages are not ghost messages anymore, reactive the messages
-                        tryUnificationofKnowledge(M, --- create and check ghosts before and after
-                            nextBackNarrow*(M,GS,F:Filters,Nodes,empty,IST)
-                        )
-                    )
-                )
-             )
-        )
-    )
-    .
-endm
-
+load utils/queue.maude
+load utils/loading.maude
+load common.maude
 load metaInterpreter.maude
-load loading.maude
-
-view Worker from TRIV to CONFIGURATION is
-    sort Elt to Oid .
-endv
-
-fmod IQUEUE{X :: TRIV} is
-    protecting BOOL .
-    pr NAT .
-
-    sort Queue{X} .
-    subsort X$Elt < Queue{X} .
-    op emptyq : -> Queue{X} [ctor] .
-    op _|_ : Queue{X} Queue{X} -> Queue{X} [ctor assoc id: emptyq] .
-    op isEmpty : Queue{X} -> Bool .
-    op qsize : Queue{X} -> Nat .
-    var Q : Queue{X} .
-    var E : X$Elt .
-
-    eq qsize(emptyq) = 0 .
-    eq qsize(E | Q) = qsize(Q) + 1 .
-
-    eq isEmpty(emptyq) = true .
-    eq isEmpty(E | Q) = false .
-endfm
-
-mod PARALLEL-CONFIG is
-    pr MAUDE-NPA-EXT .
-    pr META-INTERPRETER .
-    pr IQUEUE{Worker} .
-    pr SEQUENCE .
-
-    sort IStatus .
-    ops idle initializing initialized waiting suspending working stopping terminated : -> IStatus .
-    op status :_ : IStatus -> Attribute [ctor format(m o o o)] .
-    op m :_ : Module -> Attribute .
-    op gs :_ : GrammarList -> Attribute .
-    op filter :_ : Filters -> Attribute .
-    op bStep :_ : Bound -> Attribute .
-    op nodes :_ : Bound -> Attribute .
-    op sess :_ : Bound -> Attribute .
-    op rem :_ : Bool -> Attribute .
-    op history :_ : IdSystemSet -> Attribute .
-    op jobs :_ : IdSystemSet -> Attribute .
-    op next :_ : IdSystemSet -> Attribute .
-    op init :_ : IdSystemSet -> Attribute .
-    op depth :_ : Nat -> Attribute .
-    op #workers :_ : Nat -> Attribute [format(! o o o)] .
-    op workers :_ : Queue{Worker} -> Attribute [format(! o o o)] .
-    op (loading[_] :_) : Oid Bool -> Attribute .
-    op (pending[_] :_) : Oid Seq -> Attribute .
-    op stopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
-    op ShortIdSystem:_ : IdSystemSet-or-Error -> Msg [ctor msg] .
-    op initialize : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
-                    IdSystemSet IdSystemSet -> Msg [ctor msg format (b o)] .
-
-    op Manager : -> Cid [ctor] .
-    op aManager : -> Oid [ctor] .
-    op npa : -> Oid [ctor] .
-
-endm
-
-mod PARALLEL-GENERIC-TOOL is
-    pr PARALLEL-CONFIG .
-
-    vars M : Module .
-    vars GS : GrammarList .
-    vars F : Filters .
-    vars BStep Nodes Sess : Bound .
-    vars Rem? : Bool .
-    vars IST HistoryIST : IdSystemSet .
-
-    *** prun *******************************
-    op p-run : Nat Bound Filters Nat -> Configuration .
-    op p-run : Nat Bound Nat -> Configuration .
-
-    eq p-run(Attack:Nat,Depth:Bound, nWorker:Nat)
-    = < aManager : Manager | #workers : nWorker:Nat, status : idle >
-    toMsg(run[0](Attack:Nat,Depth:Bound,+parallel,unbounded)< unbounded >) .
-
-    eq p-run(Attack:Nat,Depth:Bound,F:Filters,nWorker:Nat)
-    = < aManager : Manager | #workers : nWorker:Nat, status : idle >
-    toMsg(run[0](Attack:Nat,Depth:Bound,F:Filters,unbounded)< unbounded >) .
-
-    op toMsg : IdSystemSet -> Msg .
-    eq toMsg(< M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST >)
-    = initialize(aManager, npa, M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST) .
-endm
+load simplification.maude
 
 mod PARALLEL-MAUDE-NPA is
     pr PARALLEL-GENERIC-TOOL .
+    pr SIMPLIFICATION .
 
     vars O O' MI : Oid .
     var  A : AttributeSet .
-    vars N D D' C : Nat .
+    vars N D D' C C' : Nat .
     vars Nodes BStep Sess : Bound .
     vars Rem? : Bool .
     vars IST IST' IST'' INIT INIT' HistoryIST : IdSystemSet .
     var IS : IdSystem .
-    vars W : Queue{Worker} .
+    vars W W' : Queue{Worker} .
     vars T : Term .
     var RT : Type .
     vars M M' M'' : Module .
@@ -426,7 +257,7 @@ mod PARALLEL-MAUDE-NPA is
         depth : D,
         A >
     => < O : Manager |
-        status : suspending,
+        status : (if C' > 0 then stopping else suspending fi),
         #workers : N,
         workers : W,
         m : M,
@@ -442,16 +273,42 @@ mod PARALLEL-MAUDE-NPA is
         history : (HistoryIST IST''),
         depth : D',
         A >
+        (if C' > 0 then stopWorking(O, O) else none fi)
     if qsize(W) == N
     /\ IST =/= empty
-    /\ < INIT', IST' > := searchState-CheckInit(M, Sess, HistoryIST, IST) --- filter with history to get initial and other states
-    /\ IST'' := filterStates(F, HistoryIST, IST') --- filter states by simplification
+    /\ IST' := filterStates(F, HistoryIST, IST) --- filter states by simplification
+    /\ < INIT', IST'' > := searchState-CheckInit(M, Sess, HistoryIST, IST') --- filter with history to get initial and other states
     /\ D' := (D + 1)
     /\ C := #jobs(IST'')
+    /\ C' := #jobs(INIT')
     /\ K:Nat := #jobs(IST)
     /\ H:Nat := #jobs(IST')
     /\ L:Nat := #jobs(HistoryIST)
     [print "<================= [Switch at Depth " D' " #jobs = " C " #jobs1 = " K:Nat " #jobs2 = " H:Nat " #his = " L:Nat "] =================>"] .
+
+    *** parallel simplification
+    --- crl [Switching] : < O : Manager |
+    ---     status : working,
+    ---     #workers : N,
+    ---     workers : W,
+    ---     bStep : BStep,
+    ---     jobs : empty,
+    ---     next : IST,
+    ---     depth : D,
+    ---     A >
+    --- => < O : Manager |
+    ---     status : simplifying,
+    ---     #workers : N,
+    ---     workers : W,
+    ---     bStep : decN(BStep,1),
+    ---     jobs : empty,
+    ---     next : IST,
+    ---     depth : D',
+    ---     A >
+    --- if qsize(W) == N
+    --- /\ IST =/= empty
+    --- /\ D' := D + 1
+    --- [print "<================= [Switching at Depth " D' "] =================>"] .
 
     rl [Resuming] : < O : Manager |
         status : suspending,
