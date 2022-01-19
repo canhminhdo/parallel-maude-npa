@@ -10614,9 +10614,9 @@ fmod DEFINITION-PROTOCOL-RULES-HANDLING is
 
   op _<<<**_ : Id Id -> Bool .
   eq I:IdElem <<<** I:IdElem = true .
-  eq I1:IdElem <<<** (I2:IdElem [ N2:Nat ]) = I1:IdElem <<<** I2:IdElem .
-  eq I1:IdElem <<<** (I2:IdElem { N2:Nat }) = I1:IdElem <<<** I2:IdElem .
-  eq I1:IdElem <<<** (I2:IdElem {{ N2:Nat }}) = I1:IdElem <<<** I2:IdElem .
+  ceq I1:IdElem <<<** (I2:IdElem { N2:Nat }) = I1:IdElem <<<** I2:IdElem if I1:IdElem =/= (I2:IdElem { N2:Nat }) .
+  ceq I1:IdElem <<<** (I2:IdElem [ N2:Nat ]) = I1:IdElem <<<** I2:IdElem if I1:IdElem =/= (I2:IdElem [ N2:Nat ]) .
+  ceq I1:IdElem <<<** (I2:IdElem {{ N2:Nat }}) = I1:IdElem <<<** I2:IdElem if I1:IdElem =/= (I2:IdElem {{ N2:Nat }}) .
   eq X:Id <<<** X':Id = false [owise] .
 
   sort IdSet .
