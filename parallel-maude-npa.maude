@@ -40,7 +40,7 @@ mod PARALLEL-MAUDE-NPA is
         nodes : Nodes,
         sess : Sess,
         rem : Rem?,
-        history : (HistoryIST),
+        history : (IST HistoryIST),
         jobs : IST,
         next : empty,
         init : empty,
