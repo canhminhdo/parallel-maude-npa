@@ -11,7 +11,6 @@ mod SIMPLIFICATION is
     op <_|_> : IdSystemSet IdSystemSet -> J2J .
     op <_,_> : Queue{Worker} Queue{Worker} -> W2W .
 
-
     vars O O' MI : Oid .
     var  A : AttributeSet .
     vars N D D' C C' C'' C''' C1 C2 C3 C4 C5 : Nat .
@@ -36,7 +35,7 @@ mod SIMPLIFICATION is
         next : IST,
         A >
     => < O : Manager |
-        status : simplifyingL,
+        status : startSimplifyingH,
         workers : W,
         next : IST',
         A >
@@ -44,7 +43,7 @@ mod SIMPLIFICATION is
     /\ C < simL-Batch
     /\ IST' := simplifyByImplicationL(IST)
     /\ C' := | IST' |
-    [print "[SimplificationL] Completed #IST = " C " #IST' = " C'] .
+    [print "[SimplificationL] completed #IST = " C " #IST' = " C'] .
 
     crl [SimplificationL] : < O : Manager |
         status : simplifying,
@@ -52,9 +51,10 @@ mod SIMPLIFICATION is
         next : IST,
         A >
     => < O : Manager |
-        status : startSimplifyingH,
+        status : simplifyingL,
         workers : W1,
         next : empty,
+        simJobs : emptyq,
         A >
         handleJobsLByWorkers(O, W2J)
     if C := #jobs(IST)
@@ -62,7 +62,7 @@ mod SIMPLIFICATION is
     /\ C1 := (C quo simL-Batch) --- #workers needed
     /\ < W1, W2 > := getWorkers(W, C1)
     /\ W2J := produceJobs2Workers(W2, IST)
-    [print "[SimplifyByImplicationL] #usedInterpreters = " C1 " #IST = " C] .
+    [print "[SimplificationL] #usedInterpreters = " C1 " #IST = " C] .
 
     op handleJobsLByWorkers : Oid Map{Worker,IdSystemSet} -> Configuration .
     eq handleJobsLByWorkers(O, (MI |-> IST, W2J)) = if IST == empty then
@@ -131,7 +131,7 @@ mod SIMPLIFICATION is
     /\ C <= 1
     /\ IST := (if C == 0 then empty else qtop(SJ) fi)
     /\ C' := #jobs(IST)
-    [print "<================= [SimplificationLDone] #jobs = " C' "] =================>"] .
+    [print "[SimplificationLDone] #jobs = " C'] .
 
     *** parallel SimplifyingH
     crl [SimplificationH] : < O : Manager |
@@ -174,7 +174,7 @@ mod SIMPLIFICATION is
     /\ C5 := (C2 quo C4) --- #worker needed
     /\ < W1, W2 > := getWorkers(W, C5)
     /\ W2J := produceJobs2Workers(W2, IST)
-    [print "[SimplifyByImplicationL] #usedInterpreters = " C5 " #IST = " C2] .
+    [print "[SimplificationH] #usedInterpreters = " C5 " #IST = " C2] .
 
     op initW2J : Queue{Worker} -> Map{Worker,IdSystemSet} .
     eq initW2J(MI | W) =  MI |-> empty, initW2J(W) .
@@ -258,7 +258,7 @@ mod SIMPLIFICATION is
     /\ < INIT', IST' > := searchState-CheckInit(M, Sess, HistoryIST, IST)
     /\ C := #jobs(INIT')
     /\ C' := #jobs(IST')
-    [print "<================= [SimplificationDone1] #jobs = " C' " #init = " C "] =================>"] .
+    [print "<================= [SimplificationHDone] #jobs = " C' " #init = " C "] =================>"] .
 
     crl [SimplificationDone2] : < O : Manager |
         status : simplifyingH,
@@ -277,5 +277,5 @@ mod SIMPLIFICATION is
         stopWorking(O, O)
     if qsize(W) == N
     /\ IST == empty
-    [print "<================= [SimplificationDone2] next IST = " IST "] =================>"] .
+    [print "<================= [SimplificationHDoneAndStop] IST = " IST "] =================>"] .
 endm

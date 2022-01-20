@@ -2,7 +2,7 @@ fmod PARAMETER-GLOBAL is
     pr NAT .
 
     op simL-Batch : -> Nat .
-    eq simL-Batch = 20 .
+    eq simL-Batch = 10 .
 
     op simH-Batch : -> Nat .
     eq simH-Batch = 50 .
