@@ -1,0 +1,9 @@
+fmod PARAMETER-GLOBAL is
+    pr NAT .
+
+    op simL-Batch : -> Nat .
+    eq simL-Batch = 20 .
+
+    op simH-Batch : -> Nat .
+    eq simH-Batch = 50 .
+endfm

@@ -10,8 +10,8 @@ mod MAUDE-NPA-EXT is
     vars F : Filters .
     vars BStep Nodes Sess : Bound .
     vars Rem? : Bool .
-    vars IS : IdSystem .
-    vars IST IST' INIT HistoryIST : IdSystemSet .
+    vars IS IS' : IdSystem .
+    vars IST IST' IST'' INIT HistoryIST : IdSystemSet .
     vars N N' : Nat .
 
     op decN : Bound Nat -> Bound .
@@ -23,6 +23,28 @@ mod MAUDE-NPA-EXT is
     op #jobs : IdSystemSet -> Nat .
     eq #jobs(IS IST) = #jobs(IST) + 1 .
     eq #jobs(empty) = 0 .
+
+    *** combine two simplified sets from simplifyByImplicationL
+    op simplifyByImplicationLCombine : IdSystemSet IdSystemSet -> IdSystemSet .
+    eq simplifyByImplicationLCombine(IST, empty) = IST .
+    eq simplifyByImplicationLCombine(empty, IST') = IST' .
+    eq simplifyByImplicationLCombine(IS IST, IS' IST')
+    = simplifyByImplicationLCombine*(IST, IS, IS' IST', IS' IST') .
+
+    op simplifyByImplicationLCombine* : IdSystemSet IdSystem IdSystemSet IdSystemSet -> IdSystemSet .
+    eq simplifyByImplicationLCombine*(IST, IS, empty, IST')
+    = IS simplifyByImplicationLCombine(IST, IST') .
+
+    eq simplifyByImplicationLCombine*(IST, IS, IS' IST', IS' IST'') =
+    if IS implies IS'
+    then simplifyByImplicationLCombine*(IST, IS, IST', IST'')
+    else
+        if IS' implies IS
+        then simplifyByImplicationLCombine(IST, IS' IST'')
+        else simplifyByImplicationLCombine*(IST, IS, IST', IS' IST'')
+        fi
+    fi
+    .
 
     *** filter by simplification *******************************
     op filterStates : Filters IdSystemSet IdSystemSet -> IdSystemSet .
@@ -88,13 +110,18 @@ mod MAUDE-NPA-EXT is
     .
 endm
 
+view IdSystemSet from TRIV to MAUDE-NPA is
+    sort Elt to IdSystemSet .
+endv
+
 mod PARALLEL-CONFIG is
     pr MAUDE-NPA-EXT .
     pr IQUEUE{Worker} .
+    pr IQUEUE{IdSystemSet} .
     pr SEQUENCE .
 
     sort IStatus .
-    ops idle initializing initialized waiting suspending working stopping terminated simplifying simplifyingL simplifyingH : -> IStatus .
+    ops idle initializing initialized waiting suspending working stopping terminated simplifying simplifyingL simplifyingH startSimplifyingH : -> IStatus .
     op status :_ : IStatus -> Attribute [ctor format(m o o o)] .
     op m :_ : Module -> Attribute .
     op gs :_ : GrammarList -> Attribute .
@@ -110,6 +137,7 @@ mod PARALLEL-CONFIG is
     op depth :_ : Nat -> Attribute .
     op #workers :_ : Nat -> Attribute [format(! o o o)] .
     op workers :_ : Queue{Worker} -> Attribute [format(! o o o)] .
+    op simJobs :_ : Queue{IdSystemSet} -> Attribute [format(! o o o)] .
     op (loading[_] :_) : Oid Bool -> Attribute .
     op (pending[_] :_) : Oid Seq -> Attribute .
     op stopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
