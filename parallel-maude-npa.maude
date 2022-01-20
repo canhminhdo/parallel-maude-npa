@@ -208,10 +208,10 @@ mod PARALLEL-MAUDE-NPA is
     = reduceTerm(MI, O,
         'MAUDE-NPA-EXT,
         T)
-    if T := 'nextBackNarrowParallel*[
-            upTerm(M),
-            upTerm(GS),
-            upTerm(F),
+    if T := 'nextBackNarrowParallel[
+            --- upTerm(M),
+            --- upTerm(GS),
+            --- upTerm(F),
             upTerm(Nodes),
             upTerm(IS)
         ]
@@ -234,10 +234,7 @@ mod PARALLEL-MAUDE-NPA is
         A >
     if RT == 'IdSystemSet or-else RT == 'IdSystem
     /\ IST' := downTerm(T, errIdSystemSet)
-    /\ IST'' := filterStateWithHistory(M, HistoryIST, IST')
-    /\ C := #jobs(IST')
-    /\ C':Nat := #jobs(IST'')
-    [print "[WorkerResult] " MI " #jobs = " C " #jobs' = " C':Nat] .
+    [print "[WorkerResult] " MI] .
 
     --- crl [Switch] : < O : Manager |
     ---     status : working,
