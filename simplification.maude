@@ -60,12 +60,16 @@ mod SIMPLIFICATION is
     op neededWorkersForSimH : Nat Nat Nat -> Nat .
     eq neededWorkersForSimH(C1, C2, N) = if C1 * C2 < simH-Batch then 1 else neededWorkersForSimH*(C1, C2, N) fi .
     op neededWorkersForSimH* : Nat Nat Nat -> Nat .
-    ceq neededWorkersForSimH*(C1, C2, N) = if C5 > 1
-                                           then
-                                                (if C5 > N then N else C5 fi)
-                                           else
-                                                (if (C2 rem C4) >= (C4 quo 2) then 2 else 1 fi)
-                                           fi
+    ceq neededWorkersForSimH*(C1, C2, N) =  if C5 < 1
+                                            then 1
+                                            else
+                                                if C5 > 1
+                                                then
+                                                        (if C5 > N then N else C5 fi)
+                                                else
+                                                        (if (C2 rem C4) >= (C4 quo 2) then 2 else 1 fi)
+                                                fi
+                                            fi
     if C3 := (simH-Batch quo C1)
     /\ C4 := (if C3 == 0 then 1 else C3 fi) --- #states required per each worker
     /\ C5 := C2 quo C4 --- #workers needed
