@@ -4082,7 +4082,7 @@ op FirstHalfTerms(_) : ListOfTerms -> ListOfTerms .
 op SecondHalfTerms(_) : ListOfTerms -> ListOfTerms .
 op RemoveZero(_) : BitVector -> BitVector .
 op RemoveOne(_) : BitVector -> BitVector .
-op Convert*(_) : Term -> Term .
+op Convert(_) : Term -> Term .
 op Convert(_) : TermList -> TermList .
 op InGoodShape(_,_) : ListOfTerms ListOfTerms -> Bool .
 op Shaping(_,_,_) : ListOfTerms Term ListOfTerms -> ListOfTerms .
@@ -4405,21 +4405,22 @@ eq ContainSameVar(TermList_X1, TermList_X2) = false [owise].
 *** typical recursive transformation
 *******************************************************************************************
 
-eq Convert*(E(Term_X1, TermList_X1)) = Convert*(RemoveTopE(E(Term_X1, TermList_X1))) .
-eq Convert*(P(BitVector_X ; TermList_X1)) = Convert*(RemoveTopP(P(BitVector_X ; TermList_X1))) .
-eq Convert*(p(Term_X1, Term_X2)) = p(Convert*(Term_X1), Convert*(Term_X2)) .
-eq Convert*(e(Term_X1, Term_X2)) = e(Convert*(Term_X1), Convert*(Term_X2)) .
-eq Convert*(F[TL]) = F[Convert(TL)] .
-eq Convert*(Variable_X) = Variable_X .
-eq Convert*(Constant_c1) = Constant_c1 .
+eq Convert(E(Term_X1, TermList_X1)) = Convert(RemoveTopE(E(Term_X1, TermList_X1))) .
+eq Convert(P(BitVector_X ; TermList_X1)) = Convert(RemoveTopP(P(BitVector_X ; TermList_X1))) .
+eq Convert(p(Term_X1, Term_X2)) = p(Convert(Term_X1), Convert(Term_X2)) .
+eq Convert(e(Term_X1, Term_X2)) = e(Convert(Term_X1), Convert(Term_X2)) .
+eq Convert(F[TL]) = F[Convert(TL)] .
+eq Convert(Variable_X) = Variable_X .
+eq Convert(Constant_c1) = Constant_c1 .
 
-eq Convert(E(Term_X1, TermList_X1), TL) = Convert*(RemoveTopE(E(Term_X1, TermList_X1))), Convert(TL) .
-eq Convert(P(BitVector_X ; TermList_X1), TL) = Convert*(RemoveTopP(P(BitVector_X ; TermList_X1))), Convert(TL) .
-eq Convert(p(Term_X1, Term_X2), TL) = p(Convert*(Term_X1), Convert*(Term_X2)), Convert(TL) .
-eq Convert(e(Term_X1, Term_X2), TL) = e(Convert*(Term_X1), Convert*(Term_X2)), Convert(TL) .
-eq Convert(F[TL'], TL) = F[Convert(TL')], Convert(TL) .
-eq Convert(Variable_X, TL) = Variable_X, Convert(TL) .
-eq Convert(Constant_c1, TL) = Constant_c1, Convert(TL) .
+eq Convert(empty) = empty .
+ceq Convert(E(Term_X1, TermList_X1), TL) = Convert(RemoveTopE(E(Term_X1, TermList_X1))), Convert(TL) if TL =/= empty .
+ceq Convert(P(BitVector_X ; TermList_X1), TL) = Convert(RemoveTopP(P(BitVector_X ; TermList_X1))), Convert(TL) if TL =/= empty .
+ceq Convert(p(Term_X1, Term_X2), TL) = p(Convert(Term_X1), Convert(Term_X2)), Convert(TL) if TL =/= empty .
+ceq Convert(e(Term_X1, Term_X2), TL) = e(Convert(Term_X1), Convert(Term_X2)), Convert(TL) if TL =/= empty .
+ceq Convert(F[TL'], TL) = F[Convert(TL')], Convert(TL) if TL =/= empty .
+ceq Convert(Variable_X, TL) = Variable_X, Convert(TL) if TL =/= empty .
+ceq Convert(Constant_c1, TL) = Constant_c1, Convert(TL) if TL =/= empty .
 
 
 ******************Shaping************************************************************
