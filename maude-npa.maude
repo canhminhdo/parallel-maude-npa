@@ -4082,7 +4082,7 @@ op FirstHalfTerms(_) : ListOfTerms -> ListOfTerms .
 op SecondHalfTerms(_) : ListOfTerms -> ListOfTerms .
 op RemoveZero(_) : BitVector -> BitVector .
 op RemoveOne(_) : BitVector -> BitVector .
-op Convert(_) : Term -> Term .
+op Convert*(_) : Term -> Term .
 op Convert(_) : TermList -> TermList .
 op InGoodShape(_,_) : ListOfTerms ListOfTerms -> Bool .
 op Shaping(_,_,_) : ListOfTerms Term ListOfTerms -> ListOfTerms .
@@ -4153,7 +4153,7 @@ eq {EmptyEquation} Sub = EmptyEquation .
 eq {(none).Substitution}Sub = (none).Substitution .
 
 eq {Term_X # TermList_X1} Sub = {Term_X}Sub # {TermList_X1}Sub .
-eq {T, TL}Sub = ({T}Sub, {TL}Sub) .
+ceq {T, TL}Sub = ({T}Sub, {TL}Sub) if TL =/= empty .
 
 ********************************Homomorphism**************************************
 var EqS : EquationSet .
@@ -4220,10 +4220,10 @@ eq MapBack(C, F, G) = C .
 eq MapBack(e(T, T'), F, G) = F[MapBack(T, F, G), MapBack(T', F, G)] .
 eq MapBack(p(T, T'), F, G) = G[MapBack(T, F, G), MapBack(T', F, G)] .
 eq MapBack(H[TL], F, G) = H[MapBack(TL, F, G)] .
-eq MapBack((T, TL), F, G) = MapBack(T, F, G), MapBack(TL, F, G) .
+ceq MapBack((T, TL), F, G) = MapBack(T, F, G), MapBack(TL, F, G) if TL =/= empty .
 eq MapBack(X <- T, F, G) = X <- MapBack(T, F, G) .
 eq MapBack((none).Substitution, F, G) = (none).Substitution .
-eq MapBack(Assignments_X ; Assignments_Y, F, G) = (MapBack(Assignments_X, F, G) ; MapBack(Assignments_Y, F, G)) .
+ceq MapBack(Assignments_X ; Assignments_Y, F, G) = (MapBack(Assignments_X, F, G) ; MapBack(Assignments_Y, F, G)) if Assignments_X =/= none and-then Assignments_Y =/= none .
 
 ************ Check if a variable occurs in some term****************************************
 *******************************************************************************************
@@ -4234,9 +4234,10 @@ eq occurs(Variable_X, p(Term_X1, Term_X2)) = occurs(Variable_X, Term_X1) or occu
 eq occurs(Variable_X, e(Term_X1, Term_X2)) = occurs(Variable_X, Term_X1) or occurs(Variable_X, Term_X2) .
 eq occurs(Variable_X, F[TL]) = occurs(Variable_X, TL) .
 eq occurs(Variable_X, EmptyTerm) = false .
+eq occurs(Variable_X, empty) = false .
 eq occurs(Variable_X, P(BitVector_X ; TermList_X1)) = occurs(Variable_X, TermList_X1).
 eq occurs(Variable_X, E(Term_X1, TermList_X1)) = occurs(Variable_X, Term_X1) or occurs(Variable_X, TermList_X1) .
-eq occurs(Variable_X, (T, TL)) = occurs(Variable_X, T) or occurs(Variable_X, TL) .
+ceq occurs(Variable_X, (T, TL)) = occurs(Variable_X, T) or occurs(Variable_X, TL) if TL =/= empty .
 eq occurs(Variable_X, Term_X1 # TermList_X1) = occurs(Variable_X, Term_X1) or occurs(Variable_X, TermList_X1) .
 
 *******************Check if the top symbol of a term is a e(or p or E)*************
@@ -4404,18 +4405,18 @@ eq ContainSameVar(TermList_X1, TermList_X2) = false [owise].
 *** typical recursive transformation
 *******************************************************************************************
 
-eq Convert(E(Term_X1, TermList_X1)) = Convert(RemoveTopE(E(Term_X1, TermList_X1))) .
-eq Convert(P(BitVector_X ; TermList_X1)) = Convert(RemoveTopP(P(BitVector_X ; TermList_X1))) .
-eq Convert(p(Term_X1, Term_X2)) = p(Convert(Term_X1), Convert(Term_X2)) .
-eq Convert(e(Term_X1, Term_X2)) = e(Convert(Term_X1), Convert(Term_X2)) .
-eq Convert(F[TL]) = F[Convert(TL)] .
-eq Convert(Variable_X) = Variable_X .
-eq Convert(Constant_c1) = Constant_c1 .
+eq Convert*(E(Term_X1, TermList_X1)) = Convert*(RemoveTopE(E(Term_X1, TermList_X1))) .
+eq Convert*(P(BitVector_X ; TermList_X1)) = Convert*(RemoveTopP(P(BitVector_X ; TermList_X1))) .
+eq Convert*(p(Term_X1, Term_X2)) = p(Convert*(Term_X1), Convert*(Term_X2)) .
+eq Convert*(e(Term_X1, Term_X2)) = e(Convert*(Term_X1), Convert*(Term_X2)) .
+eq Convert*(F[TL]) = F[Convert(TL)] .
+eq Convert*(Variable_X) = Variable_X .
+eq Convert*(Constant_c1) = Constant_c1 .
 
-eq Convert(E(Term_X1, TermList_X1), TL) = Convert(RemoveTopE(E(Term_X1, TermList_X1))), Convert(TL) .
-eq Convert(P(BitVector_X ; TermList_X1), TL) = Convert(RemoveTopP(P(BitVector_X ; TermList_X1))), Convert(TL) .
-eq Convert(p(Term_X1, Term_X2), TL) = p(Convert(Term_X1), Convert(Term_X2)), Convert(TL) .
-eq Convert(e(Term_X1, Term_X2), TL) = e(Convert(Term_X1), Convert(Term_X2)), Convert(TL) .
+eq Convert(E(Term_X1, TermList_X1), TL) = Convert*(RemoveTopE(E(Term_X1, TermList_X1))), Convert(TL) .
+eq Convert(P(BitVector_X ; TermList_X1), TL) = Convert*(RemoveTopP(P(BitVector_X ; TermList_X1))), Convert(TL) .
+eq Convert(p(Term_X1, Term_X2), TL) = p(Convert*(Term_X1), Convert*(Term_X2)), Convert(TL) .
+eq Convert(e(Term_X1, Term_X2), TL) = e(Convert*(Term_X1), Convert*(Term_X2)), Convert(TL) .
 eq Convert(F[TL'], TL) = F[Convert(TL')], Convert(TL) .
 eq Convert(Variable_X, TL) = Variable_X, Convert(TL) .
 eq Convert(Constant_c1, TL) = Constant_c1, Convert(TL) .
@@ -4821,7 +4822,7 @@ fmod XorUnif is
 	eq getSameFunctions(C, QI1) = empty .
 	ceq getSameFunctions((QI2[TL], TL), QI1) = getSameFunctions(TL, QI1) if QI1 =/= QI2 .
 	ceq getSameFunctions(QI2[TL], QI1) = empty if QI1 =/= QI2 .
-	eq getSameFunctions((XT, TL), QI1) = (getSameFunctions(XT, QI1), getSameFunctions(TL, QI1)).
+	ceq getSameFunctions((XT, TL), QI1) = (getSameFunctions(XT, QI1), getSameFunctions(TL, QI1)) if TL =/= empty .
 
 	op getSameFunctions : UnificandPair Qid -> TermList .
 
@@ -4938,7 +4939,7 @@ fmod XorUnif is
 
 	eq Apply(TL, none) = TL .
 	eq Apply(TL, fail) = TL .
-	eq Apply((XT,TL1), SUB) = (Apply(XT, SUB), Apply(TL1, SUB)) .
+	ceq Apply((XT,TL1), SUB) = (Apply(XT, SUB), Apply(TL1, SUB)) if TL1 =/= empty .
 	eq Apply((empty).TermList, SUB) = (empty).TermList .
 
 
@@ -5101,11 +5102,13 @@ fmod XorUnif is
 ***for our inference system, we remember the substitution by set of equations. After get some result(mainly from syntactic unification), we need add these result into our list of solved equations.
 
 	op UnifToEq : Substitution -> UnificationProblem .
+    op UnifToEq* : Assignment -> UnificationProblem .
 
-	eq UnifToEq(V <- XT) = (V =? XT) .
+	eq UnifToEq*(V <- XT) = (V =? XT) .
+    eq UnifToEq*(fail) = FailEquation .
 	eq UnifToEq(none) = EmptyEq .
 	ceq UnifToEq(AS ; SUB) = FailEquation if AS == fail .
-	eq UnifToEq((AS ; SUB)) = UnifToEq(AS) /\ UnifToEq(SUB) .
+	eq UnifToEq((AS ; SUB)) = UnifToEq*(AS) /\ UnifToEq(SUB) .
 
 
 *******Sometimes, we need deal with some equationset sepratedly  and we need combine them back.
@@ -5146,7 +5149,7 @@ fmod XorUnif is
 *** *******occurs in termlist
 	op occurs : Variable TermList Int -> Bool .
 
-	eq occurs(V, (XT,TL), N) = (occurs(V, XT, N) or occurs(V, TL, N)).
+	ceq occurs(V, (XT,TL), N) = (occurs(V, XT, N) or occurs(V, TL, N)) if TL =/= empty .
 	eq occurs(V, empty, N) = false .
 
 ************sometimes we need check whether it occurs in all the terms.
@@ -5182,7 +5185,7 @@ fmod XorUnif is
 	op noFreeVariable : TermList -> Bool .
 
 	eq noFreeVariable(empty) = true .
-	eq noFreeVariable((XT, TL)) = noFreeVariable(XT) and noFreeVariable(TL) .
+	ceq noFreeVariable((XT, TL)) = noFreeVariable(XT) and noFreeVariable(TL) if TL =/= empty .
 
 	op noFreeVariable : UnificandPair -> Bool .
 
@@ -5225,7 +5228,7 @@ fmod XorUnif is
 	eq XOoccurs(V , N) = false .
 	eq XOoccurs(NilTerm, N) = false .
 
-	eq XOoccurs((XT , TL), N) = XOoccurs(XT , 1) or XOoccurs(TL , 1) .
+	ceq XOoccurs((XT , TL), N) = XOoccurs(XT , 1) or XOoccurs(TL , 1) if TL =/= empty .
 	eq XOoccurs(empty, N) = false .
 
 	op XOoccurs : UnificandPair Int -> Bool .
