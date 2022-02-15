@@ -4017,6 +4017,7 @@ var Assignments_X Assignments_Y : Substitution .
 var F G H : Qid .
 var T T' T'' : Term .
 var TL TL' : TermList .
+var NeTL NeTL' : NeTermList .
 var M : Module .
 
 op IseTerm(_) : Term -> Bool .
@@ -4153,7 +4154,7 @@ eq {EmptyEquation} Sub = EmptyEquation .
 eq {(none).Substitution}Sub = (none).Substitution .
 
 eq {Term_X # TermList_X1} Sub = {Term_X}Sub # {TermList_X1}Sub .
-ceq {T, TL}Sub = ({T}Sub, {TL}Sub) if TL =/= empty .
+eq {T, NeTL}Sub = ({T}Sub, {NeTL}Sub) .
 
 ********************************Homomorphism**************************************
 var EqS : EquationSet .
@@ -4220,7 +4221,7 @@ eq MapBack(C, F, G) = C .
 eq MapBack(e(T, T'), F, G) = F[MapBack(T, F, G), MapBack(T', F, G)] .
 eq MapBack(p(T, T'), F, G) = G[MapBack(T, F, G), MapBack(T', F, G)] .
 eq MapBack(H[TL], F, G) = H[MapBack(TL, F, G)] .
-ceq MapBack((T, TL), F, G) = MapBack(T, F, G), MapBack(TL, F, G) if TL =/= empty .
+eq MapBack((T, NeTL), F, G) = MapBack(T, F, G), MapBack(NeTL, F, G) .
 eq MapBack(X <- T, F, G) = X <- MapBack(T, F, G) .
 eq MapBack((none).Substitution, F, G) = (none).Substitution .
 ceq MapBack(Assignments_X ; Assignments_Y, F, G) = (MapBack(Assignments_X, F, G) ; MapBack(Assignments_Y, F, G)) if Assignments_X =/= none and-then Assignments_Y =/= none .
@@ -4414,14 +4415,13 @@ eq Convert(Variable_X) = Variable_X .
 eq Convert(Constant_c1) = Constant_c1 .
 
 eq Convert(empty) = empty .
-ceq Convert(E(Term_X1, TermList_X1), TL) = Convert(RemoveTopE(E(Term_X1, TermList_X1))), Convert(TL) if TL =/= empty .
-ceq Convert(P(BitVector_X ; TermList_X1), TL) = Convert(RemoveTopP(P(BitVector_X ; TermList_X1))), Convert(TL) if TL =/= empty .
-ceq Convert(p(Term_X1, Term_X2), TL) = p(Convert(Term_X1), Convert(Term_X2)), Convert(TL) if TL =/= empty .
-ceq Convert(e(Term_X1, Term_X2), TL) = e(Convert(Term_X1), Convert(Term_X2)), Convert(TL) if TL =/= empty .
-ceq Convert(F[TL'], TL) = F[Convert(TL')], Convert(TL) if TL =/= empty .
-ceq Convert(Variable_X, TL) = Variable_X, Convert(TL) if TL =/= empty .
-ceq Convert(Constant_c1, TL) = Constant_c1, Convert(TL) if TL =/= empty .
-
+eq Convert(E(Term_X1, TermList_X1), NeTL) = Convert(RemoveTopE(E(Term_X1, TermList_X1))), Convert(NeTL) .
+eq Convert(P(BitVector_X ; TermList_X1), NeTL) = Convert(RemoveTopP(P(BitVector_X ; TermList_X1))), Convert(NeTL) .
+eq Convert(p(Term_X1, Term_X2), NeTL) = p(Convert(Term_X1), Convert(Term_X2)), Convert(NeTL) .
+eq Convert(e(Term_X1, Term_X2), NeTL) = e(Convert(Term_X1), Convert(Term_X2)), Convert(NeTL) .
+eq Convert(F[TL'], NeTL) = F[Convert(TL')], Convert(NeTL) .
+eq Convert(Variable_X, NeTL) = Variable_X, Convert(NeTL) .
+eq Convert(Constant_c1, NeTL) = Constant_c1, Convert(NeTL) .
 
 ******************Shaping************************************************************
 *** After "Shaping" is applied, three things can happen:
@@ -4823,7 +4823,7 @@ fmod XorUnif is
 	eq getSameFunctions(C, QI1) = empty .
 	ceq getSameFunctions((QI2[TL], TL), QI1) = getSameFunctions(TL, QI1) if QI1 =/= QI2 .
 	ceq getSameFunctions(QI2[TL], QI1) = empty if QI1 =/= QI2 .
-	ceq getSameFunctions((XT, TL), QI1) = (getSameFunctions(XT, QI1), getSameFunctions(TL, QI1)) if TL =/= empty .
+	eq getSameFunctions((XT, NeTL), QI1) = (getSameFunctions(XT, QI1), getSameFunctions(NeTL, QI1)) .
 
 	op getSameFunctions : UnificandPair Qid -> TermList .
 
@@ -4940,7 +4940,7 @@ fmod XorUnif is
 
 	eq Apply(TL, none) = TL .
 	eq Apply(TL, fail) = TL .
-	ceq Apply((XT,TL1), SUB) = (Apply(XT, SUB), Apply(TL1, SUB)) if TL1 =/= empty .
+	eq Apply((XT,NeTL), SUB) = (Apply(XT, SUB), Apply(NeTL, SUB)) .
 	eq Apply((empty).TermList, SUB) = (empty).TermList .
 
 
@@ -5150,7 +5150,7 @@ fmod XorUnif is
 *** *******occurs in termlist
 	op occurs : Variable TermList Int -> Bool .
 
-	ceq occurs(V, (XT,TL), N) = (occurs(V, XT, N) or occurs(V, TL, N)) if TL =/= empty .
+	eq occurs(V, (XT,NeTL), N) = (occurs(V, XT, N) or occurs(V, NeTL, N)) .
 	eq occurs(V, empty, N) = false .
 
 ************sometimes we need check whether it occurs in all the terms.
@@ -5186,7 +5186,7 @@ fmod XorUnif is
 	op noFreeVariable : TermList -> Bool .
 
 	eq noFreeVariable(empty) = true .
-	ceq noFreeVariable((XT, TL)) = noFreeVariable(XT) and noFreeVariable(TL) if TL =/= empty .
+	eq noFreeVariable((XT, NeTL)) = noFreeVariable(XT) and noFreeVariable(NeTL) .
 
 	op noFreeVariable : UnificandPair -> Bool .
 
@@ -5229,7 +5229,7 @@ fmod XorUnif is
 	eq XOoccurs(V , N) = false .
 	eq XOoccurs(NilTerm, N) = false .
 
-	ceq XOoccurs((XT , TL), N) = XOoccurs(XT , 1) or XOoccurs(TL , 1) if TL =/= empty .
+	eq XOoccurs((XT , NeTL), N) = XOoccurs(XT , 1) or XOoccurs(NeTL , 1) .
 	eq XOoccurs(empty, N) = false .
 
 	op XOoccurs : UnificandPair Int -> Bool .
