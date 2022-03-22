@@ -130,6 +130,12 @@ fmod SEQUENCE is
                     m('META-NORMALIZE)
                     m('META-E-NARROWING)
                     m('META-NARROWING-SEARCH)
+                    --- start smt
+                    m('BOOLEAN)
+                    m('INTEGER)
+                    m('REAL)
+                    m('REAL-INTEGER)
+                    --- end smt
                     m('DEFINITION-PROTOCOL-RULES)
                     m('GLOBAL-STRATEGY)
                     m('DEFINITION-CONSTRAINTS)

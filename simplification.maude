@@ -1,0 +1,334 @@
+mod JOB-HANDLING is
+    pr META-INTERPRETER .
+    pr PARALLEL-CONFIG .
+    pr MAP{Worker,IdSystemSet} .
+    pr SET{Worker} .
+    pr PARAMETER-GLOBAL .
+
+    sorts J2J W2W .
+
+    vars O MI : Oid .
+    vars N C C1 C2 C3 C4 C5 : Nat .
+    var Sess : Bound .
+    vars IST IST' HistoryIST : IdSystemSet .
+    var IS : IdSystem .
+    vars W W' : Queue{Worker} .
+    var W2J : Map{Worker,IdSystemSet} .
+
+    op <_|_> : IdSystemSet IdSystemSet -> J2J .
+    op <_,_> : Queue{Worker} Queue{Worker} -> W2W .
+
+    *** calculate the number of workers for step 2.1 (simplificationL)
+    op neededWorkersForSimL : Nat Nat -> Nat .
+    eq neededWorkersForSimL(C, N)
+    =   if C < simBatch
+        then 1
+        else
+            if (C quo simBatch) > 1
+            then
+                if (C quo simBatch) > N then N else (C quo simBatch) fi
+            else
+                if (C rem simBatch) >= (simBatch quo 2) then 2 else 1 fi
+            fi
+        fi .
+
+    *** distribute a job evenly to each worker in step 2.1
+    op handleJobsLByWorkers : Oid Map{Worker,IdSystemSet} -> Configuration .
+    eq handleJobsLByWorkers(O, (MI |-> IST, W2J))
+    =   if IST == empty then
+            none
+        else
+            reduceTerm(MI, O,
+                'MAUDE-NPA-EXT,
+                'simplifyByImplicationL[
+                    upTerm(IST)
+                ]
+            )
+            handleJobsLByWorkers(O, W2J)
+        fi .
+    eq handleJobsLByWorkers(O, empty) = none .
+
+    *** calculate the number of workers for step 2.2 (simplificationH)
+    op neededWorkersForSimH : Nat Nat Nat -> Nat .
+    eq neededWorkersForSimH(C1, C2, N)
+    =   if C1 * C2 < simBatchH
+        then 1
+        else neededWorkersForSimH*(C1, C2, N)
+        fi .
+    op neededWorkersForSimH* : Nat Nat Nat -> Nat .
+    ceq neededWorkersForSimH*(C1, C2, N)
+    =   if C5 < 1
+        then 1
+        else
+            if C5 > 1
+            then
+                (if C5 > N then N else C5 fi)
+            else
+                (if (C2 rem C4) >= (C4 quo 2) then 2 else 1 fi)
+            fi
+        fi
+    if C3 := (simBatchH quo C1)
+    /\ C4 := (if C3 == 0 then 1 else C3 fi) --- the minimum number of states should be assigned to each worker
+    /\ C5 := C2 quo C4 . --- #workers needed
+
+    *** distribute a job to each worker in step 2.2
+    op handleJobsByWorkers : Oid Map{Worker,IdSystemSet} IdSystemSet -> Configuration .
+    eq handleJobsByWorkers(O, (MI |-> IST, W2J), HistoryIST)
+    =   if IST == empty then
+            none
+        else
+            reduceTerm(MI, O,
+                'MAUDE-NPA-EXT,
+                'simplifyByImplicationH[
+                    upTerm(HistoryIST),
+                    upTerm(IST)
+                ]
+            )
+            handleJobsByWorkers(O, W2J, HistoryIST)
+        fi .
+    eq handleJobsByWorkers(O, empty, HistoryIST) = none .
+
+    *** pick up a needed number of workers from workers
+    op getWorkers : Queue{Worker} Nat -> W2W .
+    eq getWorkers(W, N) = getWorkers*(W, N, emptyq) .
+    op getWorkers* : Queue{Worker} Nat Queue{Worker} -> W2W .
+    eq getWorkers*(MI | W, N, W')
+    =   if N > 0
+        then getWorkers*(W, sd(N, 1), MI | W')
+        else < MI | W, W' >
+        fi .
+    eq getWorkers*(emptyq, N, W') = < emptyq, W' > .
+
+    *** divide jobs evenly for each worker
+    op initW2J : Queue{Worker} -> Map{Worker,IdSystemSet} .
+    eq initW2J(MI | W) =  MI |-> empty, initW2J(W) .
+    eq initW2J(emptyq) = empty .
+
+    op produceJobs2Workers : Queue{Worker} IdSystemSet -> Map{Worker,IdSystemSet} .
+    eq produceJobs2Workers(W, IST) = produceJobs2Workers*(W, W, initW2J(W), IST) .
+
+    op produceJobs2Workers* : Queue{Worker} Queue{Worker} Map{Worker,IdSystemSet} IdSystemSet -> Map{Worker,IdSystemSet} .
+    eq produceJobs2Workers*(W, MI | W', (MI |-> IST', W2J), IS IST)
+    = produceJobs2Workers*(W, W', (MI |-> (IS IST'), W2J), IST) .
+
+    eq produceJobs2Workers*(W, emptyq, W2J, IST) = produceJobs2Workers*(W, W, W2J, IST) .
+    eq produceJobs2Workers*(W, W', W2J, empty) = W2J .
+endm
+
+mod SIMPLIFICATION is
+    pr JOB-HANDLING .
+
+    vars O MI : Oid .
+    var A : AttributeSet .
+    vars N N1 C C1 C2 : Nat .
+    var Sess : Bound .
+    vars IST IST' INIT INIT' HistoryIST : IdSystemSet .
+    vars W W1 W2 : Queue{Worker} .
+    var SJ : Queue{IdSystemSet} .
+    vars T : Term .
+    var RT : Type .
+    var M : Module .
+    var W2J : Map{Worker,IdSystemSet} .
+
+    *** parallelize step 2.1 (simplifyingL)
+    crl [SimplificationL] : < O : Manager |
+        status : simplifying,
+        workers : W,
+        #workers : N,
+        next : IST,
+        A >
+    => < O : Manager |
+        status : startSimplifyingH,
+        workers : W,
+        #workers : N,
+        next : IST',
+        A >
+    if C := #jobs(IST)
+    /\ N1 := neededWorkersForSimL(C, N)
+    /\ N1 <= 1
+    /\ IST' := simplifyByImplicationL(IST)
+    [print "[SimplificationL] completed #IST = " C] .
+
+    crl [SimplificationL] : < O : Manager |
+        status : simplifying,
+        workers : W,
+        #workers : N,
+        next : IST,
+        A >
+    => < O : Manager |
+        status : simplifyingL,
+        workers : W1,
+        #workers : N,
+        next : empty,
+        simJobs : emptyq,
+        A >
+        handleJobsLByWorkers(O, W2J)
+    if C := #jobs(IST)
+    /\ N1 := neededWorkersForSimL(C, N)
+    /\ N1 > 1
+    /\ < W1, W2 > := getWorkers(W, N1)
+    /\ W2J := produceJobs2Workers(W2, IST)
+    [print "[SimplificationL] #usedInterpreters = " N1 " #IST = " C] .
+
+    crl [Result4SimL] : < O : Manager |
+        status : simplifyingL,
+        workers : W,
+        simJobs : SJ,
+        A >
+        reducedTerm(O, MI, N, T, RT)
+    => < O : Manager |
+        status : simplifyingL,
+        workers : (W | MI),
+        simJobs : (SJ | IST),
+        A >
+    if RT == 'IdSystemSet or-else RT == 'IdSystem
+    /\ IST := downTerm(T, errIdSystemSet)
+    [print "[Result4SimL] " MI] .
+
+    rl [SimLAssignJob] : < O : Manager |
+        status : simplifyingL,
+        workers : (MI | W),
+        simJobs : (IST | IST' | SJ),
+        A >
+    => < O : Manager |
+        status : simplifyingL,
+        workers : W,
+        simJobs : SJ,
+        A >
+        reduceTerm(MI, O,
+            'MAUDE-NPA-EXT,
+            'simplifyByImplicationLCombine[
+                upTerm(IST),
+                upTerm(IST')
+            ]
+        )
+        [print "[SimLAssignJob] " MI] .
+
+    crl [SimplificationLDone] : < O : Manager |
+        status : simplifyingL,
+        #workers : N,
+        workers : W,
+        simJobs : SJ,
+        next : empty,
+        A >
+    => < O : Manager |
+        status : startSimplifyingH,
+        #workers : N,
+        workers : W,
+        next : IST,
+        A >
+    if qsize(W) == N
+    /\ C := qsize(SJ)
+    /\ C <= 1
+    /\ IST := (if C == 0 then empty else qtop(SJ) fi)
+    [print "[SimplificationLDone]"] .
+
+    *** parallelize step 2.2 (SimplifyingH)
+    crl [SimplificationH] : < O : Manager |
+        status : startSimplifyingH,
+        workers : W,
+        #workers : N,
+        next : IST,
+        history : HistoryIST,
+        A >
+    => < O : Manager |
+        status : simplifyingH,
+        workers : W,
+        #workers : N,
+        next : IST',
+        history : HistoryIST,
+        A >
+    if C1 := #jobs(HistoryIST)
+    /\ C2 := #jobs(IST)
+    /\ N1 := neededWorkersForSimH(C1, C2, N)
+    /\ N1 <= 1
+    /\ IST' := simplifyByImplicationH(HistoryIST, IST)
+    [print "[SimplificationH] completed #IST = " C2 ", #Hist = " C1] .
+
+    crl [SimplificationH] : < O : Manager |
+        status : startSimplifyingH,
+        workers : W,
+        #workers : N,
+        next : IST,
+        history : HistoryIST,
+        A >
+    => < O : Manager |
+        status : (if C2 > 0 then simplifyingH else stopping fi),
+        workers : W1,
+        #workers : N,
+        next : empty,
+        history : HistoryIST,
+        A >
+        if C2 > 0 then handleJobsByWorkers(O, W2J, HistoryIST) else stopWorking(O, O) fi
+    if C1 := #jobs(HistoryIST)
+    /\ C2 := #jobs(IST)
+    /\ N1 := neededWorkersForSimH(C1, C2, N)
+    /\ N1 > 1
+    /\ < W1, W2 > := getWorkers(W, N1)
+    /\ W2J := produceJobs2Workers(W2, IST)
+    [print "[SimplificationH] #usedInterpreters = " N1 ", #His " C1 ", #IST = " C2] .
+
+    crl [Result4SimH] : < O : Manager |
+        status : simplifyingH,
+        workers : W,
+        next : IST,
+        A >
+        reducedTerm(O, MI, N, T, RT)
+    => < O : Manager |
+        status : simplifyingH,
+        workers : (W | MI),
+        next : (IST IST'),
+        A >
+    if RT == 'IdSystemSet or-else RT == 'IdSystem
+    /\ IST' := downTerm(T, errIdSystemSet)
+    [print "[Result4SimH] " MI] .
+
+    crl [SimplificationDone] : < O : Manager |
+        status : simplifyingH,
+        #workers : N,
+        workers : W,
+        m : M,
+        sess : Sess,
+        init : INIT,
+        jobs : empty,
+        next : IST,
+        history : HistoryIST,
+        A >
+    => < O : Manager |
+        status : (if C > 0 then stopping else suspending fi),
+        #workers : N,
+        workers : W,
+        m : M,
+        sess : Sess,
+        init : (INIT INIT'),
+        jobs : IST',
+        next : empty,
+        history : (HistoryIST IST'),
+        A >
+        (if C > 0 then stopWorking(O, O) else none fi)
+    if qsize(W) == N
+    /\ IST =/= empty
+    /\ < INIT', IST' > := searchState-CheckInit(M, Sess, HistoryIST, IST)
+    /\ C := #jobs(INIT')
+    /\ C1 := #jobs(IST')
+    [print "<================= [SimplificationHDone] #jobs = " C1 " #init = " C "] =================>"] .
+
+    crl [SimplificationHDoneAndStop] : < O : Manager |
+        status : simplifyingH,
+        #workers : N,
+        workers : W,
+        jobs : empty,
+        next : IST,
+        A >
+    => < O : Manager |
+        status : stopping,
+        #workers : N,
+        workers : W,
+        jobs : empty,
+        next : IST,
+        A >
+        stopWorking(O, O)
+    if qsize(W) == N
+    /\ IST == empty
+    [print "<================= [SimplificationHDoneAndStop] IST = " IST "] =================>"] .
+endm

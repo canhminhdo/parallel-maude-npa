@@ -1,9 +1,9 @@
 #!/bin/zsh
 time maude << EOF
 in maude-npa.maude
-load examples/Symmetric-Key-Protocols/Diffie-Hellman/Diffie-Hellman.maude
+load examples/Needham_Schroeder.maude
 select MAUDE-NPA .
-red run(1, 2) .
+red run(0, unbounded) .
 EOF
 
 # red run(0, 7) .

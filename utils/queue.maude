@@ -2,20 +2,27 @@ fmod IQUEUE{X :: TRIV} is
     protecting BOOL .
     pr NAT .
 
-    sort Queue{X} .
-    subsort X$Elt < Queue{X} .
+    sort NeQueue{X} Queue{X} .
+    subsort X$Elt < NeQueue{X} < Queue{X} .
+
     op emptyq : -> Queue{X} [ctor] .
     op _|_ : Queue{X} Queue{X} -> Queue{X} [ctor assoc id: emptyq] .
-    op isEmpty : Queue{X} -> Bool .
-    op qsize : Queue{X} -> Nat .
+    op _|_ : NeQueue{X} Queue{X} -> NeQueue{X} [ctor ditto] .
+    op _|_ : NeQueue{X} NeQueue{X} -> NeQueue{X} [ctor ditto] .
+
     var Q : Queue{X} .
     var E : X$Elt .
 
-    eq qsize(emptyq) = 0 .
-    eq qsize(E | Q) = qsize(Q) + 1 .
-
+    op isEmpty : Queue{X} -> Bool .
     eq isEmpty(emptyq) = true .
     eq isEmpty(E | Q) = false .
+
+    op qtop : NeQueue{X} -> X$Elt .
+    eq qtop(E | Q) = E .
+
+    op qsize : Queue{X} -> Nat .
+    eq qsize(emptyq) = 0 .
+    eq qsize(E | Q) = qsize(Q) + 1 .
 endfm
 
 view Job from TRIV to STRING is

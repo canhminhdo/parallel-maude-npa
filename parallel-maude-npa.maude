@@ -1,0 +1,387 @@
+load utils/queue.maude
+load utils/loading.maude
+load common.maude
+load metaInterpreter.maude
+load global.maude
+load simplification.maude
+
+mod PARALLEL-MAUDE-NPA is
+    pr PARALLEL-GENERIC-TOOL .
+    pr SIMPLIFICATION .
+
+    vars O O' MI : Oid .
+    var  A : AttributeSet .
+    vars N D D' C C' : Nat .
+    vars Nodes BStep Sess : Bound .
+    vars Rem? : Bool .
+    vars IST IST' IST'' INIT INIT' HistoryIST : IdSystemSet .
+    var IS : IdSystem .
+    vars W W' : Queue{Worker} .
+    vars T : Term .
+    var RT : Type .
+    vars M M' M'' : Module .
+    var GS : GrammarList .
+    var F : Filters .
+    vars Q : Qid .
+    var Rest : Seq .
+
+    rl [CreateWorkers] : < O : Manager |
+        status : idle,
+        #workers : N,
+        A >
+        initialize(O, O', M, GS, F, BStep, Nodes, Sess, Rem?, HistoryIST, IST)
+    => < O : Manager |
+        status : initializing,
+        #workers : N,
+        workers : emptyq,
+        m : M,
+        gs : GS,
+        filter : F,
+        bStep : BStep,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        history : (IST HistoryIST),
+        jobs : IST,
+        next : empty,
+        init : empty,
+        depth : 0,
+        A >
+        produceInterpreter(O, N)
+        [print "[CreateWorkers]"] .
+
+    *** request to create N meta-interpreters
+    op produceInterpreter : Oid Nat -> Configuration .
+    ceq produceInterpreter(O, N) = createInterpreter(interpreterManager, O, newProcess)
+        produceInterpreter(O, sd(N, 1)) if N > 0 .
+    eq produceInterpreter(O, N) = none [owise] .
+
+    rl [CreatedWorker] : < O : Manager |
+        status : initializing,
+        A >
+        createdInterpreter(O, O', MI)
+    => < O : Manager |
+        status : initializing,
+        (loading[MI] : false),
+        (pending[MI] : prelude maudenpa),
+        A >
+        [print "[CreatedWorker]"] .
+
+    *** loading modules from prelude and maude-npa files *******************************
+    rl [LoadingModule] : < O : Manager |
+        status : initializing,
+        (loading[MI] : false),
+        (pending[MI] : m(Q) Rest),
+        A >
+    => < O : Manager |
+        status : initializing,
+        (loading[MI] : true),
+        (pending[MI] : Rest),
+        A >
+        insertModule(MI, O, upModule(Q, false)) .
+
+    rl [LoadingModule] : < O : Manager |
+        status : initializing,
+        (pending[MI] : m(Q) Rest),
+        A >
+        insertedModule(O, MI)
+    => < O : Manager |
+        status : initializing,
+        (pending[MI] : Rest),
+        A >
+        insertModule(MI, O, upModule(Q, false)) .
+
+    rl [LoadingModule] : < O : Manager |
+        status : initializing,
+        (pending[MI] : m(Q) Rest),
+        A >
+        insertedView(O, MI)
+    => < O : Manager |
+        status : initializing,
+        (pending[MI] : Rest),
+        A >
+        insertModule(MI, O, upModule(Q, false)) .
+
+    rl [LoadingView] : < O : Manager |
+        status : initializing,
+        (pending[MI] : v(Q) Rest),
+        A >
+        insertedModule(O, MI)
+    => < O : Manager |
+        status : initializing,
+        (pending[MI] : Rest),
+        A >
+        insertView(MI, O, upView(Q)) .
+
+    rl [LoadingView] : < O : Manager |
+        status : initializing,
+        (pending[MI] : v(Q) Rest),
+        A >
+        insertedView(O, MI)
+    => < O : Manager |
+        status : initializing,
+        (pending[MI] : Rest),
+        A >
+        insertView(MI, O, upView(Q)) .
+
+    crl [LoadingModule] : < O : Manager |
+        status : initializing,
+        m : M,
+        gs : GS,
+        filter : F,
+        (loading[MI] : true),
+        (pending[MI] : nil),
+        A >
+        insertedModule(O, MI)
+    => < O : Manager |
+        status : initializing,
+        m : M,
+        gs : GS,
+        filter : F,
+        (loading[MI] : false),
+        (pending[MI] : nil),
+        A >
+        insertModule(MI, O, M'')
+    if M' := upModule('MAUDE-NPA-EXT, false)
+    /\ M'' := newName('MAUDE-NPA-EXT, addEqs(
+        (eq 'pM.Module = upTerm(M) [none] . )
+        (eq 'pGS.GrammarList = upTerm(GS) [nonexec] . )
+        (eq 'pF.Filters = upTerm(F) [none] . )
+        , M'
+    )) .
+
+    rl [Loaded] : < O : Manager |
+        status : initializing,
+        workers : W,
+        (loading[MI] : false),
+        (pending[MI] : nil),
+        A >
+        insertedModule(O, MI)
+    => < O : Manager |
+        status : initializing,
+        workers : (W | MI),
+        A >
+        [print "[Loaded] " MI] .
+
+    crl [CreatedWorkersDone] : < O : Manager |
+        status : initializing,
+        #workers : N,
+        workers : W,
+        A >
+    => < O : Manager |
+        status : working,
+        #workers : N,
+        workers : W,
+        A >
+    if qsize(W) == N [print "[CreatedWorkersDone]"] .
+
+    rl [AssignJob] : < O : Manager |
+        status : working,
+        jobs : (IS IST),
+        workers : (MI | W),
+        m : M,
+        gs : GS,
+        filter : F,
+        nodes : Nodes,
+        bStep : BStep,
+        A >
+    => < O : Manager |
+        status : working,
+        jobs : IST,
+        workers : W,
+        m : M,
+        gs : GS,
+        filter : F,
+        nodes : Nodes,
+        bStep : BStep,
+        A >
+        handleJob(O, MI, M, GS, F, if BStep == 1 then Nodes else unbounded fi, IS)
+        [print "[AssignJob] " MI] .
+
+    *** request meta-interpreter to handle the backward narrowing just by one step
+    op handleJob : Oid Oid Module GrammarList Filters Bound IdSystemSet -> Configuration .
+    ceq handleJob(O, MI, M, GS, F, Nodes, IS)
+    = reduceTerm(MI, O, 'MAUDE-NPA-EXT, T)
+    if T := 'nextBackNarrowParallel[
+            --- upTerm(M),
+            --- upTerm(GS),
+            --- upTerm(F),
+            upTerm(Nodes),
+            upTerm(IS)
+        ] .
+
+    crl [WorkerResult] : < O : Manager |
+        status : working,
+        workers : W,
+        m : M,
+        next : IST,
+        history : HistoryIST,
+        A >
+        reducedTerm(O, MI, N, T, RT)
+    => < O : Manager |
+        status : working,
+        workers : (W | MI),
+        m : M,
+        next : (IST IST'),
+        history : HistoryIST,
+        A >
+    if RT == 'IdSystemSet or-else RT == 'IdSystem
+    /\ IST' := downTerm(T, errIdSystemSet)
+    [print "[WorkerResult] " MI] .
+
+    *** conducting the transition subsumption in sequence
+    --- crl [Switch] : < O : Manager |
+    ---     status : working,
+    ---     #workers : N,
+    ---     workers : W,
+    ---     m : M,
+    ---     gs : GS,
+    ---     filter : F,
+    ---     bStep : BStep,
+    ---     nodes : Nodes,
+    ---     sess : Sess,
+    ---     rem : Rem?,
+    ---     jobs : empty,
+    ---     next : IST,
+    ---     init : INIT,
+    ---     history : HistoryIST,
+    ---     depth : D,
+    ---     A >
+    --- => < O : Manager |
+    ---     status : (if C' > 0 then stopping else suspending fi),
+    ---     #workers : N,
+    ---     workers : W,
+    ---     m : M,
+    ---     gs : GS,
+    ---     filter : F,
+    ---     bStep : decN(BStep, 1),
+    ---     nodes : Nodes,
+    ---     sess : Sess,
+    ---     rem : Rem?,
+    ---     jobs : IST'',
+    ---     next : empty,
+    ---     init : (INIT INIT'),
+    ---     history : (HistoryIST IST''),
+    ---     depth : D',
+    ---     A >
+    ---     (if C' > 0 then stopWorking(O, O) else none fi)
+    --- if qsize(W) == N
+    --- /\ IST =/= empty
+    --- /\ IST' := filterStates(F, HistoryIST, IST) --- filter states by simplification
+    --- /\ < INIT', IST'' > := searchState-CheckInit(M, Sess, HistoryIST, IST') --- filter with history to get initial and other states
+    --- /\ D' := (D + 1)
+    --- /\ C := #jobs(IST'')
+    --- /\ C' := #jobs(INIT')
+    --- /\ K:Nat := #jobs(IST)
+    --- /\ H:Nat := #jobs(IST')
+    --- /\ L:Nat := #jobs(HistoryIST)
+    --- [print "<================= [Switch at Depth " D' " #jobs = " C " #jobs1 = " K:Nat " #jobs2 = " H:Nat " #his = " L:Nat "] =================>"] .
+
+    *** parallelize the transition subsumption (simplification)
+    crl [Switching] : < O : Manager |
+        status : working,
+        #workers : N,
+        workers : W,
+        bStep : BStep,
+        jobs : empty,
+        next : IST,
+        depth : D,
+        A >
+    => < O : Manager |
+        status : simplifying,
+        #workers : N,
+        workers : W,
+        bStep : decN(BStep,1),
+        jobs : empty,
+        next : IST,
+        depth : D',
+        A >
+    if qsize(W) == N
+    /\ IST =/= empty
+    /\ D' := D + 1
+    [print "<================= [Switching at Depth " D' "] =================>"] .
+
+    rl [Resuming] : < O : Manager |
+        status : suspending,
+        jobs : IST,
+        filter : F,
+        history : HistoryIST,
+        bStep : BStep,
+        rem : Rem?,
+        A >
+    =>  if BStep == 0 or-else IST == empty
+        then
+            --- Stop the search
+            stopWorking(O, O)
+            < O : Manager |
+                status : stopping,
+                jobs : IST,
+                filter : F,
+                history : HistoryIST,
+                bStep : BStep,
+                rem : Rem?,
+                A >
+        else
+            < O : Manager |
+                status : working,
+                jobs : IST,
+                filter : F,
+                history : HistoryIST,
+                bStep : BStep,
+                rem : Rem?,
+                A >
+        fi .
+
+    crl [terminate] : < O : Manager |
+        status : working,
+        #workers : N,
+        workers : W,
+        jobs : empty,
+        next : empty,
+        A >
+    => < O : Manager |
+        status : stopping,
+        #workers : N,
+        workers : W,
+        jobs : empty,
+        next : empty,
+        A >
+        stopWorking(O, O)
+    if qsize(W) == N
+    [print "[terminate]"] .
+
+    rl [StopWorkers] : < O : Manager |
+        workers : W, A >
+        stopWorking(O, O')
+    => < O : Manager |
+        workers : W, A >
+        produceQuitMsg(O, W)
+        [print "[StopWorkers]"] .
+
+    *** quit all meta-interpreters
+    op produceQuitMsg : Oid Queue{Worker} -> Configuration .
+    eq produceQuitMsg(O, (MI | W)) = quit(MI, O) produceQuitMsg(O, W) .
+    eq produceQuitMsg(O, emptyq) = none .
+
+    rl [Bye] : < O : Manager |
+        workers : (MI | W), A >
+        bye(O, MI)
+    => < O : Manager |
+        workers : W, A >
+        [print "[Bye]"] .
+
+    rl [CleanUp] : < O : Manager |
+        status : stopping,
+        workers : emptyq,
+        filter : F,
+        jobs : IST,
+        rem : Rem?,
+        init : INIT,
+        A >
+    => ShortIdSystem: if Rem? then
+            changeShortSystem(F, INIT IST)
+        else
+            changeShortSystem(F, INIT)
+        fi
+        [print "[CleanUp]"] .
+endm
