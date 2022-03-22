@@ -2,24 +2,26 @@ mod MAUDE-NPA-EXT is
     pr MAUDE-NPA .
 
     sort IdSystemSetPair .
-    op <_,_> : IdSystemSet IdSystemSet -> IdSystemSetPair .
-    op errIdSystemSet : -> IdSystemSet .
 
-    vars M : Module .
-    vars GS : GrammarList .
-    vars F : Filters .
-    vars BStep Nodes Sess : Bound .
-    vars Rem? : Bool .
+    var M : Module .
+    var GS : GrammarList .
+    var F : Filters .
+    vars Nodes Sess : Bound .
     vars IS IS' : IdSystem .
     vars IST IST' IST'' INIT HistoryIST : IdSystemSet .
     vars N N' : Nat .
 
+    op <_,_> : IdSystemSet IdSystemSet -> IdSystemSetPair .
+    op errIdSystemSet : -> IdSystemSet .
+
+    *** decreasing a bound
     op decN : Bound Nat -> Bound .
     eq decN(unbounded, N) = unbounded .
     eq decN(s(N), s(N')) = decN(N, N') .
     eq decN(0, N) = 0 .
     eq decN(N, 0) = N .
 
+    *** number of jobs
     op #jobs : IdSystemSet -> Nat .
     eq #jobs(IS IST) = #jobs(IST) + 1 .
     eq #jobs(empty) = 0 .
@@ -35,56 +37,47 @@ mod MAUDE-NPA-EXT is
     eq simplifyByImplicationLCombine*(IST, IS, empty, IST')
     = IS simplifyByImplicationLCombine(IST, IST') .
 
-    eq simplifyByImplicationLCombine*(IST, IS, IS' IST', IS' IST'') =
-    if IS implies IS'
-    then simplifyByImplicationLCombine*(IST, IS, IST', IST'')
-    else
-        if IS' implies IS
-        then simplifyByImplicationLCombine(IST, IS' IST'')
-        else simplifyByImplicationLCombine*(IST, IS, IST', IS' IST'')
-        fi
-    fi
-    .
+    eq simplifyByImplicationLCombine*(IST, IS, IS' IST', IS' IST'')
+    =   if IS implies IS'
+        then simplifyByImplicationLCombine*(IST, IS, IST', IST'')
+        else
+            if IS' implies IS
+            then simplifyByImplicationLCombine(IST, IS' IST'')
+            else simplifyByImplicationLCombine*(IST, IS, IST', IS' IST'')
+            fi
+        fi .
 
-    *** filter by simplification *******************************
+    *** filter by simplification
     op filterStates : Filters IdSystemSet IdSystemSet -> IdSystemSet .
     eq filterStates(F, HistoryIST, IST)
     = filterSMsgListX(F, filterIdX(F, simplify-theSystemSet(F, HistoryIST, IST)))
     [print "Simlification"] .
 
-    *** filter init and other states by history *******************************
+    *** filter init and other states by history
     op searchState-CheckInit : Module Bound IdSystemSet IdSystemSet -> IdSystemSetPair .
     eq searchState-CheckInit(M, Sess, HistoryIST, IST)
     = searchState-CheckInit*(M, Sess, HistoryIST, < empty, empty >, IST) [print "[Filter States and Initial States]"] .
 
     op searchState-CheckInit* : Module Bound IdSystemSet IdSystemSetPair IdSystemSet -> IdSystemSetPair .
     eq searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, empty) = < INIT, IST' > .
-    eq searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, (IS IST))
-    = if Sess =/= unbounded and-then countSessions(IS) > Sess
-    then searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, IST)
-    else if isInitialM(M, IS)
-        then
-            searchState-CheckInit*(M, Sess, HistoryIST, < INIT IS, IST' >, IST)
-        else searchState-CheckInit*(M, Sess, HistoryIST,
-            < INIT, if isNFSystem(M, HistoryIST, IS) then IST' else (IS IST') fi >,
-            IST)
-        fi
-    fi .
+    eq searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, (IS IST)) =
+        if Sess =/= unbounded and-then countSessions(IS) > Sess
+        then searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, IST)
+        else if isInitialM(M, IS)
+            then
+                searchState-CheckInit*(M, Sess, HistoryIST, < INIT IS, IST' >, IST)
+            else searchState-CheckInit*(M, Sess, HistoryIST,
+                < INIT, if isNFSystem(M, HistoryIST, IS) then IST' else (IS IST') fi >,
+                IST)
+            fi
+        fi .
 
-    *** filter states by histories *******************************
-    op filterStateWithHistory : Module IdSystemSet IdSystemSet -> IdSystemSet .
-    eq filterStateWithHistory(M, HistoryIST, empty) = empty .
-    eq filterStateWithHistory(M, HistoryIST, IS IST)
-    = if isNFSystem(M, HistoryIST, IS)
-    then filterStateWithHistory(M, HistoryIST, IST)
-    else IS filterStateWithHistory(M, HistoryIST, IST)
-    fi .
-
+    *** pre-defined operators to load shared information at once
     op pM : -> Module .
     op pGS : -> GrammarList .
     op pF : -> Filters .
 
-    *** backward one step *******************************
+    *** backward narrowing just one step
     op nextBackNarrowParallel : Bound IdSystemSet -> IdSystemSet .
     ceq nextBackNarrowParallel(Nodes, IST) = nextBackNarrowParallel*(pM, GS, pF, Nodes, IST)
     if GS := downTerm(extract('pGS.GrammarList, upModule('MAUDE-NPA-EXT, false)), (none).GrammarList) .
@@ -106,8 +99,7 @@ mod MAUDE-NPA-EXT is
                 )
              )
         )
-    )
-    .
+    ) .
 endm
 
 view IdSystemSet from TRIV to MAUDE-NPA is
@@ -121,7 +113,10 @@ mod PARALLEL-CONFIG is
     pr SEQUENCE .
 
     sort IStatus .
-    ops idle initializing initialized waiting suspending working stopping terminated simplifying simplifyingL simplifyingH startSimplifyingH : -> IStatus .
+    ops idle initializing initialized waiting suspending working stopping
+        terminated simplifying simplifyingL simplifyingH startSimplifyingH : -> IStatus .
+
+    *** attributes
     op status :_ : IStatus -> Attribute [ctor format(m o o o)] .
     op m :_ : Module -> Attribute .
     op gs :_ : GrammarList -> Attribute .
@@ -140,11 +135,14 @@ mod PARALLEL-CONFIG is
     op simJobs :_ : Queue{IdSystemSet} -> Attribute [format(! o o o)] .
     op (loading[_] :_) : Oid Bool -> Attribute .
     op (pending[_] :_) : Oid Seq -> Attribute .
+
+    *** messages
     op stopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
     op ShortIdSystem:_ : IdSystemSet-or-Error -> Msg [ctor msg] .
     op initialize : Oid Oid Module GrammarList Filters Bound Bound Bound Bool
                     IdSystemSet IdSystemSet -> Msg [ctor msg format (b o)] .
 
+    *** object ids and class
     op Manager : -> Cid [ctor] .
     op aManager : -> Oid [ctor] .
     op npa : -> Oid [ctor] .
@@ -153,9 +151,9 @@ endm
 mod PARALLEL-GENERIC-TOOL is
     pr PARALLEL-CONFIG .
 
-    vars M : Module .
-    vars GS : GrammarList .
-    vars F : Filters .
+    var M : Module .
+    var GS : GrammarList .
+    var F : Filters .
     vars BStep Nodes Sess : Bound .
     vars Rem? : Bool .
     vars IST HistoryIST : IdSystemSet .

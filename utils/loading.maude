@@ -1,7 +1,9 @@
 fmod SEQUENCE is
     pr QID .
+
     sort ViewCmd ModuleCmd Seq .
     subsort ViewCmd ModuleCmd < Seq .
+
     op v : Qid -> ViewCmd .
     op m : Qid -> ModuleCmd .
     op __  : Seq Seq -> Seq [assoc id: nil] .

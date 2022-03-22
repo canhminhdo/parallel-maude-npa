@@ -2,6 +2,7 @@ load utils/queue.maude
 load utils/loading.maude
 load common.maude
 load metaInterpreter.maude
+load global.maude
 load simplification.maude
 
 mod PARALLEL-MAUDE-NPA is
@@ -47,9 +48,9 @@ mod PARALLEL-MAUDE-NPA is
         depth : 0,
         A >
         produceInterpreter(O, N)
-        --- if IST' := nextBackNarrowParallel*(M, GS, F, Nodes, IST)
-    [print "[CreateWorkers]"] .
+        [print "[CreateWorkers]"] .
 
+    *** request to create N meta-interpreters
     op produceInterpreter : Oid Nat -> Configuration .
     ceq produceInterpreter(O, N) = createInterpreter(interpreterManager, O, newProcess)
         produceInterpreter(O, sd(N, 1)) if N > 0 .
@@ -77,8 +78,7 @@ mod PARALLEL-MAUDE-NPA is
         (loading[MI] : true),
         (pending[MI] : Rest),
         A >
-        insertModule(MI, O, upModule(Q, false))
-        .
+        insertModule(MI, O, upModule(Q, false)) .
 
     rl [LoadingModule] : < O : Manager |
         status : initializing,
@@ -89,8 +89,7 @@ mod PARALLEL-MAUDE-NPA is
         status : initializing,
         (pending[MI] : Rest),
         A >
-        insertModule(MI, O, upModule(Q, false))
-        .
+        insertModule(MI, O, upModule(Q, false)) .
 
     rl [LoadingModule] : < O : Manager |
         status : initializing,
@@ -101,8 +100,7 @@ mod PARALLEL-MAUDE-NPA is
         status : initializing,
         (pending[MI] : Rest),
         A >
-        insertModule(MI, O, upModule(Q, false))
-        .
+        insertModule(MI, O, upModule(Q, false)) .
 
     rl [LoadingView] : < O : Manager |
         status : initializing,
@@ -113,8 +111,7 @@ mod PARALLEL-MAUDE-NPA is
         status : initializing,
         (pending[MI] : Rest),
         A >
-        insertView(MI, O, upView(Q))
-        .
+        insertView(MI, O, upView(Q)) .
 
     rl [LoadingView] : < O : Manager |
         status : initializing,
@@ -125,8 +122,7 @@ mod PARALLEL-MAUDE-NPA is
         status : initializing,
         (pending[MI] : Rest),
         A >
-        insertView(MI, O, upView(Q))
-        .
+        insertView(MI, O, upView(Q)) .
 
     crl [LoadingModule] : < O : Manager |
         status : initializing,
@@ -146,14 +142,13 @@ mod PARALLEL-MAUDE-NPA is
         (pending[MI] : nil),
         A >
         insertModule(MI, O, M'')
-        if M' := upModule('MAUDE-NPA-EXT, false)
-        /\ M'' := newName('MAUDE-NPA-EXT, addEqs(
-            (eq 'pM.Module = upTerm(M) [none] . )
-            (eq 'pGS.GrammarList = upTerm(GS) [nonexec] . )
-            (eq 'pF.Filters = upTerm(F) [none] . )
-            , M'
-        ))
-        .
+    if M' := upModule('MAUDE-NPA-EXT, false)
+    /\ M'' := newName('MAUDE-NPA-EXT, addEqs(
+        (eq 'pM.Module = upTerm(M) [none] . )
+        (eq 'pGS.GrammarList = upTerm(GS) [nonexec] . )
+        (eq 'pF.Filters = upTerm(F) [none] . )
+        , M'
+    )) .
 
     rl [Loaded] : < O : Manager |
         status : initializing,
@@ -203,19 +198,17 @@ mod PARALLEL-MAUDE-NPA is
         handleJob(O, MI, M, GS, F, if BStep == 1 then Nodes else unbounded fi, IS)
         [print "[AssignJob] " MI] .
 
+    *** request meta-interpreter to handle the backward narrowing just by one step
     op handleJob : Oid Oid Module GrammarList Filters Bound IdSystemSet -> Configuration .
     ceq handleJob(O, MI, M, GS, F, Nodes, IS)
-    = reduceTerm(MI, O,
-        'MAUDE-NPA-EXT,
-        T)
+    = reduceTerm(MI, O, 'MAUDE-NPA-EXT, T)
     if T := 'nextBackNarrowParallel[
             --- upTerm(M),
             --- upTerm(GS),
             --- upTerm(F),
             upTerm(Nodes),
             upTerm(IS)
-        ]
-    .
+        ] .
 
     crl [WorkerResult] : < O : Manager |
         status : working,
@@ -236,6 +229,7 @@ mod PARALLEL-MAUDE-NPA is
     /\ IST' := downTerm(T, errIdSystemSet)
     [print "[WorkerResult] " MI] .
 
+    *** conducting the transition subsumption in sequence
     --- crl [Switch] : < O : Manager |
     ---     status : working,
     ---     #workers : N,
@@ -283,7 +277,7 @@ mod PARALLEL-MAUDE-NPA is
     --- /\ L:Nat := #jobs(HistoryIST)
     --- [print "<================= [Switch at Depth " D' " #jobs = " C " #jobs1 = " K:Nat " #jobs2 = " H:Nat " #his = " L:Nat "] =================>"] .
 
-    *** parallel simplification
+    *** parallelize the transition subsumption (simplification)
     crl [Switching] : < O : Manager |
         status : working,
         #workers : N,
@@ -315,7 +309,8 @@ mod PARALLEL-MAUDE-NPA is
         bStep : BStep,
         rem : Rem?,
         A >
-    => if BStep == 0 or-else IST == empty then
+    =>  if BStep == 0 or-else IST == empty
+        then
             --- Stop the search
             stopWorking(O, O)
             < O : Manager |
@@ -355,14 +350,25 @@ mod PARALLEL-MAUDE-NPA is
     if qsize(W) == N
     [print "[terminate]"] .
 
-    rl [StopWorkers] : < O : Manager | workers : W, A > stopWorking(O, O')
-        => produceQuitMsg(O, W) < O : Manager | workers : W, A > [print "[StopWorkers]"] .
+    rl [StopWorkers] : < O : Manager |
+        workers : W, A >
+        stopWorking(O, O')
+    => < O : Manager |
+        workers : W, A >
+        produceQuitMsg(O, W)
+        [print "[StopWorkers]"] .
 
+    *** quit all meta-interpreters
     op produceQuitMsg : Oid Queue{Worker} -> Configuration .
     eq produceQuitMsg(O, (MI | W)) = quit(MI, O) produceQuitMsg(O, W) .
     eq produceQuitMsg(O, emptyq) = none .
 
-    rl [Bye] : < O : Manager | workers : (MI | W), A > bye(O, MI) => < O : Manager | workers : W, A > [print "[Bye]"] .
+    rl [Bye] : < O : Manager |
+        workers : (MI | W), A >
+        bye(O, MI)
+    => < O : Manager |
+        workers : W, A >
+        [print "[Bye]"] .
 
     rl [CleanUp] : < O : Manager |
         status : stopping,
