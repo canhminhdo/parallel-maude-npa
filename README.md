@@ -74,3 +74,7 @@ and history states that should be assigned to each worker at step (2.2).
 
 By default, `simBatch` and `simBatchH` are set to 20 and 50, respectively.
 You can change them in the `global.maude` file.
+
+### Papers
+---
+TBA
