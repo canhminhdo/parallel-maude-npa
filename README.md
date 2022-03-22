@@ -58,10 +58,9 @@ erew <> p-run(0, unbounded, 8) .
 
 - `Step 1:` load `maude-npa.maude` file at line 1.
 - `Step 2:` load `parallel-maude-npa.maude` file at line 2.
-- `Step 3:` load the formal specification of a protocol specified in Maude-NPA
-(e.g. Needham Schroeder Lowe ECB protocol) at line 3.
-- `Step 4:` select `PARALLEL-MAUDE-NPA` module as default at line 4
-- `Step 5:` conduct the analysis in parallel by using the command `p-run(<attack-state>, <depth-bound>, <#workers>)`
+- `Step 3:` load the formal specification of a protocol specified in Maude-NPA at line 3. For example, Needham Schroeder Lowe ECB protocol is used.
+- `Step 4:` select `PARALLEL-MAUDE-NPA` module as default at line 4.
+- `Step 5:` conduct the analysis in parallel by using the command `p-run(<attack-state>, <depth-bound>, <#workers>)`.
 
 ### Global parameters
 ---
