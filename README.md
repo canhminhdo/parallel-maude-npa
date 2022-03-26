@@ -1,4 +1,4 @@
-### A Parallel Version of Maude-NPA
+### Parallel Maude-NPA for Cryptographic Protocol Analysis
 ---
 
 Maude-NPA is a formal verification/analysis tool for
