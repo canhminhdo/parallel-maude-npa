@@ -1,0 +1,457 @@
+--- simplified version
+
+fmod PROTOCOL-EXAMPLE-SYMBOLS is
+    protecting DEFINITION-PROTOCOL-RULES .
+
+    sorts Name Nonce NeNonceSet
+        PqPk PqSk PqKey Cipher
+        PreMasterSecret MasterSecret
+        Cert Session
+        Group Gen Exp GenvExp .
+
+    subsort Nonce NeNonceSet GenvExp Session Cert < IMsg .
+    subsort PqPk PqSk PqKey Cipher < IMsg .
+    subsort PreMasterSecret MasterSecret < IMsg .
+    subsort Name < Public .
+    subsort PqPk < Public .
+    subsort Gen < Public .
+    subsort Group < Public .
+    subsort Gen Exp < GenvExp .
+
+    --- NeNonceSet
+    subsort Nonce < NeNonceSet .
+    op _*_ : NeNonceSet NeNonceSet -> NeNonceSet [frozen assoc comm] .
+    --- Groups
+    ops g : -> Group .
+    --- Gen
+    op gen : Group -> Gen .
+    --- Exp
+    op exp : Group GenvExp NeNonceSet -> Exp [frozen] .
+
+    ops server client i : -> Name .
+    op n : Name Fresh -> Nonce .
+    op sess : Name Fresh -> Session .
+
+    --- PQ KEM keys
+    op pqPk : Name Fresh  -> PqPk [frozen] .
+    op pqSk : Name Fresh -> PqSk [frozen] .
+    op cipher : PqPk -> Cipher [frozen] .
+    op pqKey : PqPk -> PqKey [frozen] .
+    op decap : Name Cipher -> PqKey [frozen] .
+    --- PreMasterSecret & MasterSecret
+    op pms : Exp PqKey -> PreMasterSecret [frozen] .
+    op ms : PreMasterSecret Nonce Nonce Exp Cipher -> MasterSecret [frozen] .
+    --- certificate & Signature
+    op cert : Name -> Cert [frozen] .
+    op sig : Name IMsg -> IMsg [frozen] .
+
+    --- encryption
+    op enc : MasterSecret IMsg -> IMsg [frozen] .
+    op dec : MasterSecret IMsg -> IMsg [frozen] .
+
+    --- conncatenation
+    op _;_ : IMsg  IMsg  -> IMsg [gather (e E) frozen] .
+
+    --- messages
+    op ch    : -> IMsg . --- client hello
+    op sh    : -> IMsg . --- server hello
+    op sc    : -> IMsg . --- server certificate
+    op ske   : -> IMsg . --- server key exchange
+    op cke   : -> IMsg . --- client key exchange
+    op shd   : -> IMsg . --- server hello done
+    op ccs   : -> IMsg . --- change cipher spec
+    op cf    : -> IMsg . --- client finished
+    op sf    : -> IMsg . --- server finished
+    op sHSM  : -> IMsg . --- server handshake messages
+    op cHSM  : -> IMsg . --- client handshake messages
+
+endfm
+
+fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
+    protecting PROTOCOL-EXAMPLE-SYMBOLS .
+
+    ----------------------------------------------------------
+    --- Overwrite this module with the algebraic properties
+    --- of your protocol
+    ----------------------------------------------------------
+
+    --- classical key
+    eq exp(G:Group,exp(G:Group,gen(G:Group),Y:NeNonceSet),Z:NeNonceSet)
+    = exp(G:Group,gen(G:Group), Y:NeNonceSet * Z:NeNonceSet) [variant] .
+
+    --- post-quantum key
+    eq decap(A:Name, cipher(pqPk(A:Name,r:Fresh))) = pqKey(pqPk(A:Name,r:Fresh)) [variant] .
+
+    --- cancellation of encrytion/decryption
+    eq dec(K:MasterSecret,enc(K:MasterSecret,M:IMsg)) = M:IMsg [variant] .
+
+endfm
+
+fmod PROTOCOL-SPECIFICATION is
+    protecting PROTOCOL-EXAMPLE-SYMBOLS .
+    protecting DEFINITION-PROTOCOL-RULES .
+    protecting DEFINITION-CONSTRAINTS-INPUT .
+
+    ----------------------------------------------------------
+    --- Overwrite this module with the strands
+    --- of your protocol
+    ----------------------------------------------------------
+
+    vars NS1 NS2 NS : NeNonceSet .
+    vars N N' N1 N2 : Nonce .
+    var GE : GenvExp .
+    vars A C S : Name .
+    vars r r' r1' r2' r1 r2 r3 r4 : Fresh .
+    vars M M1 M2 : IMsg .
+    vars SS : Session .
+    vars CP : Cipher .
+    vars Ke : MasterSecret .
+    vars G : Group .
+    vars PK1 E : Exp .
+    vars PK2 : PqPk .
+
+    eq STRANDS-DOLEVYAO
+    = :: nil :: [ nil | -(M1 ; M2), +(M1), nil ] &
+      :: nil :: [ nil | -(M1 ; M2), +(M2), nil ] &
+      :: nil :: [ nil | -(M1), -(M2), +(M1 ; M2), nil ] &
+    ---   :: nil :: [ nil | -(Ke), -(M), +(enc(Ke,M)), nil ] &
+    ---   :: nil :: [ nil | -(Ke), -(M), +(dec(Ke,M)), nil ] &
+    ---   :: nil :: [ nil | -(NS1), -(NS2), +(NS1 * NS2), nil ] &
+    ---   :: nil :: [ nil | -(GE), -(NS), +(exp(g,GE,NS)), nil ] &
+    ---   :: nil :: [ nil | -(PK2), +(cipher(PK2)), nil ] &
+    ---   :: nil :: [ nil | -(PK2), +(pqKey(PK2)), nil ] &
+    ---   :: nil :: [ nil | -(CP), +(decap(i,CP)), nil ] &
+    ---   :: nil :: [ nil | -(M), +(sig(i,M)), nil ] &
+    ---   :: r :: [ nil | +(n(i,r)), nil ] &
+    ---   :: nil :: [ nil | +(ch), nil ] &
+    ---   :: nil :: [ nil | +(sh), nil ] &
+    ---   :: nil :: [ nil | +(sc), nil ] &
+    ---   :: nil :: [ nil | +(ske), nil ] &
+    ---   :: nil :: [ nil | +(shd), nil ] &
+    ---   :: nil :: [ nil | +(cke), nil ] &
+    ---   :: nil :: [ nil | +(ccs), nil ] &
+    ---   :: nil :: [ nil | +(sf), nil ] &
+    ---   :: nil :: [ nil | +(cf), nil ] &
+      :: nil :: [ nil | +(A), nil ]
+    [nonexec] .
+
+    --- Macros
+    op _++_ : IMsg IMsg -> IMsg [frozen gather (E e)] .
+    eq (X1:IMsg ; X2:IMsg) ++ Y:IMsg = X1:IMsg ; (X2:IMsg ++ Y:IMsg) .
+    eq X:IMsg ++ Y:IMsg = X:IMsg ; Y:IMsg [owise] .
+
+    --- classical keys
+    op keyG : Group Name Fresh -> IMsg [frozen] .
+    eq keyG(G,A,r) = exp(G, gen(G), n(A,r)) .
+    op keyE : Group Exp Name Fresh -> IMsg [frozen] .
+    eq keyE(G,E,A,r) = exp(G, E, n(A,r)) .
+
+    eq STRANDS-PROTOCOL
+    = :: r1,r2 ::
+      [ nil |
+        +(ch ; n(C,r1)), --- client hello message
+        -(sh ; N ; SS),
+        -(sc ; cert(S)),
+        -(ske ; PK1 ; PK2 ; sig(S, PK1 ; PK2 ; n(C,r1) ; N)),
+        -(shd),
+        +(cke ; keyG(g,C,r2) ; cipher(PK2)), --- client key exchange message
+        +(ccs), --- change cipher spec message
+        +(cf ; enc(
+                ms(
+                    pms(keyE(g,PK1,C,r2), pqKey(PK2)),
+                    n(C,r1),
+                    N,
+                    keyG(g,C,r2),
+                    cipher(PK2)
+                ),
+                (
+                    (ch ; n(C,r1)) ++
+                    (sh ; N ; SS) ++
+                    (sc ; cert(S)) ++
+                    (ske ; PK1 ; PK2 ; sig(S, PK1 ; PK2 ; n(C,r1) ; N)) ++
+                    (shd) ++
+                    (cke ; keyG(g,C,r2) ; cipher(PK2)) ++
+                    (ccs)
+                )
+            )
+        ), --- client finished message
+        -(ccs),
+        -(sf ; enc(
+                ms(
+                    pms(keyE(g,PK1,C,r2), pqKey(PK2)),
+                    n(C,r1),
+                    N,
+                    keyG(g,C,r2),
+                    cipher(PK2)
+                ),
+                (
+                    (ch ; n(C,r1)) ++
+                    (sh ; N ; SS) ++
+                    (sc ; cert(S)) ++
+                    (ske ; PK1 ; PK2 ; sig(S, PK1 ; PK2 ; n(C,r1) ; N)) ++
+                    (shd) ++
+                    (cke ; keyG(g,C,r2) ; cipher(PK2)) ++
+                    (ccs) ++
+                    (cf ; enc(
+                            ms(
+                                pms(keyE(g,PK1,C,r2), pqKey(PK2)),
+                                n(C,r1),
+                                N,
+                                keyG(g,C,r2),
+                                cipher(PK2)
+                            ),
+                            (
+                                (ch ; n(C,r1)) ++
+                                (sh ; N ; SS) ++
+                                (sc ; cert(S)) ++
+                                (ske ; PK1 ; PK2 ; sig(S, PK1 ; PK2 ; n(C,r1) ; N)) ++
+                                (shd) ++
+                                (cke ; keyG(g,C,r2) ; cipher(PK2)) ++
+                                (ccs)
+                            )
+                        )
+                    ) ++
+                    (ccs)
+                )
+            )
+        ),
+        nil
+      ] &
+      :: r1,r2,r3,r4 ::
+      [ nil |
+        -(ch ; N),
+        +(sh ; n(S,r1) ; sess(S,r2)), --- server hello message
+        +(sc ; cert(S)), --- server certificate message
+        +(ske ; keyG(g,S,r3) ; pqPk(S,r4) ; sig(S, keyG(g,S,r3) ; pqPk(S,r4) ; N ; n(S,r1))), --- server key exchange message
+        +(shd), --- server hello done message
+        -(cke ; PK1 ; CP),
+        -(ccs),
+        -(cf ; enc(
+                ms(
+                    pms(keyE(g,PK1,S,r3), decap(S,CP)),
+                    N,
+                    n(S,r1),
+                    PK1,
+                    CP
+                ),
+                (ch ; N) ++
+                (sh ; n(S,r1) ; sess(S,r2)) ++
+                (sc ; cert(S)) ++
+                (ske ; keyG(g,S,r3) ; pqPk(S,r4) ; sig(S, keyG(g,S,r3) ; pqPk(S,r4) ; N ; n(S,r1))) ++
+                (shd) ++
+                (cke ; PK1 ; CP) ++
+                (ccs)
+            )
+        ),
+        +(ccs), --- change cipher spec message
+        +(sf ; enc(
+                ms(
+                    pms(keyE(g,PK1,S,r3), decap(S,CP)),
+                    N,
+                    n(S,r1),
+                    PK1,
+                    CP
+                ),
+                (ch ; N) ++
+                (sh ; n(S,r1) ; sess(S,r2)) ++
+                (sc ; cert(S)) ++
+                (ske ; keyG(g,S,r3) ; pqPk(S,r4) ; sig(S, keyG(g,S,r3) ; pqPk(S,r4) ; N ; n(S,r1))) ++
+                (shd) ++
+                (cke ; PK1 ; CP) ++
+                (ccs) ++
+                (cf ; enc(
+                        ms(
+                            pms(keyE(g,PK1,S,r3), decap(S,CP)),
+                            N,
+                            n(S,r1),
+                            PK1,
+                            CP
+                        ),
+                        (ch ; N) ++
+                        (sh ; n(S,r1) ; sess(S,r2)) ++
+                        (sc ; cert(S)) ++
+                        (ske ; keyG(g,S,r3) ; pqPk(S,r4) ; sig(S, keyG(g,S,r3) ; pqPk(S,r4) ; N ; n(S,r1))) ++
+                        (shd) ++
+                        (cke ; PK1 ; CP) ++
+                        (ccs)
+                    )
+                ) ++
+                (ccs)
+            )
+        ), --- server finished message
+        nil
+      ]
+    [nonexec] .
+
+    eq ATTACK-STATE(1)
+    = :: r1,r2 ::
+      [ nil,
+        +(ch ; n(client,r1)), --- client hello message
+        -(sh ; N ; SS),
+        -(sc ; cert(server)),
+        -(ske ; PK1 ; PK2 ; sig(server, PK1 ; PK2 ; n(client,r1) ; N)),
+        -(shd),
+        +(cke ; keyG(g,client,r2) ; cipher(PK2)), --- client key exchange message
+        +(ccs), --- change cipher spec message
+        +(cf ; enc(
+                ms(
+                    pms(keyE(g,PK1,C,r2), pqKey(PK2)),
+                    n(C,r1),
+                    N,
+                    keyG(g,C,r2),
+                    cipher(PK2)
+                ),
+                (
+                    (ch ; n(C,r1)) ++
+                    (sh ; N ; SS) ++
+                    (sc ; cert(S)) ++
+                    (ske ; PK1 ; PK2 ; sig(S, PK1 ; PK2 ; n(client,r1) ; N)) ++
+                    (shd) ++
+                    (cke ; keyG(g,C,r2) ; cipher(PK2)) ++
+                    (ccs)
+                )
+            )
+        ), --- client finished message
+        -(ccs),
+        -(sf ; enc(
+                ms(
+                    pms(keyE(g,PK1,C,r2), pqKey(PK2)),
+                    n(C,r1),
+                    N,
+                    keyG(g,C,r2),
+                    cipher(PK2)
+                ),
+                (
+                    (ch ; n(C,r1)) ++
+                    (sh ; N ; SS) ++
+                    (sc ; cert(S)) ++
+                    (ske ; PK1 ; PK2 ; sig(S, PK1 ; PK2 ; n(client,r1) ; N)) ++
+                    (shd) ++
+                    (cke ; keyG(g,C,r2) ; cipher(PK2)) ++
+                    (ccs) ++
+                    (cf ; enc(
+                            ms(
+                                pms(keyE(g,PK1,C,r2), pqKey(PK2)),
+                                n(C,r1),
+                                N,
+                                keyG(g,C,r2),
+                                cipher(PK2)
+                            ),
+                            (
+                                (ch ; n(C,r1)) ++
+                                (sh ; N ; SS) ++
+                                (sc ; cert(S)) ++
+                                (ske ; PK1 ; PK2 ; sig(S, PK1 ; PK2 ; n(client,r1) ; N)) ++
+                                (shd) ++
+                                (cke ; keyG(g,C,r2) ; cipher(PK2)) ++
+                                (ccs)
+                            )
+                        )
+                    ) ++
+                    (ccs)
+                )
+            )
+        )
+        | nil
+    ]
+    || keyE(g,PK1,C,r2) inI, pqKey(PK2) inI, empty
+    || nil
+    || nil
+    || nil
+    [nonexec] .
+
+    --- secrecy property
+    eq ATTACK-STATE(0)
+    = :: r1,r2 ::
+      [ nil,
+        +(ch ; n(client,r1)), --- client hello message
+        -(sh ; N ; SS),
+        -(sc ; cert(server)),
+        -(ske ; PK1 ; PK2 ; sig(server, PK1 ; PK2 ; n(client,r1) ; N)),
+        -(shd),
+        +(cke ; keyG(g,client,r2) ; cipher(PK2)), --- client key exchange message
+        +(ccs), --- change cipher spec message
+        +(cf ; enc(
+                ms(
+                    pms(keyE(g,PK1,C,r2), pqKey(PK2)),
+                    n(C,r1),
+                    N,
+                    keyG(g,C,r2),
+                    cipher(PK2)
+                ),
+                (
+                    (ch ; n(C,r1)) ++
+                    (sh ; N ; SS) ++
+                    (sc ; cert(S)) ++
+                    (ske ; PK1 ; PK2 ; sig(S, PK1 ; PK2 ; n(client,r1) ; N)) ++
+                    (shd) ++
+                    (cke ; keyG(g,C,r2) ; cipher(PK2)) ++
+                    (ccs)
+                )
+            )
+        ), --- client finished message
+        -(ccs),
+        -(sf ; enc(
+                ms(
+                    pms(keyE(g,PK1,C,r2), pqKey(PK2)),
+                    n(C,r1),
+                    N,
+                    keyG(g,C,r2),
+                    cipher(PK2)
+                ),
+                (
+                    (ch ; n(C,r1)) ++
+                    (sh ; N ; SS) ++
+                    (sc ; cert(S)) ++
+                    (ske ; PK1 ; PK2 ; sig(S, PK1 ; PK2 ; n(client,r1) ; N)) ++
+                    (shd) ++
+                    (cke ; keyG(g,C,r2) ; cipher(PK2)) ++
+                    (ccs) ++
+                    (cf ; enc(
+                            ms(
+                                pms(keyE(g,PK1,C,r2), pqKey(PK2)),
+                                n(C,r1),
+                                N,
+                                keyG(g,C,r2),
+                                cipher(PK2)
+                            ),
+                            (
+                                (ch ; n(C,r1)) ++
+                                (sh ; N ; SS) ++
+                                (sc ; cert(S)) ++
+                                (ske ; PK1 ; PK2 ; sig(S, PK1 ; PK2 ; n(client,r1) ; N)) ++
+                                (shd) ++
+                                (cke ; keyG(g,C,r2) ; cipher(PK2)) ++
+                                (ccs)
+                            )
+                        )
+                    ) ++
+                    (ccs)
+                )
+            )
+        )
+        | nil
+    ]
+    || keyE(g,PK1,C,r2) inI, pqKey(PK2) inI, empty
+    || nil
+    || nil
+    || nil
+    [nonexec] .
+
+    eq ATTACK-STATE(1)
+    = :: r1,r2 ::
+      [ nil,
+        +(ch ; n(client,r1)), --- client hello message
+        -(sh ; N ; SS) --- server hello message
+        | nil
+    ]
+    || empty
+    || nil
+    || nil
+    || nil
+    [nonexec] .
+
+endfm
+
+--- THIS HAS TO BE THE LAST LOADED MODULE !!!!
+select MAUDE-NPA .
