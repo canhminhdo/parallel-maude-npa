@@ -114,24 +114,24 @@ fmod PROTOCOL-SPECIFICATION is
     = :: nil :: [ nil | -(M1 ; M2), +(M1), nil ] &
       :: nil :: [ nil | -(M1 ; M2), +(M2), nil ] &
       :: nil :: [ nil | -(M1), -(M2), +(M1 ; M2), nil ] &
-    ---   :: nil :: [ nil | -(Ke), -(M), +(enc(Ke,M)), nil ] &
-    ---   :: nil :: [ nil | -(Ke), -(M), +(dec(Ke,M)), nil ] &
-    ---   :: nil :: [ nil | -(NS1), -(NS2), +(NS1 * NS2), nil ] &
-    ---   :: nil :: [ nil | -(GE), -(NS), +(exp(g,GE,NS)), nil ] &
-    ---   :: nil :: [ nil | -(PK2), +(cipher(PK2)), nil ] &
-    ---   :: nil :: [ nil | -(PK2), +(pqKey(PK2)), nil ] &
-    ---   :: nil :: [ nil | -(CP), +(decap(i,CP)), nil ] &
-    ---   :: nil :: [ nil | -(M), +(sig(i,M)), nil ] &
-    ---   :: r :: [ nil | +(n(i,r)), nil ] &
-    ---   :: nil :: [ nil | +(ch), nil ] &
-    ---   :: nil :: [ nil | +(sh), nil ] &
-    ---   :: nil :: [ nil | +(sc), nil ] &
-    ---   :: nil :: [ nil | +(ske), nil ] &
-    ---   :: nil :: [ nil | +(shd), nil ] &
-    ---   :: nil :: [ nil | +(cke), nil ] &
-    ---   :: nil :: [ nil | +(ccs), nil ] &
-    ---   :: nil :: [ nil | +(sf), nil ] &
-    ---   :: nil :: [ nil | +(cf), nil ] &
+      :: nil :: [ nil | -(Ke), -(M), +(enc(Ke,M)), nil ] &
+      :: nil :: [ nil | -(Ke), -(M), +(dec(Ke,M)), nil ] &
+      :: nil :: [ nil | -(NS1), -(NS2), +(NS1 * NS2), nil ] &
+      :: nil :: [ nil | -(GE), -(NS), +(exp(g,GE,NS)), nil ] &
+      :: nil :: [ nil | -(PK2), +(cipher(PK2)), nil ] &
+      :: nil :: [ nil | -(PK2), +(pqKey(PK2)), nil ] &
+      :: nil :: [ nil | -(CP), +(decap(i,CP)), nil ] &
+      :: nil :: [ nil | -(M), +(sig(i,M)), nil ] &
+      :: r :: [ nil | +(n(i,r)), nil ] &
+      :: nil :: [ nil | +(ch), nil ] &
+      :: nil :: [ nil | +(sh), nil ] &
+      :: nil :: [ nil | +(sc), nil ] &
+      :: nil :: [ nil | +(ske), nil ] &
+      :: nil :: [ nil | +(shd), nil ] &
+      :: nil :: [ nil | +(cke), nil ] &
+      :: nil :: [ nil | +(ccs), nil ] &
+      :: nil :: [ nil | +(sf), nil ] &
+      :: nil :: [ nil | +(cf), nil ] &
       :: nil :: [ nil | +(A), nil ]
     [nonexec] .
 
