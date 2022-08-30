@@ -108,8 +108,6 @@ fmod PROTOCOL-SPECIFICATION is
     :: nil :: [ nil | -(M1), -(M2), +(M1 ; M2), nil ] &
     :: nil :: [ nil | -(Ke), -(M), +(enc(Ke,M)), nil ] &
     :: nil :: [ nil | -(Ke), -(M), +(dec(Ke,M)), nil ] &
-    :: nil :: [ nil | -(PS1), -(PS2), +(PS1 * PS2), nil ] &
-    :: nil :: [ nil | -(PK1), +(gen(p,PK1)), nil ] &
     :: nil :: [ nil | -(gen(p,P1)), -(gen(p,P2)), +(gen(p,P1 * P2)), nil ] &
     :: nil :: [ nil | -(PK2), -(SK), +(cipher(PK2,SK)), nil ] &
     :: nil :: [ nil | -(PK2), -(SK), +(pqKey(PK2,SK)), nil ] &
