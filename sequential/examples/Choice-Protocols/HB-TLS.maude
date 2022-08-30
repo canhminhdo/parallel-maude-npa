@@ -6,9 +6,9 @@ fmod PROTOCOL-EXAMPLE-SYMBOLS is
       PqPk PqSk PqKey Cipher
       PreMasterSecret MasterSecret .
 
-  subsort Rand Session Cert Point PointSet GenvKey < IMsg .
-  subsort PqPk PqSk PqKey Cipher < IMsg .
-  subsort PreMasterSecret MasterSecret < IMsg .
+  subsort Rand Session Cert Point PointSet GenvKey < Msg .
+  subsort PqPk PqSk PqKey Cipher < Msg .
+  subsort PreMasterSecret MasterSecret < Msg .
   subsort Name < Public .
   subsort PointGen < Public .
   subsort PointGen ECKey < GenvKey .
@@ -38,23 +38,23 @@ fmod PROTOCOL-EXAMPLE-SYMBOLS is
   op ms : PreMasterSecret Rand Rand ECKey Cipher -> MasterSecret [frozen] .
   --- certificate & Signature
   op cert : Name -> Cert [frozen] .
-  op sig : Name IMsg -> IMsg [frozen] .
+  op sig : Name Msg -> Msg [frozen] .
 
   --- encryption
-  op enc : MasterSecret IMsg -> IMsg [frozen] .
-  op dec : MasterSecret IMsg -> IMsg [frozen] .
+  op enc : MasterSecret Msg -> Msg [frozen] .
+  op dec : MasterSecret Msg -> Msg [frozen] .
 
   --- conncatenation
-  op _;_ : IMsg  IMsg  -> IMsg [gather (e E) frozen] .
+  op _;_ : Msg  Msg  -> Msg [gather (e E) frozen] .
 
   --- messages
-  op ch    : -> IMsg . --- c hello
-  op sh    : -> IMsg . --- s hello
-  op sc    : -> IMsg . --- s certificate
-  op ske   : -> IMsg . --- s key exchange
-  op cke   : -> IMsg . --- c key exchange
-  op cf    : -> IMsg . --- c finished
-  op sf    : -> IMsg . --- s finished
+  op ch    : -> Msg . --- c hello
+  op sh    : -> Msg . --- s hello
+  op sc    : -> Msg . --- s certificate
+  op ske   : -> Msg . --- s key exchange
+  op cke   : -> Msg . --- c key exchange
+  op cf    : -> Msg . --- c finished
+  op sf    : -> Msg . --- s finished
 
 endfm
 
@@ -75,7 +75,7 @@ fmod PROTOCOL-EXAMPLE-ALGEBRAIC is
   eq decap(cipher(pqPk(SK:PqSk), SK2:PqSk), SK:PqSk) = $pqKey(SK:PqSk, SK2:PqSk) [variant] .
 
   --- cancellation of encrytion/decryption
-  eq dec(K:MasterSecret,enc(K:MasterSecret,M:IMsg)) = M:IMsg [variant] .
+  eq dec(K:MasterSecret,enc(K:MasterSecret,M:Msg)) = M:Msg [variant] .
 
 endfm
 
@@ -94,7 +94,7 @@ fmod PROTOCOL-SPECIFICATION is
   vars N N' N1 N2 : Rand .
   vars A C S : Name .
   vars r r' r1' r2' r3' r4' r1 r2 r3 r4 : Fresh .
-  vars M M1 M2 : IMsg .
+  vars M M1 M2 : Msg .
   vars SS : Session .
   vars CP : Cipher .
   vars Ke : MasterSecret .
@@ -128,9 +128,9 @@ fmod PROTOCOL-SPECIFICATION is
   [nonexec] .
 
   --- Macros
-  op _++_ : IMsg IMsg -> IMsg [frozen gather (E e)] .
-  eq (X1:IMsg ; X2:IMsg) ++ Y:IMsg = X1:IMsg ; (X2:IMsg ++ Y:IMsg) .
-  eq X:IMsg ++ Y:IMsg = X:IMsg ; Y:IMsg [owise] .
+  op _++_ : Msg Msg -> Msg [frozen gather (E e)] .
+  eq (X1:Msg ; X2:Msg) ++ Y:Msg = X1:Msg ; (X2:Msg ++ Y:Msg) .
+  eq X:Msg ++ Y:Msg = X:Msg ; Y:Msg [owise] .
 
   eq STRANDS-PROTOCOL
   = :: r1,r2,r3 ::
