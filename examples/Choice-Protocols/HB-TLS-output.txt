@@ -3,7 +3,7 @@
 		     /||||||||||||||||||\
 	     Maude alpha136 built: Dec 31 2021 15:22:41
 	     Copyright 1997-2021 SRI International
-		   Fri Sep  2 22:16:14 2022
+		   Sat Sep  3 10:12:52 2022
 
 	    Maude-NPA Version: 3.1.4 (June 2nd 2020)
 	    with direct composition, irreducibility constraints and time
@@ -22,9 +22,155 @@
  red ids(X,Y).                for set of state ids
  red initials(X,Y).           for showing only initial steps
 ==========================================
-erewrite in PARALLEL-MAUDE-NPA : <> p-run(0, unbounded, 8) .
-rewrites: 150789735 in 264593ms cpu (19861038ms real) (569893 rewrites/second)
-result Configuration: <> ShortIdSystem: ...
+erewrite in PARALLEL-MAUDE-NPA : <> p-initials(0, unbounded, 8) .
+rewrites: 150783777 in 259785ms cpu (20105736ms real) (580415 rewrites/second)
+result Configuration: <> ShortIdSystem: (< 1 . 6 . 6 . 10 . 6{1} . 1 . 7 . 5 . 2{1} . 2 . 2 . 2 . 1 > (
+:: nil ::
+[ nil |
+   -(gen(p, pt(c, #0:Fresh))),
+   -(gen(p, pt(s, #3:Fresh))),
+   +(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh))), nil]  &
+:: nil ::
+[ nil |
+   -(ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; rd(c, #4:Fresh) ;
+    rd(s, #5:Fresh))),
+   +(gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s,
+    #5:Fresh))), nil]  &
+:: nil ::
+[ nil |
+   -(cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))),
+   +(gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), nil]  &
+:: nil ::
+[ nil |
+   -(gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s,
+    #5:Fresh))),
+   +(gen(p, pt(s, #3:Fresh))), nil]  &
+:: nil ::
+[ nil |
+   -(gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))),
+   +(gen(p, pt(c, #0:Fresh))), nil]  &
+:: #2:Fresh,#4:Fresh,#0:Fresh ::
+[ nil |
+   +(ch ; rd(c, #4:Fresh)),
+   -(sh ; rd(s, #5:Fresh) ; sess(s, #6:Fresh)),
+   -(sc ; cert(s)),
+   -(ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; rd(c, #4:Fresh) ;
+    rd(s, #5:Fresh))),
+   +(cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))),
+   +(cf ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s,
+    #5:Fresh), gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ;
+    sess(s, #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh)))),
+   -(sf ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s,
+    #5:Fresh), gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ;
+    sess(s, #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh)) ; cf
+    ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s, #5:Fresh),
+    gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))))),
+    nil]  &
+:: #1:Fresh,#3:Fresh,#5:Fresh,#6:Fresh ::
+[ nil |
+   -(ch ; rd(c, #4:Fresh)),
+   +(sh ; rd(s, #5:Fresh) ; sess(s, #6:Fresh)),
+   +(sc ; cert(s)),
+   +(ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; rd(c, #4:Fresh) ;
+    rd(s, #5:Fresh))),
+   -(cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))),
+   -(cf ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s,
+    #5:Fresh), gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ;
+    sess(s, #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh)))),
+   +(sf ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s,
+    #5:Fresh), gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ;
+    sess(s, #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh)) ; cf
+    ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s, #5:Fresh),
+    gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))))),
+    nil] )
+|
+gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)) !inI,
+gen(p, pt(s, #3:Fresh)) !inI,
+gen(p, pt(c, #0:Fresh)) !inI,
+(ch ; rd(c, #4:Fresh)) !inI,
+(sh ; rd(s, #5:Fresh) ; sess(s, #6:Fresh)) !inI,
+(sc ; cert(s)) !inI,
+(ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s,
+    #5:Fresh))) !inI,
+(cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))) !inI,
+(cf ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s, #5:Fresh),
+    gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))))
+    !inI,
+(sf ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s, #5:Fresh),
+    gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh)) ; cf
+    ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s, #5:Fresh),
+    gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh)))))
+    !inI,
+(gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s,
+    #5:Fresh))) !inI,
+(gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))) !inI
+|
++(ch ; rd(c, #4:Fresh)),
+-(ch ; rd(c, #4:Fresh)),
++(sh ; rd(s, #5:Fresh) ; sess(s, #6:Fresh)),
++(sc ; cert(s)),
++(ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s,
+    #5:Fresh))),
+-(sh ; rd(s, #5:Fresh) ; sess(s, #6:Fresh)),
+-(sc ; cert(s)),
+-(ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s,
+    #5:Fresh))),
++(cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))),
+-(ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s,
+    #5:Fresh))),
++(gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s,
+    #5:Fresh))),
+-(gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s,
+    #5:Fresh))),
++(gen(p, pt(s, #3:Fresh))),
++(cf ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s, #5:Fresh),
+    gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh)))),
+-(cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))),
++(gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))),
+-(cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))),
+-(cf ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s, #5:Fresh),
+    gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh)))),
++(sf ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s, #5:Fresh),
+    gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh)) ; cf
+    ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s, #5:Fresh),
+    gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))))),
+-(gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))),
++(gen(p, pt(c, #0:Fresh))),
+-(gen(p, pt(c, #0:Fresh))),
+-(gen(p, pt(s, #3:Fresh))),
++(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh))),
+-(sf ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s, #5:Fresh),
+    gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh)) ; cf
+    ; enc(ms(pms(gen(p, pt(s, #3:Fresh) * pt(c, #0:Fresh)), $pqKey(pqSk(s, #1:Fresh), pqSk(c, #2:Fresh))), rd(c, #4:Fresh), rd(s, #5:Fresh),
+    gen(p, pt(c, #0:Fresh)), cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh))), ch ; rd(c, #4:Fresh) ; sh ; rd(s, #5:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s, #1:Fresh)) ; sig(s, gen(p, pt(s, #3:Fresh)) ; pqPk(pqSk(s,
+    #1:Fresh)) ; rd(c, #4:Fresh) ; rd(s, #5:Fresh)) ; cke ; gen(p, pt(c, #0:Fresh)) ; cipher(pqPk(pqSk(s, #1:Fresh)), pqSk(c, #2:Fresh)))))
+|
+nil)
 
 
 
