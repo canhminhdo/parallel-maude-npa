@@ -60,7 +60,10 @@ erew <> p-run(0, unbounded, 8) .
 - `Step 2:` load `parallel-maude-npa.maude` file at line 2.
 - `Step 3:` load the formal specification of a protocol specified in Maude-NPA at line 3. For example, Needham Schroeder Lowe ECB protocol is used.
 - `Step 4:` select `PARALLEL-MAUDE-NPA` module as default at line 4.
-- `Step 5:` conduct the analysis in parallel by using the command `p-run(<attack-state>, <depth-bound>, <#workers>)`.
+- `Step 5:` conduct the analysis in parallel by using the following commands:
+    + `p-run(<attack-state>, <depth-bound>, <#workers>)`
+    + `p-initials(<attack-state>, <depth-bound>, <#workers>)`
+    + `p-summary(<attack-state>, <depth-bound>, <#workers>)`
 
 ### Global parameters
 ---
@@ -77,4 +80,5 @@ You can change them in the `global.maude` file.
 
 ### Papers
 ---
-TBA
+
+- Canh Minh Do, Adrián Riesco, Santiago Escobar and Kazuhiro Ogata. [Parallel Maude-NPA for Cryptographic Protocol Analysis](https://doi.org/10.1007/978-3-031-12441-9_13). In Rewriting Logic and Its Applications. WRLA 2022. Lecture Notes in Computer Science, vol 13252. Springer.
