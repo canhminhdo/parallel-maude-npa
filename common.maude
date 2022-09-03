@@ -115,8 +115,11 @@ mod PARALLEL-CONFIG is
     sort IStatus .
     ops idle initializing initialized waiting suspending working stopping
         terminated simplifying simplifyingL simplifyingH startSimplifyingH : -> IStatus .
+    sort IMode .
+    ops run initials summary : -> IMode .
 
     *** attributes
+    op mode :_ : IMode -> Attribute .
     op status :_ : IStatus -> Attribute [ctor format(m o o o)] .
     op m :_ : Module -> Attribute .
     op gs :_ : GrammarList -> Attribute .
@@ -158,16 +161,41 @@ mod PARALLEL-GENERIC-TOOL is
     vars Rem? : Bool .
     vars IST HistoryIST : IdSystemSet .
 
-    *** prun *******************************
+    *** p-run *******************************
     op p-run : Nat Bound Filters Nat -> Configuration .
     op p-run : Nat Bound Nat -> Configuration .
 
+    *** p-initials *******************************
+    op p-initials : Nat Bound Filters Nat -> Configuration .
+    op p-initials : Nat Bound Nat -> Configuration .
+
+    *** p-summary *******************************
+    subsort Summary < Configuration .
+    op p-summary : Nat Bound Filters Nat -> Configuration .
+    op p-summary : Nat Bound Nat -> Configuration .
+
     eq p-run(Attack:Nat,Depth:Bound, nWorker:Nat)
-    = < aManager : Manager | #workers : nWorker:Nat, status : idle >
+    = < aManager : Manager | #workers : nWorker:Nat, status : idle, mode : run >
     toMsg(run[0](Attack:Nat,Depth:Bound,+parallel,unbounded)< unbounded >) .
 
     eq p-run(Attack:Nat,Depth:Bound,F:Filters,nWorker:Nat)
-    = < aManager : Manager | #workers : nWorker:Nat, status : idle >
+    = < aManager : Manager | #workers : nWorker:Nat, status : idle, mode : run >
+    toMsg(run[0](Attack:Nat,Depth:Bound,F:Filters,unbounded)< unbounded >) .
+
+    eq p-initials(Attack:Nat,Depth:Bound, nWorker:Nat)
+    = < aManager : Manager | #workers : nWorker:Nat, status : idle, mode : initials >
+    toMsg(run[0](Attack:Nat,Depth:Bound,+parallel,unbounded)< unbounded >) .
+
+    eq p-initials(Attack:Nat,Depth:Bound,F:Filters,nWorker:Nat)
+    = < aManager : Manager | #workers : nWorker:Nat, status : idle, mode : initials >
+    toMsg(run[0](Attack:Nat,Depth:Bound,F:Filters,unbounded)< unbounded >) .
+
+    eq p-summary(Attack:Nat,Depth:Bound, nWorker:Nat)
+    = < aManager : Manager | #workers : nWorker:Nat, status : idle, mode : summary >
+    toMsg(run[0](Attack:Nat,Depth:Bound,+parallel,unbounded)< unbounded >) .
+
+    eq p-summary(Attack:Nat,Depth:Bound,F:Filters,nWorker:Nat)
+    = < aManager : Manager | #workers : nWorker:Nat, status : idle, mode : summary >
     toMsg(run[0](Attack:Nat,Depth:Bound,F:Filters,unbounded)< unbounded >) .
 
     op toMsg : IdSystemSet -> Msg .

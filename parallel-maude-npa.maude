@@ -375,13 +375,31 @@ mod PARALLEL-MAUDE-NPA is
         workers : emptyq,
         filter : F,
         jobs : IST,
-        rem : Rem?,
+        mode : run,
         init : INIT,
         A >
-    => ShortIdSystem: if Rem? then
-            changeShortSystem(F, INIT IST)
-        else
-            changeShortSystem(F, INIT)
-        fi
+    => ShortIdSystem: changeShortSystem(F, INIT IST)
+        [print "[CleanUp]"] .
+
+    rl [CleanUp] : < O : Manager |
+        status : stopping,
+        workers : emptyq,
+        filter : F,
+        jobs : IST,
+        mode : initials,
+        init : INIT,
+        A >
+    => ShortIdSystem: changeShortSystem(F, INIT)
+        [print "[CleanUp]"] .
+
+    rl [CleanUp] : < O : Manager |
+        status : stopping,
+        workers : emptyq,
+        filter : F,
+        jobs : IST,
+        mode : summary,
+        init : INIT,
+        A >
+    => States>> #jobs(INIT IST) Solutions>> #jobs(INIT)
         [print "[CleanUp]"] .
 endm
