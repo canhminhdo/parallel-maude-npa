@@ -1,0 +1,289 @@
+	    Maude-NPA Version: 3.1.4 (June 2nd 2020)
+	    with direct composition, irreducibility constraints and time
+	    (To be run with Maude 3.0 or above)
+	    Copyright (c) 2020, University of Illinois
+	    All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+Done reading in file: "maude-npa.maude"
+==========================================
+reduce in MAUDE-NPA : summary(0, 1) .
+rewrites: 153923739 in 192537ms cpu (194316ms real) (799446 rewrites/second)
+result Summary: States>> 4 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 2) .
+rewrites: 41684631 in 32483ms cpu (32572ms real) (1283254 rewrites/second)
+result Summary: States>> 10 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 3) .
+rewrites: 133237071 in 89654ms cpu (89812ms real) (1486116 rewrites/second)
+result Summary: States>> 22 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 4) .
+rewrites: 421369209 in 272594ms cpu (272925ms real) (1545775 rewrites/second)
+result Summary: States>> 41 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 5) .
+rewrites: 1077630498 in 668520ms cpu (669162ms real) (1611963 rewrites/second)
+result Summary: States>> 66 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 6) .
+rewrites: 2214997197 in 1360848ms cpu (1362097ms real) (1627658 rewrites/second)
+result Summary: States>> 87 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 7) .
+rewrites: 3894291775 in 2431731ms cpu (2433604ms real) (1601448 rewrites/second)
+result Summary: States>> 105 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 8) .
+rewrites: 6095079595 in 3834152ms cpu (3836580ms real) (1589681 rewrites/second)
+result Summary: States>> 112 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 9) .
+rewrites: 8293201483 in 5477867ms cpu (5480570ms real) (1513947 rewrites/second)
+result Summary: States>> 129 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 10) .
+rewrites: 11282812273 in 8142863ms cpu (8145937ms real) (1385607 rewrites/second)
+result Summary: States>> 147 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 11) .
+rewrites: 16987624008 in 13937593ms cpu (13941691ms real) (1218834 rewrites/second)
+result Summary: States>> 197 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(0, 12) .
+rewrites: 33783173448 in 33524207ms cpu (33531403ms real) (1007724 rewrites/second)
+result Summary: States>> 310 Solutions>> 1
+==========================================
+reduce in MAUDE-NPA : initials(0,12) .
+rewrites: 29004 in 22ms cpu (27ms real) (1267823 rewrites/second)
+result ShortIdSystem: < 1 . 6 . 5 . 5 . 11 . 1 . 6{1} . 1 . 7{1} . 2 . 2 . 2 . 1 > (
+:: nil ::
+[ nil |
+   -(gen(p, pt(s, #0:Fresh))),
+   -(gen(p, pt(c, #1:Fresh))),
+   +(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh))), nil]  &
+:: nil ::
+[ nil |
+   -(ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; rd(c, #3:Fresh) ;
+    rd(s, #4:Fresh))),
+   +(gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s,
+    #4:Fresh))), nil]  &
+:: nil ::
+[ nil |
+   -(cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))),
+   +(gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), nil]  &
+:: nil ::
+[ nil |
+   -(gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s,
+    #4:Fresh))),
+   +(gen(p, pt(s, #0:Fresh))), nil]  &
+:: nil ::
+[ nil |
+   -(gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))),
+   +(gen(p, pt(c, #1:Fresh))), nil]  &
+:: #1:Fresh,#3:Fresh,#5:Fresh ::
+[ nil |
+   +(ch ; rd(c, #3:Fresh)),
+   -(sh ; rd(s, #4:Fresh) ; sess(s, #6:Fresh)),
+   -(sc ; cert(s)),
+   -(ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; rd(c, #3:Fresh) ;
+    rd(s, #4:Fresh))),
+   +(cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))),
+   +(cf ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s,
+    #4:Fresh), gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ;
+    sess(s, #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh)))),
+   -(sf ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s,
+    #4:Fresh), gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ;
+    sess(s, #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh)) ; cf
+    ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s, #4:Fresh),
+    gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))))),
+    nil]  &
+:: #2:Fresh,#4:Fresh,#0:Fresh,#6:Fresh ::
+[ nil |
+   -(ch ; rd(c, #3:Fresh)),
+   +(sh ; rd(s, #4:Fresh) ; sess(s, #6:Fresh)),
+   +(sc ; cert(s)),
+   +(ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; rd(c, #3:Fresh) ;
+    rd(s, #4:Fresh))),
+   -(cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))),
+   -(cf ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s,
+    #4:Fresh), gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ;
+    sess(s, #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh)))),
+   +(sf ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s,
+    #4:Fresh), gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ;
+    sess(s, #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh)) ; cf
+    ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s, #4:Fresh),
+    gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))))),
+    nil] )
+|
+gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)) !inI,
+gen(p, pt(s, #0:Fresh)) !inI,
+gen(p, pt(c, #1:Fresh)) !inI,
+(ch ; rd(c, #3:Fresh)) !inI,
+(sh ; rd(s, #4:Fresh) ; sess(s, #6:Fresh)) !inI,
+(sc ; cert(s)) !inI,
+(ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s,
+    #4:Fresh))) !inI,
+(cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))) !inI,
+(cf ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s, #4:Fresh),
+    gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))))
+    !inI,
+(sf ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s, #4:Fresh),
+    gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh)) ; cf
+    ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s, #4:Fresh),
+    gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh)))))
+    !inI,
+(gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s,
+    #4:Fresh))) !inI,
+(gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))) !inI
+|
++(ch ; rd(c, #3:Fresh)),
+-(ch ; rd(c, #3:Fresh)),
++(sh ; rd(s, #4:Fresh) ; sess(s, #6:Fresh)),
++(sc ; cert(s)),
++(ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s,
+    #4:Fresh))),
+-(ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s,
+    #4:Fresh))),
++(gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s,
+    #4:Fresh))),
+-(sh ; rd(s, #4:Fresh) ; sess(s, #6:Fresh)),
+-(sc ; cert(s)),
+-(ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s,
+    #4:Fresh))),
++(cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))),
+-(cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))),
++(gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))),
++(cf ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s, #4:Fresh),
+    gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh)))),
+-(cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))),
+-(cf ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s, #4:Fresh),
+    gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh)))),
++(sf ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s, #4:Fresh),
+    gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh)) ; cf
+    ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s, #4:Fresh),
+    gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))))),
+-(gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))),
++(gen(p, pt(c, #1:Fresh))),
+-(gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s,
+    #4:Fresh))),
++(gen(p, pt(s, #0:Fresh))),
+-(gen(p, pt(s, #0:Fresh))),
+-(gen(p, pt(c, #1:Fresh))),
++(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh))),
+-(sf ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s, #4:Fresh),
+    gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh)) ; cf
+    ; enc(ms(pms(gen(p, pt(s, #0:Fresh) * pt(c, #1:Fresh)), $pqKey(pqSk(s, #2:Fresh), pqSk(c, #5:Fresh))), rd(c, #3:Fresh), rd(s, #4:Fresh),
+    gen(p, pt(c, #1:Fresh)), cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh))), ch ; rd(c, #3:Fresh) ; sh ; rd(s, #4:Fresh) ; sess(s,
+    #6:Fresh) ; sc ; cert(s) ; ske ; gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s, #2:Fresh)) ; sig(s, gen(p, pt(s, #0:Fresh)) ; pqPk(pqSk(s,
+    #2:Fresh)) ; rd(c, #3:Fresh) ; rd(s, #4:Fresh)) ; cke ; gen(p, pt(c, #1:Fresh)) ; cipher(pqPk(pqSk(s, #2:Fresh)), pqSk(c, #5:Fresh)))))
+|
+nil
+
+
+
+		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	     Maude alpha136 built: Apr 30 2022 13:05:31
+	     Copyright 1997-2021 SRI International
+		   Fri Sep  2 22:29:23 2022
+
+	    Maude-NPA Version: 3.1.4 (June 2nd 2020)
+	    with direct composition, irreducibility constraints and time
+	    (To be run with Maude 3.0 or above)
+	    Copyright (c) 2020, University of Illinois
+	    All rights reserved.
+
+ Commands:
+ red unification? .           returns the unification algorithm to be used
+ red new-strands? .           returns the actual protocol strands
+ red displayGrammars .        for generating grammars
+ red run(X,Y).                for Y backwards analysis steps for attack pattern X
+ red debug(X,Y).              more information than run command
+ red digest(X,Y).             less information than run command
+ red summary(X,Y).            for summary of analysis steps
+ red ids(X,Y).                for set of state ids
+ red initials(X,Y).           for showing only initial steps
+==========================================
+reduce in MAUDE-NPA : summary(1, 1) .
+rewrites: 154103941 in 201989ms cpu (203881ms real) (762931 rewrites/second)
+result Summary: States>> 5 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 2) .
+rewrites: 48677767 in 39941ms cpu (40039ms real) (1218726 rewrites/second)
+result Summary: States>> 12 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 3) .
+rewrites: 153143739 in 106677ms cpu (106864ms real) (1435572 rewrites/second)
+result Summary: States>> 22 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 4) .
+rewrites: 396927641 in 273905ms cpu (274285ms real) (1449139 rewrites/second)
+result Summary: States>> 34 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 5) .
+rewrites: 708376077 in 474695ms cpu (475249ms real) (1492276 rewrites/second)
+result Summary: States>> 42 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 6) .
+rewrites: 1069440750 in 717233ms cpu (717978ms real) (1491063 rewrites/second)
+result Summary: States>> 47 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 7) .
+rewrites: 1509241539 in 1021022ms cpu (1022013ms real) (1478166 rewrites/second)
+result Summary: States>> 49 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 8) .
+rewrites: 1716952273 in 1149618ms cpu (1150617ms real) (1493497 rewrites/second)
+result Summary: States>> 46 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 9) .
+rewrites: 1976802637 in 1338374ms cpu (1339322ms real) (1477017 rewrites/second)
+result Summary: States>> 49 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 10) .
+rewrites: 2968822776 in 1959838ms cpu (1960891ms real) (1514830 rewrites/second)
+result Summary: States>> 70 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 11) .
+rewrites: 6089475316 in 3975509ms cpu (3977188ms real) (1531747 rewrites/second)
+result Summary: States>> 120 Solutions>> 0
+==========================================
+reduce in MAUDE-NPA : summary(1, 12) .
+rewrites: 14890256638 in 10505506ms cpu (10509375ms real) (1417376 rewrites/second)
+result Summary: States>> 205 Solutions>> 0

@@ -1,9 +1,9 @@
 		     \||||||||||||||||||/
 		   --- Welcome to Maude ---
 		     /||||||||||||||||||\
-	     Maude alpha136 built: Apr 30 2022 13:05:31
+	     Maude alpha136 built: Dec 31 2021 15:22:41
 	     Copyright 1997-2021 SRI International
-		   Fri Sep  2 22:29:23 2022
+		   Fri Sep  2 22:16:14 2022
 
 	    Maude-NPA Version: 3.1.4 (June 2nd 2020)
 	    with direct composition, irreducibility constraints and time
@@ -22,53 +22,11 @@
  red ids(X,Y).                for set of state ids
  red initials(X,Y).           for showing only initial steps
 ==========================================
-reduce in MAUDE-NPA : summary(1, 1) .
-rewrites: 154103941 in 201989ms cpu (203881ms real) (762931 rewrites/second)
-result Summary: States>> 5 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(1, 2) .
-rewrites: 48677767 in 39941ms cpu (40039ms real) (1218726 rewrites/second)
-result Summary: States>> 12 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(1, 3) .
-rewrites: 153143739 in 106677ms cpu (106864ms real) (1435572 rewrites/second)
-result Summary: States>> 22 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(1, 4) .
-rewrites: 396927641 in 273905ms cpu (274285ms real) (1449139 rewrites/second)
-result Summary: States>> 34 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(1, 5) .
-rewrites: 708376077 in 474695ms cpu (475249ms real) (1492276 rewrites/second)
-result Summary: States>> 42 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(1, 6) .
-rewrites: 1069440750 in 717233ms cpu (717978ms real) (1491063 rewrites/second)
-result Summary: States>> 47 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(1, 7) .
-rewrites: 1509241539 in 1021022ms cpu (1022013ms real) (1478166 rewrites/second)
-result Summary: States>> 49 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(1, 8) .
-rewrites: 1716952273 in 1149618ms cpu (1150617ms real) (1493497 rewrites/second)
-result Summary: States>> 46 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(1, 9) .
-rewrites: 1976802637 in 1338374ms cpu (1339322ms real) (1477017 rewrites/second)
-result Summary: States>> 49 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(1, 10) .
-rewrites: 2968822776 in 1959838ms cpu (1960891ms real) (1514830 rewrites/second)
-result Summary: States>> 70 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(1, 11) .
-rewrites: 6089475316 in 3975509ms cpu (3977188ms real) (1531747 rewrites/second)
-result Summary: States>> 120 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(1, 12) .
-rewrites: 14890256638 in 10505506ms cpu (10509375ms real) (1417376 rewrites/second)
-result Summary: States>> 205 Solutions>> 0
+erewrite in PARALLEL-MAUDE-NPA : <> p-run(0, unbounded, 8) .
+rewrites: 150789735 in 264593ms cpu (19861038ms real) (569893 rewrites/second)
+result Configuration: <> ShortIdSystem: ...
+
+
 
 [Parallel Maude-NPA]
 erewrite in PARALLEL-MAUDE-NPA : <> p-run(1, 12, 8) .
