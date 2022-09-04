@@ -16,56 +16,8 @@
  red initials(X,Y).           for showing only initial steps
 Done reading in file: "maude-npa.maude"
 ==========================================
-reduce in MAUDE-NPA : summary(0, 1) .
-rewrites: 153923739 in 192537ms cpu (194316ms real) (799446 rewrites/second)
-result Summary: States>> 4 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(0, 2) .
-rewrites: 41684631 in 32483ms cpu (32572ms real) (1283254 rewrites/second)
-result Summary: States>> 10 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(0, 3) .
-rewrites: 133237071 in 89654ms cpu (89812ms real) (1486116 rewrites/second)
-result Summary: States>> 22 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(0, 4) .
-rewrites: 421369209 in 272594ms cpu (272925ms real) (1545775 rewrites/second)
-result Summary: States>> 41 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(0, 5) .
-rewrites: 1077630498 in 668520ms cpu (669162ms real) (1611963 rewrites/second)
-result Summary: States>> 66 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(0, 6) .
-rewrites: 2214997197 in 1360848ms cpu (1362097ms real) (1627658 rewrites/second)
-result Summary: States>> 87 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(0, 7) .
-rewrites: 3894291775 in 2431731ms cpu (2433604ms real) (1601448 rewrites/second)
-result Summary: States>> 105 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(0, 8) .
-rewrites: 6095079595 in 3834152ms cpu (3836580ms real) (1589681 rewrites/second)
-result Summary: States>> 112 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(0, 9) .
-rewrites: 8293201483 in 5477867ms cpu (5480570ms real) (1513947 rewrites/second)
-result Summary: States>> 129 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(0, 10) .
-rewrites: 11282812273 in 8142863ms cpu (8145937ms real) (1385607 rewrites/second)
-result Summary: States>> 147 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(0, 11) .
-rewrites: 16987624008 in 13937593ms cpu (13941691ms real) (1218834 rewrites/second)
-result Summary: States>> 197 Solutions>> 0
-==========================================
-reduce in MAUDE-NPA : summary(0, 12) .
-rewrites: 33783173448 in 33524207ms cpu (33531403ms real) (1007724 rewrites/second)
-result Summary: States>> 310 Solutions>> 1
-==========================================
 reduce in MAUDE-NPA : initials(0,12) .
-rewrites: 29004 in 22ms cpu (27ms real) (1267823 rewrites/second)
+rewrites: 84378948762 in 66154013ms cpu (66180508ms real) (1275492 rewrites/second)
 result ShortIdSystem: < 1 . 6 . 5 . 5 . 11 . 1 . 6{1} . 1 . 7{1} . 2 . 2 . 2 . 1 > (
 :: nil ::
 [ nil |
