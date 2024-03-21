@@ -45,6 +45,11 @@ mod PARALLEL-MAUDE-NPA is
         jobs : IST,
         next : empty,
         init : empty,
+        current : empty,
+        currCheck : empty,
+        passCheck : empty,
+        nextCheck : empty,
+        rmFlag : false,
         depth : 0,
         A >
         produceInterpreter(O, N)
@@ -288,7 +293,7 @@ mod PARALLEL-MAUDE-NPA is
         depth : D,
         A >
     => < O : Manager |
-        status : simplifying,
+        status : startSimplifying,
         #workers : N,
         workers : W,
         bStep : decN(BStep,1),

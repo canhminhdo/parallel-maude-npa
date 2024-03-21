@@ -26,6 +26,22 @@ mod MAUDE-NPA-EXT is
     eq #jobs(IS IST) = #jobs(IST) + 1 .
     eq #jobs(empty) = 0 .
 
+    *** simplify two states
+    op simplifyTwo : IdSystem IdSystem -> IdSystemSet .
+    eq simplifyTwo(IS, IS') =   if IS implies IS' then IS 
+                                else
+                                    if IS' implies IS then IS'
+                                    else (IS IS') fi
+                                fi .
+
+    op _\in_ : IdSystem IdSystemSet -> Bool .
+    eq IS \in (IS IST) = true .
+    eq IS \in IST = false [owise] .
+    
+    op remove : IdSystem IdSystemSet -> IdSystemSet .
+    eq remove(IS, IS IST) = IST .
+    eq remove(IS, IST) = IST [owise] .
+
     *** combine two simplified sets from simplifyByImplicationL
     op simplifyByImplicationLCombine : IdSystemSet IdSystemSet -> IdSystemSet .
     eq simplifyByImplicationLCombine(IST, empty) = IST .
@@ -114,7 +130,8 @@ mod PARALLEL-CONFIG is
 
     sort IStatus .
     ops idle initializing initialized waiting suspending working stopping
-        terminated simplifying simplifyingL simplifyingH startSimplifyingH : -> IStatus .
+        terminated simplifying simplifyingL simplifyingH startSimplifyingH 
+        startSimplifying simplifyingOne : -> IStatus .
     sort IMode .
     ops run initials summary : -> IMode .
 
@@ -138,6 +155,11 @@ mod PARALLEL-CONFIG is
     op simJobs :_ : Queue{IdSystemSet} -> Attribute [format(! o o o)] .
     op (loading[_] :_) : Oid Bool -> Attribute .
     op (pending[_] :_) : Oid Seq -> Attribute .
+    op current :_ : IdSystemSet -> Attribute .
+    op currCheck :_ : IdSystemSet -> Attribute .
+    op passCheck :_ : IdSystemSet -> Attribute .
+    op nextCheck :_ : IdSystemSet -> Attribute .
+    op rmFlag :_ : Bool -> Attribute .
 
     *** messages
     op stopWorking : Oid Oid -> Msg [ctor msg format (b o)] .
