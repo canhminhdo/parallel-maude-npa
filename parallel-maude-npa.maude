@@ -220,7 +220,6 @@ mod PARALLEL-MAUDE-NPA is
         workers : W,
         m : M,
         next : IST,
-        history : HistoryIST,
         A >
         reducedTerm(O, MI, N, T, RT)
     => < O : Manager |
@@ -228,7 +227,6 @@ mod PARALLEL-MAUDE-NPA is
         workers : (W | MI),
         m : M,
         next : (IST IST'),
-        history : HistoryIST,
         A >
     if RT == 'IdSystemSet or-else RT == 'IdSystem
     /\ IST' := downTerm(T, errIdSystemSet)
@@ -309,10 +307,7 @@ mod PARALLEL-MAUDE-NPA is
     rl [Resuming] : < O : Manager |
         status : suspending,
         jobs : IST,
-        filter : F,
-        history : HistoryIST,
         bStep : BStep,
-        rem : Rem?,
         A >
     =>  if BStep == 0 or-else IST == empty
         then
@@ -321,19 +316,13 @@ mod PARALLEL-MAUDE-NPA is
             < O : Manager |
                 status : stopping,
                 jobs : IST,
-                filter : F,
-                history : HistoryIST,
                 bStep : BStep,
-                rem : Rem?,
                 A >
         else
             < O : Manager |
                 status : working,
                 jobs : IST,
-                filter : F,
-                history : HistoryIST,
                 bStep : BStep,
-                rem : Rem?,
                 A >
         fi .
 
