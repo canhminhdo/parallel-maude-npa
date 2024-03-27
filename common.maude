@@ -2,7 +2,7 @@ mod MAUDE-NPA-EXT is
     pr MAUDE-NPA .
 
     sort IdSystemSetPair .
-
+    
     var M : Module .
     var GS : GrammarList .
     var F : Filters .
@@ -13,6 +13,7 @@ mod MAUDE-NPA-EXT is
 
     op <_,_> : IdSystemSet IdSystemSet -> IdSystemSetPair .
     op errIdSystemSet : -> IdSystemSet .
+    op errBool : -> Bool .
 
     *** decreasing a bound
     op decN : Bound Nat -> Bound .
@@ -33,6 +34,9 @@ mod MAUDE-NPA-EXT is
                                     if IS' implies IS then IS'
                                     else (IS IS') fi
                                 fi .
+    
+    op simplifyHOne : IdSystem IdSystem -> Bool .
+    eq simplifyHOne(IS, IS') = IS implies IS' .
 
     op _\in_ : IdSystem IdSystemSet -> Bool .
     eq IS \in (IS IST) = true .
@@ -131,7 +135,7 @@ mod PARALLEL-CONFIG is
     sort IStatus .
     ops idle initializing initialized waiting suspending working stopping
         terminated simplifying simplifyingL simplifyingH startSimplifyingH 
-        startSimplifying simplifyingOne : -> IStatus .
+        startSimplifying simplifyingOne simplifyingHOne simplifyingHDone : -> IStatus .
     sort IMode .
     ops run initials summary : -> IMode .
 
@@ -156,7 +160,6 @@ mod PARALLEL-CONFIG is
     op (loading[_] :_) : Oid Bool -> Attribute .
     op (pending[_] :_) : Oid Seq -> Attribute .
     op current :_ : IdSystemSet -> Attribute .
-    op currCheck :_ : IdSystemSet -> Attribute .
     op passCheck :_ : IdSystemSet -> Attribute .
     op nextCheck :_ : IdSystemSet -> Attribute .
     op rmFlag :_ : Bool -> Attribute .

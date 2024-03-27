@@ -21,7 +21,6 @@ print conceal db
               (history :_)
               (next :_)
               (current :_)
-              (currCheck :_)
               (passCheck :_)
               (filter :_)
               .

@@ -46,7 +46,6 @@ mod PARALLEL-MAUDE-NPA is
         next : empty,
         init : empty,
         current : empty,
-        currCheck : empty,
         passCheck : empty,
         nextCheck : empty,
         rmFlag : false,
