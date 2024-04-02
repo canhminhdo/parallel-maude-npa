@@ -300,207 +300,207 @@ mod SIMPLIFICATION is
 
     *** parallelize step 2.2 (SimplifyingH) - a NEW version for optimizing memory usage
     --- start simplification with history states
-    crl [SimplificationH] : < O : Manager |
-        status : startSimplifyingH,
-        next : IST,
-        history : HistoryIST,
-        passCheck : IST1,
-        nextCheck : IST2,
-        current : IST3,
-        rmFlag : B,
-        A >
-    => < O : Manager |
-        status : simplifyingH,
-        next : IST,
-        history : HistoryIST,
-        passCheck : empty,
-        nextCheck : empty,
-        current : empty,
-        rmFlag : false,
-        A >
-    if C1 := #jobs(HistoryIST)
-    /\ C2 := #jobs(IST)
-    [print "[SimplificationH] #His " C1 ", #IST = " C2] .
-
-    crl [SimplificationHDone] : < O : Manager |
-        status : simplifyingH,
-        history : HistoryIST,
-        next : IST,
-        passCheck : empty,
-        nextCheck : IST2,
-        current : empty,
-        A >
-    => < O : Manager |
-        status : simplifyingHDone,
-        history : HistoryIST,
-        next : (IST' IST2),
-        passCheck : empty,
-        nextCheck : empty,
-        current : empty,
-        A >
-    if C1 := #jobs(IST)
-    /\ C2 := #jobs(HistoryIST) 
-    /\ C1 * C2 <= simBatchH
-    /\ IST' := simplifyByImplicationH(HistoryIST, IST)
-    [print "[SimplificationHDone]"] . 
-
-    rl [SimHOne] : < O : Manager |
-        status : simplifyingH,
-        next : (IS IST),
-        current : empty,
-        A >
-    => < O : Manager |
-        status : simplifyingHOne,
-        next : IST,
-        current : IS,
-        A >
-    [print "[simplifyingHOne]"] .
-
-    rl [SimHOneJob] : < O : Manager |
-        status : simplifyingHOne,
-        workers : (MI | W),
-        history : (IS' HistoryIST),
-        current : IS,
-        passCheck : IST1,
-        rmFlag : false,
-        A >
-    => < O : Manager |
-        status : simplifyingHOne,
-        workers : W,
-        history : HistoryIST,
-        current : IS,
-        passCheck : (IS' IST1),
-        rmFlag : false,
-        A >
-        reduceTerm(MI, O,
-            'MAUDE-NPA-EXT,
-            'simplifyHOne[
-                upTerm(IS'),
-                upTerm(IS)
-            ]
-        ) .
-
-    crl [Result4SimHOne] : < O : Manager |
-        status : simplifyingHOne,
-        workers : W,
-        rmFlag : B,
-        A >
-        reducedTerm(O, MI, N, T, RT)
-    => < O : Manager |
-        status : simplifyingHOne,
-        workers : (W | MI),
-        rmFlag : (B or B'),
-        A >
-    if RT == 'Bool
-    /\ B' := downTerm(T, errBool) .
-
-    crl [SimHOneDone1] : < O : Manager |
-        status : simplifyingHOne,
-        #workers : N,
-        workers : W,
-        history : empty,
-        current : IS,
-        passCheck : IST1,
-        nextCheck : IST2,
-        rmFlag : false,
-        A >
-    => < O : Manager |
-        status : simplifyingH,
-        #workers : N,
-        workers : W,
-        history : IST1,
-        current : empty,
-        passCheck : empty,
-        nextCheck : (IS IST2),
-        rmFlag : false,
-        A >
-    if qsize(W) == N .
-
-    crl [SimHOneDone2] : < O : Manager |
-        status : simplifyingHOne,
-        #workers : N,
-        workers : W,
-        history : HistoryIST,
-        current : IS,
-        passCheck : IST1,
-        nextCheck : IST2,
-        rmFlag : true,
-        A >
-    => < O : Manager |
-        status : simplifyingH,
-        #workers : N,
-        workers : W,
-        history : (IST1 HistoryIST),
-        current : empty,
-        passCheck : empty,
-        nextCheck : IST2,
-        rmFlag : false,
-        A >
-    if qsize(W) == N .
-    
-    *** parallelize step 2.2 (SimplifyingH)
     --- crl [SimplificationH] : < O : Manager |
     ---     status : startSimplifyingH,
-    ---     workers : W,
-    ---     #workers : N,
     ---     next : IST,
     ---     history : HistoryIST,
+    ---     passCheck : IST1,
+    ---     nextCheck : IST2,
+    ---     current : IST3,
+    ---     rmFlag : B,
     ---     A >
     --- => < O : Manager |
     ---     status : simplifyingH,
-    ---     workers : W,
-    ---     #workers : N,
-    ---     next : IST',
+    ---     next : IST,
     ---     history : HistoryIST,
+    ---     passCheck : empty,
+    ---     nextCheck : empty,
+    ---     current : empty,
+    ---     rmFlag : false,
     ---     A >
     --- if C1 := #jobs(HistoryIST)
     --- /\ C2 := #jobs(IST)
-    --- /\ N1 := neededWorkersForSimH(C1, C2, N)
-    --- /\ N1 <= 1
+    --- [print "[SimplificationH] #His " C1 ", #IST = " C2] .
+
+    --- crl [SimplificationHDone] : < O : Manager |
+    ---     status : simplifyingH,
+    ---     history : HistoryIST,
+    ---     next : IST,
+    ---     passCheck : empty,
+    ---     nextCheck : IST2,
+    ---     current : empty,
+    ---     A >
+    --- => < O : Manager |
+    ---     status : simplifyingHDone,
+    ---     history : HistoryIST,
+    ---     next : (IST' IST2),
+    ---     passCheck : empty,
+    ---     nextCheck : empty,
+    ---     current : empty,
+    ---     A >
+    --- if C1 := #jobs(IST)
+    --- /\ C2 := #jobs(HistoryIST) 
+    --- /\ C1 * C2 <= simBatchH
     --- /\ IST' := simplifyByImplicationH(HistoryIST, IST)
-    --- [print "[SimplificationH] completed #IST = " C2 ", #Hist = " C1] .
+    --- [print "[SimplificationHDone]"] . 
 
-    --- crl [SimplificationH] : < O : Manager |
-    ---     status : startSimplifyingH,
-    ---     workers : W,
-    ---     #workers : N,
-    ---     next : IST,
-    ---     history : HistoryIST,
+    --- rl [SimHOne] : < O : Manager |
+    ---     status : simplifyingH,
+    ---     next : (IS IST),
+    ---     current : empty,
     ---     A >
     --- => < O : Manager |
-    ---     status : (if C2 > 0 then simplifyingH else stopping fi),
-    ---     workers : W1,
-    ---     #workers : N,
-    ---     next : empty,
-    ---     history : HistoryIST,
-    ---     A >
-    ---     if C2 > 0 then handleJobsByWorkers(O, W2J, HistoryIST) else stopWorking(O, O) fi
-    --- if C1 := #jobs(HistoryIST)
-    --- /\ C2 := #jobs(IST)
-    --- /\ N1 := neededWorkersForSimH(C1, C2, N)
-    --- /\ N1 > 1
-    --- /\ < W1, W2 > := getWorkers(W, N1)
-    --- /\ W2J := produceJobs2Workers(W2, IST)
-    --- [print "[SimplificationH] #usedInterpreters = " N1 ", #His " C1 ", #IST = " C2] .
-
-    --- crl [Result4SimH] : < O : Manager |
-    ---     status : simplifyingH,
-    ---     workers : W,
+    ---     status : simplifyingHOne,
     ---     next : IST,
+    ---     current : IS,
+    ---     A >
+    --- [print "[simplifyingHOne]"] .
+
+    --- rl [SimHOneJob] : < O : Manager |
+    ---     status : simplifyingHOne,
+    ---     workers : (MI | W),
+    ---     history : (IS' HistoryIST),
+    ---     current : IS,
+    ---     passCheck : IST1,
+    ---     rmFlag : false,
+    ---     A >
+    --- => < O : Manager |
+    ---     status : simplifyingHOne,
+    ---     workers : W,
+    ---     history : HistoryIST,
+    ---     current : IS,
+    ---     passCheck : (IS' IST1),
+    ---     rmFlag : false,
+    ---     A >
+    ---     reduceTerm(MI, O,
+    ---         'MAUDE-NPA-EXT,
+    ---         'simplifyHOne[
+    ---             upTerm(IS'),
+    ---             upTerm(IS)
+    ---         ]
+    ---     ) .
+
+    --- crl [Result4SimHOne] : < O : Manager |
+    ---     status : simplifyingHOne,
+    ---     workers : W,
+    ---     rmFlag : B,
     ---     A >
     ---     reducedTerm(O, MI, N, T, RT)
     --- => < O : Manager |
-    ---     status : simplifyingH,
+    ---     status : simplifyingHOne,
     ---     workers : (W | MI),
-    ---     next : (IST IST'),
+    ---     rmFlag : (B or B'),
     ---     A >
-    --- if RT == 'IdSystemSet or-else RT == 'IdSystem
-    --- /\ IST' := downTerm(T, errIdSystemSet)
-    --- [print "[Result4SimH] " MI] .
+    --- if RT == 'Bool
+    --- /\ B' := downTerm(T, errBool) .
+
+    --- crl [SimHOneDone1] : < O : Manager |
+    ---     status : simplifyingHOne,
+    ---     #workers : N,
+    ---     workers : W,
+    ---     history : empty,
+    ---     current : IS,
+    ---     passCheck : IST1,
+    ---     nextCheck : IST2,
+    ---     rmFlag : false,
+    ---     A >
+    --- => < O : Manager |
+    ---     status : simplifyingH,
+    ---     #workers : N,
+    ---     workers : W,
+    ---     history : IST1,
+    ---     current : empty,
+    ---     passCheck : empty,
+    ---     nextCheck : (IS IST2),
+    ---     rmFlag : false,
+    ---     A >
+    --- if qsize(W) == N .
+
+    --- crl [SimHOneDone2] : < O : Manager |
+    ---     status : simplifyingHOne,
+    ---     #workers : N,
+    ---     workers : W,
+    ---     history : HistoryIST,
+    ---     current : IS,
+    ---     passCheck : IST1,
+    ---     nextCheck : IST2,
+    ---     rmFlag : true,
+    ---     A >
+    --- => < O : Manager |
+    ---     status : simplifyingH,
+    ---     #workers : N,
+    ---     workers : W,
+    ---     history : (IST1 HistoryIST),
+    ---     current : empty,
+    ---     passCheck : empty,
+    ---     nextCheck : IST2,
+    ---     rmFlag : false,
+    ---     A >
+    --- if qsize(W) == N .
+    
+    *** parallelize step 2.2 (SimplifyingH)
+    crl [SimplificationH] : < O : Manager |
+        status : startSimplifyingH,
+        workers : W,
+        #workers : N,
+        next : IST,
+        history : HistoryIST,
+        A >
+    => < O : Manager |
+        status : simplifyingH,
+        workers : W,
+        #workers : N,
+        next : IST',
+        history : HistoryIST,
+        A >
+    if C1 := #jobs(HistoryIST)
+    /\ C2 := #jobs(IST)
+    /\ N1 := neededWorkersForSimH(C1, C2, N)
+    /\ N1 <= 1
+    /\ IST' := simplifyByImplicationH(HistoryIST, IST)
+    [print "[SimplificationH] completed #IST = " C2 ", #Hist = " C1] .
+
+    crl [SimplificationH] : < O : Manager |
+        status : startSimplifyingH,
+        workers : W,
+        #workers : N,
+        next : IST,
+        history : HistoryIST,
+        A >
+    => < O : Manager |
+        status : (if C2 > 0 then simplifyingH else stopping fi),
+        workers : W1,
+        #workers : N,
+        next : empty,
+        history : HistoryIST,
+        A >
+        if C2 > 0 then handleJobsByWorkers(O, W2J, HistoryIST) else stopWorking(O, O) fi
+    if C1 := #jobs(HistoryIST)
+    /\ C2 := #jobs(IST)
+    /\ N1 := neededWorkersForSimH(C1, C2, N)
+    /\ N1 > 1
+    /\ < W1, W2 > := getWorkers(W, N1)
+    /\ W2J := produceJobs2Workers(W2, IST)
+    [print "[SimplificationH] #usedInterpreters = " N1 ", #His " C1 ", #IST = " C2] .
+
+    crl [Result4SimH] : < O : Manager |
+        status : simplifyingH,
+        workers : W,
+        next : IST,
+        A >
+        reducedTerm(O, MI, N, T, RT)
+    => < O : Manager |
+        status : simplifyingH,
+        workers : (W | MI),
+        next : (IST IST'),
+        A >
+    if RT == 'IdSystemSet or-else RT == 'IdSystem
+    /\ IST' := downTerm(T, errIdSystemSet)
+    [print "[Result4SimH] " MI] .
 
     crl [SimplificationDone] : < O : Manager |
-        --- status : simplifyingH,
-        status : simplifyingHDone,
+        status : simplifyingH,
+        --- status : simplifyingHDone,
         #workers : N,
         workers : W,
         m : M,
@@ -530,8 +530,8 @@ mod SIMPLIFICATION is
     [print "<================= [SimplificationHDone] #jobs = " C1 " #init = " C "] =================>"] .
 
     crl [SimplificationHDoneAndStop] : < O : Manager |
-        --- status : simplifyingH,
-        status : simplifyingHDone, 
+        status : simplifyingH,
+        --- status : simplifyingHDone, 
         #workers : N,
         workers : W,
         jobs : empty,
