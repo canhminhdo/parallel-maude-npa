@@ -155,7 +155,7 @@ mod SIMPLIFICATION is
     vars N N1 C C1 C2 : Nat .
     var Sess : Bound .
     vars IST IST' IST'' IST1 IST2 IST3 INIT INIT' HistoryIST : IdSystemSet .
-    vars IS : IdSystem .
+    vars IS IS' : IdSystem .
     vars W W1 W2 : Queue{Worker} .
     var SJ : Queue{IdSystemSet} .
     vars T : Term .
@@ -172,6 +172,7 @@ mod SIMPLIFICATION is
         passCheck : IST1,
         nextCheck : IST2,
         current : IST3,
+        rmFlag : B,
         A >
     => < O : Manager |
         status : simplifying,
@@ -179,6 +180,7 @@ mod SIMPLIFICATION is
         passCheck : empty,
         nextCheck : empty,
         current : empty,
+        rmFlag : false,
         A >
     if C := #jobs(IST)
     [print "[SimplificationL] #IST = " C] .
@@ -192,43 +194,55 @@ mod SIMPLIFICATION is
         A >
     => < O : Manager |
         status : startSimplifyingH,
-        next : (IST' IST2),
+        next : (IST1 IST2),
         passCheck : empty,
         nextCheck : empty,
         current : empty,
         A >
     if C := #jobs(IST)
     /\ C <= simBatch
-    /\ IST' := simplifyByImplicationL(IST) 
+    /\ IST1 := simplifyByImplicationL(IST) 
     [print "[SimplificationLDone]"] .
 
     crl [SimOne] : < O : Manager |
         status : simplifying,
-        workers : W,
         next : (IS IST),
         current : empty,
-        passCheck : empty,
-        rmFlag : B,
         A >
     => < O : Manager |
         status : simplifyingOne,
-        workers : W1,
-        next : IST',
+        next : IST,
         current : IS,
-        passCheck : empty,
+        A >
+    if C := #jobs(IST)
+    /\ C + 1 > simBatch 
+    [print "SimplifyingOne"] .
+
+    rl [SimOneJob] : < O : Manager |
+        status : simplifyingOne,
+        workers : (MI | W),
+        next : (IS' IST),
+        current : IS,
         rmFlag : false,
         A >
-        handleOneJobByWorkers(O, W2, IS, IST'')
-    if C := #jobs(IST)
-    /\ C + 1 > simBatch
-    /\ < W1, W2 > := getWorkers(W, C)
-    /\ < IST' | IST'' > := getJobs(IST, qsize(W2)) 
-    [print "[simplifyingOne]"] .
+    => < O : Manager |
+        status : simplifyingOne,
+        workers : W,
+        next : IST,
+        current : IS,
+        rmFlag : false,
+        A >
+        reduceTerm(MI, O,
+            'MAUDE-NPA-EXT,
+            'simplifyTwo[
+                upTerm(IS),
+                upTerm(IS')
+            ]
+        ) .
 
     crl [Result4SimOne] : < O : Manager |
         status : simplifyingOne,
         workers : W,
-        current : IS,
         passCheck : IST1,
         rmFlag : B,
         A >
@@ -236,36 +250,13 @@ mod SIMPLIFICATION is
     => < O : Manager |
         status : simplifyingOne,
         workers : (W | MI),
-        current : IS,
-        passCheck : ((remove(IS, IST)) IST1),
-        rmFlag : (B or (not (IS \in IST))),
+        passCheck : (IST' IST1),
+        rmFlag : (B or B'),
         A >
-    if RT == 'IdSystemSet or-else RT == 'IdSystem
-    /\ IST := downTerm(T, errIdSystemSet) .
+    if RT == 'ResSimPair
+    /\ < B' | IST' > := downTerm(T, errRes) .
 
     crl [SimOneDone1] : < O : Manager |
-        status : simplifyingOne,
-        #workers : N,
-        workers : W,
-        next : IST,
-        current : IS,
-        rmFlag : false,
-        A >
-    => < O : Manager |
-        status : simplifyingOne,
-        #workers : N,
-        workers : W1,
-        next : IST',
-        current : IS,
-        rmFlag : false,
-        A >
-        handleOneJobByWorkers(O, W2, IS, IST'')
-    if qsize(W) == N
-    /\ C := #jobs(IST) /\ C > 0
-    /\ < W1, W2 > := getWorkers(W, C)
-    /\ < IST' | IST'' > := getJobs(IST, qsize(W2)) .
-
-    crl [SimOneDone2] : < O : Manager |
         status : simplifyingOne,
         #workers : N,
         workers : W,
@@ -287,7 +278,7 @@ mod SIMPLIFICATION is
         A >
     if qsize(W) == N .
 
-    crl [SimOneDone3] : < O : Manager |
+    crl [SimOneDone2] : < O : Manager |
         status : simplifyingOne,
         #workers : N,
         workers : W,

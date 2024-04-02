@@ -1,7 +1,7 @@
 mod MAUDE-NPA-EXT is
     pr MAUDE-NPA .
 
-    sort IdSystemSetPair .
+    sorts IdSystemSetPair ResSimPair .
     
     var M : Module .
     var GS : GrammarList .
@@ -14,6 +14,8 @@ mod MAUDE-NPA-EXT is
     op <_,_> : IdSystemSet IdSystemSet -> IdSystemSetPair .
     op errIdSystemSet : -> IdSystemSet .
     op errBool : -> Bool .
+    op <_|_> : Bool IdSystemSet -> ResSimPair .
+    op errRes : -> ResSimPair .
 
     *** decreasing a bound
     op decN : Bound Nat -> Bound .
@@ -28,11 +30,11 @@ mod MAUDE-NPA-EXT is
     eq #jobs(empty) = 0 .
 
     *** simplify two states
-    op simplifyTwo : IdSystem IdSystem -> IdSystemSet .
-    eq simplifyTwo(IS, IS') =   if IS implies IS' then IS 
+    op simplifyTwo : IdSystem IdSystem -> ResSimPair .
+    eq simplifyTwo(IS, IS') =   if IS implies IS' then < false | empty >
                                 else
-                                    if IS' implies IS then IS'
-                                    else (IS IS') fi
+                                    if IS' implies IS then < true | IS' >
+                                    else < false | IS' > fi
                                 fi .
     
     op simplifyHOne : IdSystem IdSystem -> Bool .
