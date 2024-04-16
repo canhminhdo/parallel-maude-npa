@@ -24,6 +24,7 @@ mod JOB-HANDLING is
     --- precondition: N <= | IST |
     eq getJobs(IST, N) = getJobs*(IST, N, empty) .
     ceq getJobs*(IS IST, N, IST') = getJobs*(IST, sd(N, 1), IST' IS) if N > 0 .
+    eq getJobs*(empty, N, IST') = < empty | IST' > .
     eq getJobs*(IST, 0, IST') = < IST | IST' > .
 
     op handleOneJobByWorkers : Oid Queue{Worker} IdSystem IdSystemSet -> Configuration .
@@ -218,27 +219,29 @@ mod SIMPLIFICATION is
     /\ C + 1 > simBatch 
     [print "SimplifyingOne"] .
 
-    rl [SimOneJob] : < O : Manager |
+    crl [SimOneJob] : < O : Manager |
         status : simplifyingOne,
         workers : (MI | W),
-        next : (IS' IST),
+        next : IST,
         current : IS,
         rmFlag : false,
         A >
     => < O : Manager |
         status : simplifyingOne,
         workers : W,
-        next : IST,
+        next : IST1,
         current : IS,
         rmFlag : false,
         A >
         reduceTerm(MI, O,
             'MAUDE-NPA-EXT,
-            'simplifyTwo[
+            'simplifyOne[
                 upTerm(IS),
-                upTerm(IS')
+                upTerm(IST2)
             ]
-        ) .
+        ) 
+    if IST =/= empty
+    /\ < IST1 | IST2 > := getJobs(IST, jobSize) .
 
     crl [Result4SimOne] : < O : Manager |
         status : simplifyingOne,
@@ -356,29 +359,31 @@ mod SIMPLIFICATION is
         A >
     [print "[simplifyingHOne]"] .
 
-    rl [SimHOneJob] : < O : Manager |
+    crl [SimHOneJob] : < O : Manager |
         status : simplifyingHOne,
         workers : (MI | W),
-        history : (IS' HistoryIST),
+        history : HistoryIST,
         current : IS,
-        passCheck : IST1,
+        passCheck : IST',
         rmFlag : false,
         A >
     => < O : Manager |
         status : simplifyingHOne,
         workers : W,
-        history : HistoryIST,
+        history : IST1,
         current : IS,
-        passCheck : (IS' IST1),
+        passCheck : (IST2 IST'),
         rmFlag : false,
         A >
         reduceTerm(MI, O,
             'MAUDE-NPA-EXT,
             'simplifyHOne[
-                upTerm(IS'),
+                upTerm(IST2),
                 upTerm(IS)
             ]
-        ) .
+        ) 
+    if HistoryIST =/= empty
+    /\ < IST1 | IST2 > := getJobs(HistoryIST, jobSize) .
 
     crl [Result4SimHOne] : < O : Manager |
         status : simplifyingHOne,

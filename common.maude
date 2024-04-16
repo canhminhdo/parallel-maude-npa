@@ -29,16 +29,21 @@ mod MAUDE-NPA-EXT is
     eq #jobs(IS IST) = #jobs(IST) + 1 .
     eq #jobs(empty) = 0 .
 
-    *** simplify two states
-    op simplifyTwo : IdSystem IdSystem -> ResSimPair .
-    eq simplifyTwo(IS, IS') =   if IS implies IS' then < false | empty >
-                                else
-                                    if IS' implies IS then < true | IS' >
-                                    else < false | IS' > fi
-                                fi .
+    *** simplify one state and a set of states for successor states
+    op simplifyOne : IdSystem IdSystemSet -> ResSimPair .
+    op simplifyOne* : IdSystem IdSystemSet IdSystemSet -> ResSimPair .
+    eq simplifyOne(IS, IST) = simplifyOne*(IS, IST, empty) .
+    eq simplifyOne*(IS, IS' IST, IST') = if IS implies IS' then simplifyOne*(IS, IST, IST')
+                                         else
+                                            if IS' implies IS then < true | IS' IST IST' > 
+                                            else simplifyOne*(IS, IST, IS' IST') fi
+                                         fi .
+    eq simplifyOne*(IS, empty, IST') = < false | IST' > .
     
-    op simplifyHOne : IdSystem IdSystem -> Bool .
-    eq simplifyHOne(IS, IS') = IS implies IS' .
+    *** simplify a set of states and one state for history states
+    op simplifyHOne : IdSystemSet IdSystem -> Bool .
+    eq simplifyHOne(IS IST, IS') = if IS implies IS' then true else simplifyHOne(IST, IS') fi .
+    eq simplifyHOne(empty, IS') = false .
 
     op _\in_ : IdSystem IdSystemSet -> Bool .
     eq IS \in (IS IST) = true .
