@@ -3,9 +3,13 @@ fmod PARAMETER-GLOBAL is
 
     *** simBatch in step 2.1: conducting the transition subsumption for states
     op simBatch : -> Nat .
-    eq simBatch = 10 .
+    eq simBatch = 20 .
+    op jobSize : -> Nat .
+    eq jobSize = 20 .
 
     *** simBatchH in step 2.2: conducting the transition subsumption for states with history states
     op simBatchH : -> Nat .
     eq simBatchH = 20 .
+    op jobHSize : -> Nat .
+    eq jobHSize = 20 .
 endfm

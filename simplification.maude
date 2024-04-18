@@ -21,10 +21,23 @@ mod JOB-HANDLING is
     *** [NEW] distribute a job to each worker in step 2.1
     op getJobs : IdSystemSet Nat -> J2J .
     op getJobs* : IdSystemSet Nat IdSystemSet -> J2J .
-    --- precondition: N <= | IST |
     eq getJobs(IST, N) = getJobs*(IST, N, empty) .
     ceq getJobs*(IS IST, N, IST') = getJobs*(IST, sd(N, 1), IST' IS) if N > 0 .
+    ceq getJobs*(empty, N, IST') = < empty | IST' > if N > 0 .
     eq getJobs*(IST, 0, IST') = < IST | IST' > .
+
+    *** distribute a job evenly to each worker in step 2.1
+    op handleJobsOneByWorkers : Oid IdSystem Map{Worker,IdSystemSet} -> Configuration .
+    eq handleJobsOneByWorkers(O, IS, (MI |-> IST, W2J))
+    =   reduceTerm(MI, O,
+            'MAUDE-NPA-EXT,
+            'simplifyOne[
+                upTerm(IS),
+                upTerm(IST)
+            ]
+        )
+        handleJobsOneByWorkers(O, IS, W2J) .
+    eq handleJobsOneByWorkers(O, IS, empty) = none .
 
     op handleOneJobByWorkers : Oid Queue{Worker} IdSystem IdSystemSet -> Configuration .
     eq handleOneJobByWorkers(O, MI | W, IS, IS' IST)
@@ -218,11 +231,12 @@ mod SIMPLIFICATION is
         passCheck : empty,
         rmFlag : false,
         A >
-        handleOneJobByWorkers(O, W2, IS, IST'')
+        handleJobsOneByWorkers(O, IS, W2J)
     if C := #jobs(IST)
     /\ C + 1 > simBatch
     /\ < W1, W2 > := getWorkers(W, C)
-    /\ < IST' | IST'' > := getJobs(IST, qsize(W2)) 
+    /\ < IST' | IST'' > := getJobs(IST, qsize(W2) * jobSize) 
+    /\ W2J := produceJobs2Workers(W2, IST'')
     [print "[simplifyingOne]"] .
 
     crl [Result4SimOne] : < O : Manager |
@@ -237,11 +251,11 @@ mod SIMPLIFICATION is
         status : simplifyingOne,
         workers : (W | MI),
         current : IS,
-        passCheck : ((remove(IS, IST)) IST1),
-        rmFlag : (B or (not (IS \in IST))),
+        passCheck : (IST IST1),
+        rmFlag : (B or B'),
         A >
-    if RT == 'IdSystemSet or-else RT == 'IdSystem
-    /\ IST := downTerm(T, errIdSystemSet) .
+    if RT == 'ResSimPair
+    /\ < B' | IST > := downTerm(T, errRes) .
 
     crl [SimOneDone1] : < O : Manager |
         status : simplifyingOne,
@@ -259,11 +273,12 @@ mod SIMPLIFICATION is
         current : IS,
         rmFlag : false,
         A >
-        handleOneJobByWorkers(O, W2, IS, IST'')
+        handleJobsOneByWorkers(O, IS, W2J)
     if qsize(W) == N
     /\ C := #jobs(IST) /\ C > 0
     /\ < W1, W2 > := getWorkers(W, C)
-    /\ < IST' | IST'' > := getJobs(IST, qsize(W2)) .
+    /\ < IST' | IST'' > := getJobs(IST, qsize(W2) * jobSize) 
+    /\ W2J := produceJobs2Workers(W2, IST'') .
 
     crl [SimOneDone2] : < O : Manager |
         status : simplifyingOne,
