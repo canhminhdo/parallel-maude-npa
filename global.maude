@@ -1,15 +1,21 @@
 fmod PARAMETER-GLOBAL is
     pr NAT .
 
+    *** the option for memory optimization
+    op memOpt : -> Bool .
+    eq memOpt = false .
+
     *** simBatch in step 2.1: conducting the transition subsumption for states
     op simBatch : -> Nat .
     eq simBatch = 10 .
-    
-    *** job size for the transition subsumption of one state and a set of states
+    *** job size for step 2.1
     op jobSize : -> Nat .
-    eq jobSize = 5 .
+    eq jobSize = 15 .
 
     *** simBatchH in step 2.2: conducting the transition subsumption for states with history states
     op simBatchH : -> Nat .
     eq simBatchH = 20 .
+    *** job size for step 2.2
+    op jobHSize : -> Nat .
+    eq jobHSize = 10 .
 endfm

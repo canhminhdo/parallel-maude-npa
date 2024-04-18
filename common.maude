@@ -141,7 +141,7 @@ mod PARALLEL-CONFIG is
 
     sort IStatus .
     ops idle initializing initialized waiting suspending working stopping
-        terminated simplifying simplifyingL simplifyingH startSimplifyingH 
+        terminated simplifying simplifyingL simplifyingH startSimplifyingH simplifyingHBatch
         startSimplifying simplifyingOne simplifyingHOne simplifyingHDone : -> IStatus .
     sort IMode .
     ops run initials summary : -> IMode .
