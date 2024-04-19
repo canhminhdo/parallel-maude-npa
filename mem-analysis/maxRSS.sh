@@ -34,10 +34,10 @@ BEGIN {
             break
         }
         if (match($1, /(.)+(k|kb)$/)) {
-            sub("gb", "", $1)
-            sub("b", "", $1)
+            sub("k", "", $1)
+            sub("kb", "", $1)
             totalMem += ($1 / 1000)
-            print $1 " B"
+            print $1 " KB"
             break
         }
         break
