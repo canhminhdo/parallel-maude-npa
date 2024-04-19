@@ -1,15 +1,25 @@
 fmod PARAMETER-GLOBAL is
     pr NAT .
 
+    *** conduct the simplification in parallel
+    op parSim : -> Bool .
+    eq parSim = true .
+
+    *** memory optimization
+    op memOpt : -> Bool .
+    eq memOpt = false .
+
     *** simBatch in step 2.1: conducting the transition subsumption for states
     op simBatch : -> Nat .
-    eq simBatch = 20 .
+    eq simBatch = 10 .
+    --- if empOpt is true, please set it to 1
     op jobSize : -> Nat .
     eq jobSize = 20 .
 
     *** simBatchH in step 2.2: conducting the transition subsumption for states with history states
     op simBatchH : -> Nat .
-    eq simBatchH = 20 .
+    eq simBatchH = 50 .
+    --- used only when empOpt is true
     op jobHSize : -> Nat .
-    eq jobHSize = 20 .
+    eq jobHSize = 1 .
 endfm

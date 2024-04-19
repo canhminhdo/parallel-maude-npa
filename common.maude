@@ -29,6 +29,7 @@ mod MAUDE-NPA-EXT is
     eq #jobs(IS IST) = #jobs(IST) + 1 .
     eq #jobs(empty) = 0 .
 
+    *** simplify one state with a set of states in step 2.1
     op simplifyOne : IdSystem IdSystemSet -> ResSimPair .
     op simplifyOne* : IdSystem IdSystemSet IdSystemSet -> ResSimPair .
     eq simplifyOne(IS, IST) = simplifyOne*(IS, IST, empty) .
@@ -41,56 +42,20 @@ mod MAUDE-NPA-EXT is
                                          fi .
     eq simplifyOne*(IS, empty, IST') = < false | IST' > .
 
-    *** simplify two states
-    op simplifyTwo : IdSystem IdSystem -> IdSystemSet .
-    eq simplifyTwo(IS, IS') =   if IS implies IS' then IS 
-                                else
-                                    if IS' implies IS then IS'
-                                    else (IS IS') fi
-                                fi .
-    
-    op simplifyHOne : IdSystem IdSystem -> Bool .
-    eq simplifyHOne(IS, IS') = IS implies IS' .
-
-    op _\in_ : IdSystem IdSystemSet -> Bool .
-    eq IS \in (IS IST) = true .
-    eq IS \in IST = false [owise] .
-    
-    op remove : IdSystem IdSystemSet -> IdSystemSet .
-    eq remove(IS, IS IST) = IST .
-    eq remove(IS, IST) = IST [owise] .
-
-    *** combine two simplified sets from simplifyByImplicationL
-    op simplifyByImplicationLCombine : IdSystemSet IdSystemSet -> IdSystemSet .
-    eq simplifyByImplicationLCombine(IST, empty) = IST .
-    eq simplifyByImplicationLCombine(empty, IST') = IST' .
-    eq simplifyByImplicationLCombine(IS IST, IS' IST')
-    = simplifyByImplicationLCombine*(IST, IS, IS' IST', IS' IST') .
-
-    op simplifyByImplicationLCombine* : IdSystemSet IdSystem IdSystemSet IdSystemSet -> IdSystemSet .
-    eq simplifyByImplicationLCombine*(IST, IS, empty, IST')
-    = IS simplifyByImplicationLCombine(IST, IST') .
-
-    eq simplifyByImplicationLCombine*(IST, IS, IS' IST', IS' IST'')
-    =   if IS implies IS'
-        then simplifyByImplicationLCombine*(IST, IS, IST', IST'')
-        else
-            if IS' implies IS
-            then simplifyByImplicationLCombine(IST, IS' IST'')
-            else simplifyByImplicationLCombine*(IST, IS, IST', IS' IST'')
-            fi
-        fi .
+    *** simplify a set of history states with a state in step 2.2
+    op simplifyHOne : IdSystemSet IdSystem -> Bool .
+    eq simplifyHOne(IS IST, IS') = if IS implies IS' then true else simplifyHOne(IST, IS') fi .
+    eq simplifyHOne(empty, IS') = false .
 
     *** filter by simplification
     op filterStates : Filters IdSystemSet IdSystemSet -> IdSystemSet .
     eq filterStates(F, HistoryIST, IST)
-    = filterSMsgListX(F, filterIdX(F, simplify-theSystemSet(F, HistoryIST, IST)))
-    [print "Simlification"] .
+    = filterSMsgListX(F, filterIdX(F, simplify-theSystemSet(F, HistoryIST, IST))) .
 
     *** filter init and other states by history
     op searchState-CheckInit : Module Bound IdSystemSet IdSystemSet -> IdSystemSetPair .
     eq searchState-CheckInit(M, Sess, HistoryIST, IST)
-    = searchState-CheckInit*(M, Sess, HistoryIST, < empty, empty >, IST) [print "[Filter States and Initial States]"] .
+    = searchState-CheckInit*(M, Sess, HistoryIST, < empty, empty >, IST) .
 
     op searchState-CheckInit* : Module Bound IdSystemSet IdSystemSetPair IdSystemSet -> IdSystemSetPair .
     eq searchState-CheckInit*(M, Sess, HistoryIST, < INIT, IST' >, empty) = < INIT, IST' > .
@@ -148,8 +113,8 @@ mod PARALLEL-CONFIG is
 
     sort IStatus .
     ops idle initializing initialized waiting suspending working stopping
-        terminated simplifying simplifyingL simplifyingH startSimplifyingH 
-        startSimplifying simplifyingOne simplifyingHOne simplifyingHDone : -> IStatus .
+        terminated simplifying simplifyingL simplifyingH startSimplifyingH simplifyingHBatch
+        startSimplifying simplifyingOne simplifyingHOne startFiltering : -> IStatus .
     sort IMode .
     ops run initials summary : -> IMode .
 
@@ -170,12 +135,11 @@ mod PARALLEL-CONFIG is
     op depth :_ : Nat -> Attribute .
     op #workers :_ : Nat -> Attribute [format(! o o o)] .
     op workers :_ : Queue{Worker} -> Attribute [format(! o o o)] .
-    op simJobs :_ : Queue{IdSystemSet} -> Attribute [format(! o o o)] .
     op (loading[_] :_) : Oid Bool -> Attribute .
     op (pending[_] :_) : Oid Seq -> Attribute .
     op current :_ : IdSystemSet -> Attribute .
-    op passCheck :_ : IdSystemSet -> Attribute .
-    op nextCheck :_ : IdSystemSet -> Attribute .
+    op underCheck :_ : IdSystemSet -> Attribute .
+    op simJobs :_ : IdSystemSet -> Attribute .
     op rmFlag :_ : Bool -> Attribute .
 
     *** messages

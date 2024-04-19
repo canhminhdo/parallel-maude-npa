@@ -1,8 +1,8 @@
+load global.maude
 load utils/queue.maude
 load utils/loading.maude
 load common.maude
 load metaInterpreter.maude
-load global.maude
 load simplification.maude
 
 mod PARALLEL-MAUDE-NPA is
@@ -46,8 +46,8 @@ mod PARALLEL-MAUDE-NPA is
         next : empty,
         init : empty,
         current : empty,
-        passCheck : empty,
-        nextCheck : empty,
+        underCheck : empty,
+        simJobs : empty,
         rmFlag : false,
         depth : 0,
         A >
@@ -231,55 +231,56 @@ mod PARALLEL-MAUDE-NPA is
     /\ IST' := downTerm(T, errIdSystemSet)
     [print "[WorkerResult] " MI] .
 
-    *** conducting the transition subsumption in sequence
-    --- crl [Switch] : < O : Manager |
-    ---     status : working,
-    ---     #workers : N,
-    ---     workers : W,
-    ---     m : M,
-    ---     gs : GS,
-    ---     filter : F,
-    ---     bStep : BStep,
-    ---     nodes : Nodes,
-    ---     sess : Sess,
-    ---     rem : Rem?,
-    ---     jobs : empty,
-    ---     next : IST,
-    ---     init : INIT,
-    ---     history : HistoryIST,
-    ---     depth : D,
-    ---     A >
-    --- => < O : Manager |
-    ---     status : (if C' > 0 then stopping else suspending fi),
-    ---     #workers : N,
-    ---     workers : W,
-    ---     m : M,
-    ---     gs : GS,
-    ---     filter : F,
-    ---     bStep : decN(BStep, 1),
-    ---     nodes : Nodes,
-    ---     sess : Sess,
-    ---     rem : Rem?,
-    ---     jobs : IST'',
-    ---     next : empty,
-    ---     init : (INIT INIT'),
-    ---     history : (HistoryIST IST''),
-    ---     depth : D',
-    ---     A >
-    ---     (if C' > 0 then stopWorking(O, O) else none fi)
-    --- if qsize(W) == N
-    --- /\ IST =/= empty
-    --- /\ IST' := filterStates(F, HistoryIST, IST) --- filter states by simplification
-    --- /\ < INIT', IST'' > := searchState-CheckInit(M, Sess, HistoryIST, IST') --- filter with history to get initial and other states
-    --- /\ D' := (D + 1)
-    --- /\ C := #jobs(IST'')
-    --- /\ C' := #jobs(INIT')
-    --- /\ K:Nat := #jobs(IST)
-    --- /\ H:Nat := #jobs(IST')
-    --- /\ L:Nat := #jobs(HistoryIST)
-    --- [print "<================= [Switch at Depth " D' " #jobs = " C " #jobs1 = " K:Nat " #jobs2 = " H:Nat " #his = " L:Nat "] =================>"] .
+    *** conducting the transition subsumption in sequence if parSim is false
+    crl [Switch] : < O : Manager |
+        status : working,
+        #workers : N,
+        workers : W,
+        m : M,
+        gs : GS,
+        filter : F,
+        bStep : BStep,
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        jobs : empty,
+        next : IST,
+        init : INIT,
+        history : HistoryIST,
+        depth : D,
+        A >
+    => < O : Manager |
+        status : (if C' > 0 then stopping else suspending fi),
+        #workers : N,
+        workers : W,
+        m : M,
+        gs : GS,
+        filter : F,
+        bStep : decN(BStep, 1),
+        nodes : Nodes,
+        sess : Sess,
+        rem : Rem?,
+        jobs : IST'',
+        next : empty,
+        init : (INIT INIT'),
+        history : (HistoryIST IST''),
+        depth : D',
+        A >
+        (if C' > 0 then stopWorking(O, O) else none fi)
+    if parSim == false 
+    /\ qsize(W) == N
+    /\ IST =/= empty
+    /\ IST' := filterStates(F, HistoryIST, IST) --- filter states by simplification
+    /\ < INIT', IST'' > := searchState-CheckInit(M, Sess, HistoryIST, IST') --- filter with history to get initial and other states
+    /\ D' := (D + 1)
+    /\ C := #jobs(IST'')
+    /\ C' := #jobs(INIT')
+    /\ K:Nat := #jobs(IST)
+    /\ H:Nat := #jobs(IST')
+    /\ L:Nat := #jobs(HistoryIST)
+    [print "<================= [Switch at Depth " D' " #jobs = " C " #jobs1 = " K:Nat " #jobs2 = " H:Nat " #his = " L:Nat "] =================>"] .
 
-    *** parallelize the transition subsumption (simplification)
+    *** parallelize the transition subsumption (simplification) if parSim is true
     crl [Switching] : < O : Manager |
         status : working,
         #workers : N,
@@ -298,7 +299,8 @@ mod PARALLEL-MAUDE-NPA is
         next : IST,
         depth : D',
         A >
-    if qsize(W) == N
+    if parSim == true
+    /\ qsize(W) == N
     /\ IST =/= empty
     /\ D' := D + 1
     [print "<================= [Switching at Depth " D' "] =================>"] .

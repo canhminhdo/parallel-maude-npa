@@ -21,6 +21,7 @@ print conceal db
               (history :_)
               (next :_)
               (current :_)
-              (passCheck :_)
+              (underCheck :_)
+              (simJobs :_)
               (filter :_)
               .
