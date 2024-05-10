@@ -67,15 +67,16 @@ erew <> p-run(0, unbounded, 8) .
 
 ### Global parameters
 ---
-There are two parameters in the tool:
+There are three parameters in the tool:
 
-- `simBatch` is the minimum number of states that should be assigned
-to each worker at step (2.1).
+- `simBatch` is the minimum number of states that the parallelization will take place at step (2.1).
+
+- `jobSize` is the number of states that should be considered to construct to a job at step (2.1).
 
 - `simBatchH` is the minimum multiplication of the number of states
-and history states that should be assigned to each worker at step (2.2).
+and history states that the parallelization will take place at step (2.2).
 
-By default, `simBatch` and `simBatchH` are set to 20 and 50, respectively.
+By default, `simBatch`, `jobSize`, and `simBatchH` are set to 10, 20, and 50, respectively.
 You can change them in the `global.maude` file.
 
 ### Papers
